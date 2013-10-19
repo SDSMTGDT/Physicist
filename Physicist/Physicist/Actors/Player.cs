@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Physicist.Actors
 {
-    class Player : Actor
+    internal class Player : Actor
     {
 
     }

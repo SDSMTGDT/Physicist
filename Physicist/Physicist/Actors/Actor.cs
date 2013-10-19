@@ -12,5 +12,12 @@ namespace Physicist.Actors
         float y;
 
         float angle; //for rotation
+
+        public Actor(float xin = 0, float yin = 0, float anglein = 0)
+        {
+            this.x = xin;
+            this.y = yin;
+            this.angle = anglein;
+        }
     }
 }

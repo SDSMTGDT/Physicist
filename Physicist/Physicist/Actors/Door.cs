@@ -15,9 +15,9 @@ namespace Physicist.Actors
 
         //METHODS
 
-        public Door()
+        public Door(bool ied = false)
         {
-
+            this.isEndDoor = ied;
         }
 
         //event when the door is closed, either for ending the level (isEndDoor) or ending the animation (!isEndDoor)
