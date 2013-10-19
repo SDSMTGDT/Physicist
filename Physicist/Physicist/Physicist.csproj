@@ -36,21 +36,20 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\Dynamic\Ball.cs" />
-    <Compile Include="Actor\Dynamic\Dynamic.cs" />
-    <Compile Include="Actor\ICollidable.cs" />
-    <Compile Include="Actor\NPC\Slug.cs" />
-    <Compile Include="Actor\NPC\NPC.cs" />
-    <Compile Include="Actor\NPC\Enemy.cs" />
-    <Compile Include="Actor\Player\Player.cs" />
-    <Compile Include="Actor\Static\Trampoline.cs" />
-    <Compile Include="Actor\Static\Static.cs" />
-    <Compile Include="Actor\Static\Killbox.cs" />
-    <Compile Include="Control\CameraController.cs" />
-    <Compile Include="Control\GameController.cs" />
-    <Compile Include="Control\Map.cs" />
-    <Compile Include="Control\ParticleEngine.cs" />
+    <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\Door.cs" />
+    <Compile Include="Actors\Fields\AccelerationField.cs" />
+    <Compile Include="Actors\Fields\VelocityField.cs" />
+    <Compile Include="Actors\Fields\HealthField.cs" />
+    <Compile Include="Actors\Fields\IField.cs" />
+    <Compile Include="Actors\NPCs\Slug.cs" />
+    <Compile Include="Actors\NPCs\NPC.cs" />
+    <Compile Include="Actors\NPCs\Enemy.cs" />
+    <Compile Include="Actors\Player.cs" />
+    <Compile Include="Controls\CameraController.cs" />
+    <Compile Include="Controls\GameController.cs" />
+    <Compile Include="Controls\Map.cs" />
+    <Compile Include="Controls\ParticleEngine.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
@@ -71,7 +70,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-  <!--</ItemGroup>
+    <!--</ItemGroup>
   <ItemGroup>-->
     <Content Include="$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
       <!--<Link>SDL.dll</Link>-->
