@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actors
+﻿namespace Physicist.Actors
 {
-    internal class Player : Actor
-    {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
+    public class Player : Actor
+    {
     }
 }

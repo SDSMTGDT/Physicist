@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actors.Fields
+﻿namespace Physicist.Actors.Fields
 {
-    internal class VelocityField : Actor, IField 
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Microsoft.Xna.Framework;
+
+    public class VelocityField : Field 
     {
-        public float Direction; //angle in radians
-        public uint Magnitude; //magnitude of the affecting vector
+        public VelocityField(Vector2 vector) : base(vector)
+        {
+        }
 
-        public void Draw()
+        public override void Draw()
         {
             throw new NotImplementedException();
         }
 
-        public void AffectPlayer(Player p)
+        public override void AffectPlayer(Player p)
         {
             throw new NotImplementedException();
-        }
-
-        public VelocityField(float directionIn = 0, uint magnitudeIn = 0)
-        {
-            this.Direction = directionIn;
-            this.Magnitude = magnitudeIn;
         }
     }
 }

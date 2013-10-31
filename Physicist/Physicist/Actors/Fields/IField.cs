@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actors.Fields
+﻿namespace Physicist.Actors.Fields
 {
-    internal interface IField
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Microsoft.Xna.Framework;
+
+    public interface IField
     {
+        // sprite is a back color, translucent - > to be used with Actor
+        Vector2 Vector { get; set; }
 
-        //sprite is a back color, translucent - > to be used with Actor
-
-        //overloading
+        // overloading
         void Draw();
-        void AffectPlayer(Player p);
 
+        void AffectPlayer(Player p);
     }
 }

@@ -37,8 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\FieldContainer.cs" />
     <Compile Include="Actors\Door.cs" />
     <Compile Include="Actors\Fields\AccelerationField.cs" />
+    <Compile Include="Actors\Fields\Field.cs" />
     <Compile Include="Actors\Fields\VelocityField.cs" />
     <Compile Include="Actors\Fields\HealthField.cs" />
     <Compile Include="Actors\Fields\IField.cs" />

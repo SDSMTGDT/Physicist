@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Controls
+﻿namespace Physicist.Controls
 {
-    class CameraController
-    {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
+    public class CameraController
+    {
     }
 }

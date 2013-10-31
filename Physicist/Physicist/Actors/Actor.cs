@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actors
+﻿namespace Physicist.Actors
 {
-    abstract class Actor
-    {
-        //coordinates in the map
-        float x;
-        float y;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-        float angle; //for rotation
+    public abstract class Actor
+    {
+        // coordinates in the map
+        private float x;
+        private float y;
+
+        private float angle; // for rotation
 
         public Actor(float xin = 0, float yin = 0, float anglein = 0)
         {

@@ -1,38 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actors.Fields
+﻿namespace Physicist.Actors.Fields
 {
-    internal class HealthField : Actor, IField
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Microsoft.Xna.Framework;
+
+    public class HealthField : Field
     {
-        public Boolean healing;
-        public float Direction; //angle in radians
-        public uint Magnitude; //magnitude of the affecting vector
-            //True - heals
-            //False - false
-
-        //magnitude is the % of HP healed
-
-        public float hitsPerSecond;
-
-        public HealthField(float directionIn = 0, uint magnitudeIn = 0, float hitsPerSecondIn = 0, bool healingIn = false)
+        public HealthField(Vector2 vector, float hitsPerSecond = 0)
+            : base(vector)
         {
-            this.Direction = directionIn;
-            this.Magnitude = magnitudeIn;
-            this.healing = healingIn;
-            this.hitsPerSecond = hitsPerSecondIn;
+            this.HitsPerSecond = hitsPerSecond;
         }
 
-        void IField.Draw()
+        // Vector2 notes:
+        // magnitude of Vector2 is the % of HP healed
+        // direction of Vector2 : positive - heals, negative - damages
+        public float HitsPerSecond { get; set; }
+
+        public override void Draw()
         {
-            throw new NotImplementedException();
         }
 
-        void IField.AffectPlayer(Player p)
+        public override void AffectPlayer(Player p)
         {
-            throw new NotImplementedException();
         }
     }
 }
