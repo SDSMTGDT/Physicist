@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Text;
 
-    public class CameraController
+    public class Viewport
     {
     }
 }

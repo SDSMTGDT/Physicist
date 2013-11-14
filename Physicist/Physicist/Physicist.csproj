@@ -37,26 +37,36 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\Dynamic\Ball.cs" />
-    <Compile Include="Actor\Dynamic\Dynamic.cs" />
-    <Compile Include="Actor\ICollidable.cs" />
-    <Compile Include="Actor\NPC\Slug.cs" />
-    <Compile Include="Actor\NPC\NPC.cs" />
+    <Compile Include="Actor\Door.cs" />
+    <Compile Include="Actor\FieldContainer.cs" />
+    <Compile Include="Actor\Field\AccelerationField.cs" />
+    <Compile Include="Actor\Field\Field.cs" />
+    <Compile Include="Actor\Field\HealthField.cs" />
+    <Compile Include="Actor\Field\IField.cs" />
+    <Compile Include="Actor\Field\VelocityField.cs" />
+    <Compile Include="Actor\GameSprite.cs" />
+    <Compile Include="Actor\NPC.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
-    <Compile Include="Actor\Player\Player.cs" />
-    <Compile Include="Actor\Static\Trampoline.cs" />
-    <Compile Include="Actor\Static\Static.cs" />
-    <Compile Include="Actor\Static\Killbox.cs" />
+    <Compile Include="Actor\NPC\NPC.cs" />
+    <Compile Include="Actor\NPC\Slug.cs" />
+    <Compile Include="Actor\Player.cs" />
+    <Compile Include="Actor\SpriteAnimation.cs" />
     <Compile Include="Control\CameraController.cs" />
     <Compile Include="Control\GameController.cs" />
     <Compile Include="Control\Map.cs" />
     <Compile Include="Control\ParticleEngine.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Control\Viewport.cs" />
+    <Compile Include="Enum\Visibility.cs" />
+    <Compile Include="Extensions\Primatives\Size.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysics MonoGame">
+      <HintPath>$(ProjectDir)Tools\FarseerPhysics\FarseerPhysics MonoGame.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
     </Reference>
@@ -71,7 +81,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-  <!--</ItemGroup>
+    <!--</ItemGroup>
   <ItemGroup>-->
     <Content Include="$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
       <!--<Link>SDL.dll</Link>-->

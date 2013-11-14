@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Actor.NPC
+﻿namespace Physicist.Actors.NPCs
 {
-    class Slug : Enemy, ICollidable
-    {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
+    public class Slug : Enemy
+    {
     }
 }
