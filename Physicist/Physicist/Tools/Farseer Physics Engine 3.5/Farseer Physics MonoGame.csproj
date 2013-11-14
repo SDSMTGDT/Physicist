@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FarseerPhysics</RootNamespace>
+    <AssemblyName>FarseerPhysics MonoGame</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\WindowsGL\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Collision\Collision.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Distance.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\DynamicTree.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\DynamicTreeBroadPhase.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\IBroadPhase.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Shapes\ChainShape.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Shapes\CircleShape.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Shapes\EdgeShape.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Shapes\PolygonShape.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\Shapes\Shape.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Collision\TimeOfImpact.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\ConvexHull\ChainHull.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\ConvexHull\GiftWrap.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\ConvexHull\Melkman.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\BayazitDecomposer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDTDecomposer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\ITriangulatable.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Orientation.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Polygon\Polygon.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Polygon\PolygonPoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Polygon\PolygonSet.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Sets\PointSet.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\TriangulationConstraint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\TriangulationContext.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\TriangulationMode.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\TriangulationPoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\TriangulationUtil.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Util\FixedArray3.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Util\FixedBitArray3.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Util\PointGenerator.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\CDT\Util\PolygonGenerator.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\EarclipDecomposer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\FlipcodeDecomposer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\SeidelDecomposer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Edge.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\MonotoneMountain.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Node.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Point.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\QueryGraph.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Sink.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Trapezoid.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\TrapezoidalMap.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\Triangulator.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\XNode.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Seidel\YNode.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Decomposition\Triangulate.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\FixedArray.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\LineTools.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Math.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Path.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PathManager.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PhysicsLogic\FilterData.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PhysicsLogic\PhysicsLogic.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PhysicsLogic\RealExplosion.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PhysicsLogic\SimpleExplosion.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PolygonManipulation\CuttingTools.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PolygonManipulation\SimpleCombiner.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PolygonManipulation\SimplifyTools.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PolygonManipulation\YuPengClipper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\PolygonTools.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Serialization.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\TextureTools\MarchingSquares.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\TextureTools\Terrain.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\TextureTools\TextureConverter.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Common\Vertices.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\AbstractForceController.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\BuoyancyController.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\Controller.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\GravityController.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\SimpleWindForce.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Controllers\VelocityLimitController.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ConvertUnits.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="DebugViewBase.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Body.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\BreakableBody.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\ContactManager.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Contacts\Contact.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Contacts\ContactSolver.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Fixture.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Island.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\AngleJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\DistanceJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\FixedMouseJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\FrictionJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\GearJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\Joint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\MotorJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\PrismaticJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\PulleyJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\RevoluteJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\RopeJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\WeldJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\Joints\WheelJoint.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\TimeStep.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\World.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dynamics\WorldCallbacks.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Factories\BodyFactory.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Factories\FixtureFactory.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Factories\JointFactory.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Factories\LinkFactory.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Settings.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(ProjectDir)\..\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
