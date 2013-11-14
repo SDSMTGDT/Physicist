@@ -1,11 +1,11 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.Actors.NPC
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
-    public class CameraController
+    public class NPC : Actor
     {
     }
 }

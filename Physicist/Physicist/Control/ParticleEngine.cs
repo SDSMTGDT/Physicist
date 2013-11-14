@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Physicist.Control
+﻿namespace Physicist.Controls
 {
-    class ParticleEngine
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    public class ParticleEngine
     {
     }
 }
