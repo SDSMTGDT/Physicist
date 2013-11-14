@@ -11,6 +11,8 @@
         // sprite is a back color, translucent - > to be used with Actor
         Vector2 Vector { get; set; }
 
+        Rectangle Size { get; set; }
+
         // overloading
         void Draw();
 

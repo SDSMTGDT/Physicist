@@ -28,6 +28,19 @@
             }
         }
 
+        public Rectangle Size
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public abstract void Draw();
 
         public abstract void AffectPlayer(Player p);

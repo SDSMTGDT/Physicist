@@ -12,9 +12,9 @@
         private bool isEndDoor;
 
         // METHODS
-        public Door(bool ied = false)
+        public Door(bool isEndDoor = false)
         {
-            this.isEndDoor = ied;
+            this.isEndDoor = isEndDoor;
         }
 
         // event when the door is closed, either for ending the level (isEndDoor) or ending the animation (!isEndDoor)
