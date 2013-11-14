@@ -1,26 +1,26 @@
-﻿#region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Linq;
-#endregion
-
-namespace Physicist
+﻿namespace Physicist
 {
-#if WINDOWS || LINUX
-    /// <summary>
-    /// The main class.
-    /// </summary>
-    public static class Program
-    {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    #if WINDOWS || LINUX
         /// <summary>
-        /// The main entry point for the application.
+        /// The main class.
         /// </summary>
-        [STAThread]
-        static void Main()
+        public static class Program
         {
-            using (var game = new Game1())
-                game.Run();
+            /// <summary>
+            /// The main entry point for the application.
+            /// </summary>
+            [STAThread]
+            public static void Main()
+            {
+                using (var game = new MainGame())
+                {
+                    game.Run();
+                }
+            }
         }
-    }
-#endif
+    #endif
 }
