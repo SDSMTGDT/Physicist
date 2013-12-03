@@ -1,0 +1,16 @@
+﻿<Dictionary>
+  <Words>
+    <Unrecognized>
+      <Word>cb</Word>
+    </Unrecognized>
+    <Recognized>
+      <Word>spriteBatch</Word>
+      <Word>sb</Word>
+    </Recognized>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>NPC</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>
