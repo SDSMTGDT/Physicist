@@ -8,7 +8,7 @@
 
     public class HealthField : Field
     {
-        public HealthField(Vector2 vector, float hitsPerSecond = 0)
+        public HealthField(Vector2 vector, float hitsPerSecond)
             : base(vector)
         {
             this.HitsPerSecond = hitsPerSecond;
@@ -23,7 +23,7 @@
         {
         }
 
-        public override void AffectPlayer(Player p)
+        public override void AffectPlayer(Player player)
         {
         }
     }

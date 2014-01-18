@@ -6,6 +6,7 @@
     using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Enums;
     using Physicist.Extensions;
 
     public class GameSprite
@@ -18,11 +19,11 @@
         private float markedTime = 0;
         private float depth = 0f;
 
-        public GameSprite(Texture2D spriteSheet, Size frameSize, float frameLength = 0.2f)
+        public GameSprite(Texture2D spriteSheet, Size frameSize)
         {
             this.SpriteSheet = spriteSheet;
             this.FrameSize = frameSize;
-            this.FrameLength = frameLength;
+            this.FrameLength = 0.2f;
             this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
         }
 
@@ -32,6 +33,14 @@
         public Size FrameSize { get; private set; }
 
         public Vector2 Offset { get; set; }
+
+        public List<string> AnimationKeys
+        {
+            get
+            {
+                return new List<string>(this.animations.Keys);
+            }
+        }
 
         public float Depth
         {       
@@ -91,7 +100,7 @@
             }
         }
 
-        public uint NumAnimations
+        public uint AnimationCount
         {
             get
             {
@@ -103,7 +112,7 @@
         {
             get
             {
-                return this.CurrentAnimation.NumFrames;
+                return this.CurrentAnimation.FrameCount;
             }
         }
 
@@ -138,22 +147,33 @@
                 }
             }
         }
-        
+
         public void Update(GameTime time)
         {
-            this.markedTime += time.ElapsedGameTime.Milliseconds / 1000.0f;
-     
-            // if the elapsed time since the last frame change indicates that it is time to animate the sprite, do so.
-            if (this.markedTime > this.FrameLength)
+            if (time != null)
             {
-                this.CurrentFrame = (this.CurrentFrame + 1) % this.MaxFrames;
-                this.markedTime = 0;
+                this.markedTime += time.ElapsedGameTime.Milliseconds / 1000.0f;
+
+                // if the elapsed time since the last frame change indicates that it is time to animate the sprite, do so.
+                if (this.markedTime > this.FrameLength)
+                {
+                    this.CurrentFrame = (this.CurrentFrame + 1) % this.MaxFrames;
+                    this.markedTime = 0;
+                }
             }
         }
 
         public void AddAnimation(string animationName, SpriteAnimation animation)
         {
             this.animations.Add(animationName, animation);
+        }
+
+        public void AddAnimation(Enum animationName, SpriteAnimation animation)
+        {
+            if (animationName != null && animation != null)
+            {
+                this.AddAnimation(animationName.ToString(), animation);
+            }
         }
 
         public void ChangeAnimation(string animationName, SpriteAnimation animation)

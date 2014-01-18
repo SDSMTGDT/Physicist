@@ -5,14 +5,17 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
+    using Physicist.Extensions;
 
     public abstract class Field : IField
     {
         private Vector2 vector;
+        private Rectangle size;
 
-        public Field(Vector2 fieldVector)
+        protected Field(Vector2 fieldVector)
         {
             this.Vector = fieldVector;
+            this.size = Rectangle.Empty;
         }
 
         public Vector2 Vector
@@ -32,17 +35,17 @@
         {
             get
             {
-                throw new NotImplementedException();
+                return this.size;
             }
 
             set
             {
-                throw new NotImplementedException();
+                this.size = value;
             }
         }
 
         public abstract void Draw();
 
-        public abstract void AffectPlayer(Player p);
+        public abstract void AffectPlayer(Player player);
     }
 }

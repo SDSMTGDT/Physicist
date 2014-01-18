@@ -38,14 +38,13 @@
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\Door.cs" />
-    <Compile Include="Actor\FieldContainer.cs" />
+    <Compile Include="Actor\Field\FieldContainer.cs" />
     <Compile Include="Actor\Field\AccelerationField.cs" />
     <Compile Include="Actor\Field\Field.cs" />
     <Compile Include="Actor\Field\HealthField.cs" />
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
-    <Compile Include="Actor\NPC.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
@@ -53,9 +52,12 @@
     <Compile Include="Actor\SpriteAnimation.cs" />
     <Compile Include="Control\CameraController.cs" />
     <Compile Include="Control\GameController.cs" />
+    <Compile Include="Control\KeyboardController.cs" />
     <Compile Include="Control\Map.cs" />
     <Compile Include="Control\ParticleEngine.cs" />
     <Compile Include="Control\Viewport.cs" />
+    <Compile Include="Enum\StandardAnimations.cs" />
+    <Compile Include="Enum\StandardKeyActions.cs" />
     <Compile Include="Enum\Visibility.cs" />
     <Compile Include="Extensions\Primatives\Size.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -87,10 +89,16 @@
       <!--<Link>SDL.dll</Link>-->
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </CodeAnalysisDictionary>
     <Content Include="Icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Content\" />
+    <None Include="Content\Textures\NOTSTOLEN.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProjectDir)Tools\StyleCop\v4.7\StyleCop.targets" />

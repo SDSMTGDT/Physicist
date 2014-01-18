@@ -17,7 +17,7 @@
             throw new NotImplementedException();
         }
 
-        public override void AffectPlayer(Player p)
+        public override void AffectPlayer(Player player)
         {
             throw new NotImplementedException();
         }
