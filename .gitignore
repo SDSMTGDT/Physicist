@@ -28,6 +28,12 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## StyleCop
+#################
+
+StyleCop.Cache
+*.Cache
 
 #################
 ## Visual Studio
