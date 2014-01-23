@@ -4,32 +4,70 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using FarseerPhysics.Dynamics;
+    using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     public class Actor
     {
-        public Actor()
-        {
-            this.Sprites = new Dictionary<string, GameSprite>();
+        private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
+        private Body body;
 
-            this.Position = Vector2.Zero;
-            this.Velocity = Vector2.Zero;
-            this.Acceleration = Vector2.Zero;
+        public Actor()
+        {            
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
-            this.Rotation = 0f;
             this.Health = 1;
         }
 
+        // Farseer Structures
+        public Body Body 
+        { 
+            get
+            {
+                return this.body;
+            }
+
+            set
+            {
+                this.body = value;
+            }
+        }
+
         // 2space variables
-        public Vector2 Position { get; set; }
+        public Vector2 Position 
+        {
+            get
+            {
+                return this.body.Position;
+            }
+
+            set
+            {
+                this.body.Position = value;
+            }
+        }
 
         public Vector2 Velocity { get; set; }
         
         public Vector2 Acceleration { get; set; }
         
-        public float Rotation { get; set; }
+        public float Rotation 
+        {
+            get
+            {
+                return this.body.Rotation;
+            }
+
+            set
+            {
+                this.body.Rotation = value;
+            }
+        }
+
+        public Vector2 MovementSpeed { get; set; }
 
         // gameplay state variables
         public int Health { get; set; }
@@ -45,26 +83,48 @@
         }
 
         // draw properties
-        public Dictionary<string, GameSprite> Sprites { get; set; }
+        public Dictionary<string, GameSprite> Sprites 
+        {
+            get
+            {
+                return this.sprites;
+            }
+        }
 
         public Visibility VisibleState { get; set; }
 
         public virtual void Draw(SpriteBatch sb)
         {
-            if (this.VisibleState == Visibility.Visible)
+            if (this.IsEnabled)
             {
-                foreach (var sprite in this.Sprites.Values)
+                if (sb != null && this.VisibleState == Visibility.Visible)
                 {
-                    sb.Draw(
-                        sprite.SpriteSheet,
-                        new Vector2(this.Position.X + sprite.Offset.X, this.Position.Y + sprite.Offset.Y),
-                        sprite.CurrentSprite,
-                        Color.White,
-                        this.Rotation,
-                        Vector2.Zero,
-                        1f,
-                        SpriteEffects.None,
-                        sprite.Depth);
+                    foreach (var sprite in this.Sprites.Values)
+                    {
+                        Vector2 shapeOffset = ((Vector2)sprite.FrameSize) / 2;
+
+                        var effect = SpriteEffects.None;
+                        if (sprite.CurrentAnimation.FlipHorizontal)
+                        {
+                            effect |= SpriteEffects.FlipHorizontally;
+                        }
+
+                        if (sprite.CurrentAnimation.FlipVertical)
+                        {
+                            effect |= SpriteEffects.FlipVertically;
+                        }
+
+                        sb.Draw(
+                            sprite.SpriteSheet,
+                            this.Position + sprite.Offset - shapeOffset,
+                            sprite.CurrentSprite,
+                            Color.White,
+                            this.Rotation,
+                            Vector2.Zero,
+                            1f,
+                            effect,
+                            sprite.Depth);
+                    }
                 }
             }
         }
@@ -73,14 +133,14 @@
         {
             if (sprite == null)
             {
-                throw new ArgumentNullException("Sprite cannot be null");
+                throw new ArgumentNullException("sprite");
             }
 
             this.Sprites.Add(name, sprite);
         }
 
         public virtual void Update(GameTime time)
-        {
+        {           
             // update every sprite in the sprite collection
             if (this.IsEnabled)
             {

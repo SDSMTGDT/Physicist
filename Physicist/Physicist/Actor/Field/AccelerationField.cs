@@ -8,10 +8,10 @@
 
     public class AccelerationField : Field
     {
-        public AccelerationField(Vector2 vector, float velocityDampenRate = 0)
+        public AccelerationField(Vector2 vector)
             : base(vector)
         {
-            this.VelocityDampenRate = velocityDampenRate;
+            this.VelocityDampenRate = 0;
         }
 
         public float VelocityDampenRate { get; set; } // the rate at which to dampen player velocity when they enter the field. Negative number instantly removes all velocity
@@ -21,7 +21,7 @@
             throw new NotImplementedException();
         }
 
-        public override void AffectPlayer(Player p)
+        public override void AffectPlayer(Player player)
         {
             throw new NotImplementedException();
         }

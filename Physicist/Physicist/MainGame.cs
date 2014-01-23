@@ -2,12 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using FarseerPhysics;
+    using FarseerPhysics.Collision.Shapes;
+    using FarseerPhysics.Common;
+    using FarseerPhysics.Dynamics;
+    using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.GamerServices;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Microsoft.Xna.Framework.Storage;
     using Physicist.Actors;
+    using Physicist.Enums;
     using Physicist.Extensions;
 
     /// <summary>
@@ -15,15 +21,29 @@
     /// </summary>
     public class MainGame : Game
     {
+        private static World world;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private Actor test;
+        private Texture2D testText;
+        
+        // TEST OBJECTS
+        private Player test;
+
+        private Texture2D texture;
 
         public MainGame()
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+        }
+
+        public static World World
+        {
+            get
+            {
+                return MainGame.world;
+            }
         }
 
         /// <summary>
@@ -47,15 +67,11 @@
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D texture = this.Content.Load<Texture2D>("Textures\\NOTSTOLEN");
+
+            this.SetupWorld();
+
+            this.CreateActors();
             
-            GameSprite testSprite = new GameSprite(texture, new Size(19, 35));
-            testSprite.AddAnimation("Down", new SpriteAnimation(0, 8, 1));
-            testSprite.CurrentAnimationString = "Down";
-
-            this.test = new Actor();
-            this.test.AddSprite("test", testSprite);
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -75,15 +91,20 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (gameTime != null)
             {
-                this.Exit();
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                {
+                    this.Exit();
+                }
+
+                MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+
+                this.test.Update(gameTime, Keyboard.GetState());
+
+                // TODO: Add your update logic here
             }
 
-            this.test.Position = new Vector2(this.test.Position.X, this.test.Position.Y + 1);
-            this.test.Update(gameTime);            
-
-            // TODO: Add your update logic here
             base.Update(gameTime);
         }
 
@@ -98,9 +119,60 @@
 
             this.test.Draw(this.spriteBatch);
 
+            // TEST WITH MADE TEXTURE
+            this.spriteBatch.Draw(this.testText, this.test.Body.Position, Color.White); 
+
             base.Draw(gameTime);
 
             this.spriteBatch.End();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
+        private void SetupWorld()
+        {
+            MainGame.world = new World(new Vector2(0f, 9.81f));
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(100f);
+
+            Vertices borderVerts = new Vertices();
+            borderVerts.Add(Vector2.Zero);
+            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, 0));
+
+            var border = BodyFactory.CreateLoopShape(MainGame.World, borderVerts);
+            border.Friction = 1f;
+        }
+
+        private void CreateActors()
+        {
+            this.texture = this.Content.Load<Texture2D>("Textures\\NOTSTOLEN");
+
+            // TEST TEXTURE AT CENTER POINT
+            this.testText = new Texture2D(this.GraphicsDevice, 2, 2);
+            Color[] colors = new Color[4];
+            for (int i = 0; i < 4; i++)
+            {
+                colors[i] = new Color(255, 255, 0);
+            }
+
+            this.testText.SetData(colors);
+
+            GameSprite testSprite = new GameSprite(this.texture, new Size(19, 40));
+            testSprite.AddAnimation(StandardAnimation.Idle, new SpriteAnimation(0, 1, 1));
+            testSprite.AddAnimation(StandardAnimation.Down, new SpriteAnimation(0, 8, 1));
+            testSprite.AddAnimation(StandardAnimation.Up, new SpriteAnimation(0, 8, 1) { FlipVertical = true });
+            testSprite.AddAnimation(StandardAnimation.Right, new SpriteAnimation(1, 8, 1));
+            testSprite.AddAnimation(StandardAnimation.Left, new SpriteAnimation(1, 8, 1) { FlipHorizontal = true });
+            testSprite.CurrentAnimationString = StandardAnimation.Idle.ToString();
+
+            this.test = new Player();
+            this.test.AddSprite("test", testSprite);
+
+            this.test.Body = BodyFactory.CreateRectangle(MainGame.world, 19f, 40f, 1f);
+            this.test.Body.BodyType = BodyType.Dynamic;
+            this.test.Body.CollidesWith = Category.All;
+            this.test.Body.FixedRotation = true;
+            this.test.Position = Vector2.Zero;
         }
     }
 }

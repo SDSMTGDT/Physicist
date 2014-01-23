@@ -16,6 +16,6 @@
         // overloading
         void Draw();
 
-        void AffectPlayer(Player p);
+        void AffectPlayer(Player player);
     }
 }
