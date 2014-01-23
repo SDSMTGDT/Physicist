@@ -9,13 +9,13 @@
 
     public static class KeyboardController
     {
-        private static Dictionary<string, Keys> mappedKeys = null;
+        private static Dictionary<StandardKeyAction, Keys> mappedKeys = null;
 
         public static Keys UpKey
         {
             get
             {
-                return KeyboardController.MappedKeys[StandardKeyAction.Up.ToString()];
+                return KeyboardController.MappedKeys[StandardKeyAction.Up];
             }
         }
 
@@ -23,7 +23,7 @@
         {
             get
             {
-                return KeyboardController.MappedKeys[StandardKeyAction.Down.ToString()];
+                return KeyboardController.MappedKeys[StandardKeyAction.Down];
             }
         }
 
@@ -31,7 +31,7 @@
         {
             get
             {
-                return KeyboardController.MappedKeys[StandardKeyAction.Right.ToString()];
+                return KeyboardController.MappedKeys[StandardKeyAction.Right];
             }
         }
 
@@ -39,7 +39,7 @@
         {
             get
             {
-                return KeyboardController.MappedKeys[StandardKeyAction.Left.ToString()];
+                return KeyboardController.MappedKeys[StandardKeyAction.Left];
             }
         }
 
@@ -47,29 +47,29 @@
         {
             get
             {
-                return KeyboardController.MappedKeys[StandardKeyAction.Jump.ToString()];
+                return KeyboardController.MappedKeys[StandardKeyAction.Jump];
             }
         }
 
-        private static Dictionary<string, Keys> MappedKeys
+        private static Dictionary<StandardKeyAction, Keys> MappedKeys
         {
             get
             {
                 if (KeyboardController.mappedKeys == null)
                 {
-                    KeyboardController.mappedKeys = new Dictionary<string, Keys>();
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Up.ToString(), Keys.Up);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Down.ToString(), Keys.Down);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Left.ToString(), Keys.Left);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Right.ToString(), Keys.Right);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Jump.ToString(), Keys.Space);
+                    KeyboardController.mappedKeys = new Dictionary<StandardKeyAction, Keys>();
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Up, Keys.Up);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Down, Keys.Down);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Left, Keys.Left);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Right, Keys.Right);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Jump, Keys.Space);
                 }
 
                 return KeyboardController.mappedKeys;
             }
         }
 
-        public static bool TrySetKey(string keyAction, Keys newKey)
+        public static bool TrySetKey(StandardKeyAction keyAction, Keys newKey)
         {
             bool canset = KeyboardController.mappedKeys.ContainsKey(keyAction) && !KeyboardController.mappedKeys.ContainsValue(newKey);
             if (canset)
