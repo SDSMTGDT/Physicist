@@ -50,10 +50,12 @@
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
+    <Compile Include="Control\Background.cs" />
     <Compile Include="Control\CameraController.cs" />
     <Compile Include="Control\GameController.cs" />
     <Compile Include="Control\KeyboardController.cs" />
     <Compile Include="Control\Map.cs" />
+    <Compile Include="Control\MapSaver.cs" />
     <Compile Include="Control\ParticleEngine.cs" />
     <Compile Include="Control\Viewport.cs" />
     <Compile Include="Enum\StandardAnimations.cs" />
@@ -78,6 +80,7 @@
     <Reference Include="Lidgren.Network">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
     </Reference>

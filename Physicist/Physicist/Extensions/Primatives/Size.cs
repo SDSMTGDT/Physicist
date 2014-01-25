@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
+    using System.Xml.Linq;
 
     public struct Size
     {
@@ -71,6 +72,15 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        private XElement Serialize(string name, Size size)
+        {
+            XElement element = new XElement(name,
+                new XAttribute("Width", size.Width),
+                new XAttribute("Height", size.Height));
+
+            return element;
         }
     }
 }
