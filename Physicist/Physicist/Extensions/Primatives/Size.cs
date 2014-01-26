@@ -6,8 +6,9 @@
     using System.Text;
     using Microsoft.Xna.Framework;
     using System.Xml.Linq;
+    using Physicist.Actors;
 
-    public struct Size
+    public struct Size : IXmlSerializable
     {
         private int width;
         private int height;
@@ -74,13 +75,19 @@
             return base.GetHashCode();
         }
 
-        private XElement Serialize(string name, Size size)
+        public XElement Serialize()
         {
-            XElement element = new XElement(name,
-                new XAttribute("Width", size.Width),
-                new XAttribute("Height", size.Height));
+            XElement element = new XElement("Size",
+                new XAttribute("Width", this.Width),
+                new XAttribute("Height", this.Height));
 
             return element;
+        }
+
+        public void Deserialize(XElement element)
+        {
+            this.Width = int.Parse(element.Attribute("Width").Value);
+            this.Height = int.Parse(element.Attribute("Height").Value);
         }
     }
 }

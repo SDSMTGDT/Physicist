@@ -11,9 +11,8 @@
 
     interface IXmlSerializable
     {
-        //overloading
-        void Serialize(Stream iostream);
+        XElement Serialize();
 
-        Object Deserialize(XElement element);
+        void Deserialize(XElement element);
     }
 }

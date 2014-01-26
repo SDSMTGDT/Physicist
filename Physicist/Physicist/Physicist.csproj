@@ -51,7 +51,9 @@
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
+    <Compile Include="Control\Backdrop.cs" />
     <Compile Include="Control\Background.cs" />
+    <Compile Include="Control\BackgroundMusic.cs" />
     <Compile Include="Control\CameraController.cs" />
     <Compile Include="Control\GameController.cs" />
     <Compile Include="Control\KeyboardController.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Enum\StandardAnimations.cs" />
     <Compile Include="Enum\StandardKeyActions.cs" />
     <Compile Include="Enum\Visibility.cs" />
+    <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
     <Compile Include="Extensions\Primatives\Size.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainGame.cs" />
