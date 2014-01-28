@@ -21,8 +21,10 @@
         private float markedTime = 0;
         private float depth = 0f;
 
-        //Note: Empty constructor for use in deserialization only!
-        public GameSprite() { }
+        // Note: Empty constructor for use in deserialization only!
+        public GameSprite()
+        {
+        }
 
         public GameSprite(Texture2D spriteSheet, Size frameSize)
         {
@@ -186,14 +188,14 @@
             this.animations[animationName] = animation;
         }
 
-        public void Serialize(System.IO.Stream iostream)
+        public XElement Serialize()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public Object Deserialize(XElement element)
+        public void Deserialize(XElement element)
         {
-            return new GameSprite();
+            return;
         }
     }
 }
