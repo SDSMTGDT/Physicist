@@ -4,12 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml;
+    using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Enums;
     using Physicist.Extensions;
 
-    public class GameSprite
+    public class GameSprite : IXmlSerializable
     {
         // animation fields
         private float frameLength = 0.1f;
@@ -18,6 +20,11 @@
         private Dictionary<string, SpriteAnimation> animations;
         private float markedTime = 0;
         private float depth = 0f;
+
+        // Note: Empty constructor for use in deserialization only!
+        public GameSprite()
+        {
+        }
 
         public GameSprite(Texture2D spriteSheet, Size frameSize)
         {
@@ -179,6 +186,16 @@
         public void ChangeAnimation(string animationName, SpriteAnimation animation)
         {
             this.animations[animationName] = animation;
+        }
+
+        public XElement Serialize()
+        {
+            return null;
+        }
+
+        public void Deserialize(XElement element)
+        {
+            return;
         }
     }
 }
