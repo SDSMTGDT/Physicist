@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Microsoft.Xna.Framework;
     using System.Xml.Linq;
+    using Microsoft.Xna.Framework;
     using Physicist.Actors;
 
     public struct Size : IXmlSerializable
@@ -77,7 +78,8 @@
 
         public XElement Serialize()
         {
-            XElement element = new XElement("Size",
+            XElement element = new XElement(
+                "Size",
                 new XAttribute("Width", this.Width),
                 new XAttribute("Height", this.Height));
 
@@ -86,8 +88,13 @@
 
         public void Deserialize(XElement element)
         {
-            this.Width = int.Parse(element.Attribute("Width").Value);
-            this.Height = int.Parse(element.Attribute("Height").Value);
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            this.Width = int.Parse(element.Attribute("Width").Value, CultureInfo.CurrentCulture);
+            this.Height = int.Parse(element.Attribute("Height").Value, CultureInfo.CurrentCulture);
         }
     }
 }

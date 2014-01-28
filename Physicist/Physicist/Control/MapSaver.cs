@@ -27,9 +27,9 @@
             document.Save(stream);
         }
 
-        public static void SaveMap(Map map, string filename)
+        public static void SaveMap(Map map, string fileName)
         {
-            using(Stream stream = File.Create(filename))
+            using (Stream stream = File.Create(fileName))
             {
                 SaveMap(map, stream);
             }

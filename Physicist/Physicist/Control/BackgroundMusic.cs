@@ -13,41 +13,46 @@
 
     public class BackgroundMusic : IXmlSerializable
     {
-        public Vector2 Location { get; set; }
-        private Size Dimensions { get; set; }
-        private SoundEffect soundEffect { get; set; }
+        public BackgroundMusic()
+        {
+        }
 
-        public BackgroundMusic() { }
         public BackgroundMusic(Vector2 location, Size dimensions, SoundEffect soundEffect)
         {
             this.Location = location;
             this.Dimensions = dimensions;
-            this.soundEffect = soundEffect;
+            this.SoundEffect = soundEffect;
         }
+
+        public Vector2 Location { get; set; }
+
+        public Size Dimensions { get; set; }
+
+        public SoundEffect SoundEffect { get; set; }
 
         public XElement Serialize()
         {
-            XElement element = new XElement("Backdrop",
+            XElement element = new XElement(
+                "Backdrop",
                 this.Location.Serialize("Location"),
                 this.Dimensions.Serialize(),
-                new XElement("SoundRef", this.soundEffect.Name));
+                new XElement("SoundRef", this.SoundEffect.Name));
 
             return element;
         }
 
         public void Deserialize(XElement element)
         {
-            Vector2 location;
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
 
-            // Location is a property, so it can't be passed by reference.
-            ExtensionMethods.Deserialize(element.Element("Location"), out location);
-            this.Location = location;
-
+            this.Location = ExtensionMethods.DeserializeVector2(element.Element("Location"));
             this.Dimensions = new Size();
             this.Dimensions.Deserialize(element.Element("Dimensions"));
 
-            //TODO: Pull sound effect from global content
-            //backgroundMusic.soundEffect.
+            // TODO: Pull sound effect from global content
         }
     }
 }

@@ -4,20 +4,19 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Actors;
     using Physicist.Extensions;
-    using System.Xml.Linq;
 
-    public struct Backdrop : IXmlSerializable
+    public class Backdrop : IXmlSerializable
     {
-        public Vector2 Location { get; set; }
-        public Size Dimensions { get; set; }
-        public float Depth { get; set; }
-        public Texture2D Texture { get; set; }
+        public Backdrop()
+        {
+        }
 
-        public Backdrop(Vector2 location, Size dimensions, float depth, string textureReference, Texture2D texture)
+        public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
         {
             this.Location = location;
             this.Dimensions = dimensions;
@@ -25,9 +24,18 @@
             this.Texture = texture;
         }
 
+        public Vector2 Location { get; set; }
+
+        public Size Dimensions { get; set; }
+
+        public float Depth { get; set; }
+
+        public Texture2D Texture { get; set; }
+
         public XElement Serialize()
         {
-            XElement element = new XElement("Backdrop",
+            XElement element = new XElement(
+                "Backdrop",
                 this.Location.Serialize("Location"),
                 this.Dimensions.Serialize(),
                 new XElement("Depth", this.Depth),
@@ -38,7 +46,7 @@
 
         public void Deserialize(XElement element)
         {
-
+            throw new NotImplementedException();
         }
     }
 }

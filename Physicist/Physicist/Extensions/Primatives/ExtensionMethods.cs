@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
@@ -11,19 +12,25 @@
     {
         public static XElement Serialize(this Vector2 vector, string name)
         {
-            XElement element = new XElement(name,
+            XElement element = new XElement(
+                name,
                 new XAttribute("X", vector.X),
                 new XAttribute("Y", vector.Y));
 
             return element;
         }
 
-        public static void Deserialize(XElement element, out Vector2 vector)
+        public static Vector2 DeserializeVector2(XElement element)
         {
-            float x = float.Parse(element.Attribute("X").Value);
-            float y = float.Parse(element.Attribute("Y").Value);
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
 
-            vector = new Vector2(x,y);
+            float x = float.Parse(element.Attribute("X").ToString(), CultureInfo.CurrentCulture);
+            float y = float.Parse(element.Attribute("Y").ToString(), CultureInfo.CurrentCulture);
+
+            return new Vector2(x, y);
         }
     }
 }

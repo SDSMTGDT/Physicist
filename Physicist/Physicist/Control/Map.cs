@@ -1,12 +1,11 @@
 ﻿namespace Physicist.Controls
 {
-
-using FarseerPhysics.Collision.Shapes;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using FarseerPhysics.Collision.Shapes;
+    using Microsoft.Xna.Framework.Graphics;
 
     public class Map
     {
@@ -15,7 +14,6 @@ using System.Text;
 
         public Map()
         {
-            
         }
     }
 }
