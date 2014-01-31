@@ -10,11 +10,11 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    public class Actor
+    public class Actor 
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
-
+        
         public Actor()
         {            
             this.VisibleState = Visibility.Visible;
@@ -148,7 +148,7 @@
                 {
                     sprite.Update(time);
                 }
-            }
+            }           
         }
     }
 }
