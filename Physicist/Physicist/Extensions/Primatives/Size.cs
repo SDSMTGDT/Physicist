@@ -76,7 +76,7 @@
             return base.GetHashCode();
         }
 
-        public XElement Serialize()
+        public XElement XmlSerialize()
         {
             XElement element = new XElement(
                 "Size",
@@ -86,7 +86,7 @@
             return element;
         }
 
-        public void Deserialize(XElement element)
+        public void XmlDeserialize(XElement element)
         {
             if (element == null)
             {

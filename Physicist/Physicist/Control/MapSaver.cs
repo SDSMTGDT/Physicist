@@ -16,12 +16,10 @@
         {
             XDocument document = new XDocument();
 
-            XElement mapRoot = new XElement("Map");
-            
-            // Media
+            XElement mapRoot = new XElement("map");
 
-            // Level Objects
-            XElement levelObjects = new XElement("LevelObects");
+            mapRoot.Add(SaveMedia());
+            mapRoot.Add(SaveLevelObjects());
 
             document.Add(mapRoot);
             document.Save(stream);
@@ -33,6 +31,23 @@
             {
                 SaveMap(map, stream);
             }
+        }
+
+        private static XElement SaveMedia()
+        {
+            XElement mediaElements = new XElement("media");
+
+            // TODO: Pull references from 
+            IEnumerable<Tuple<Type, string, string>> mediaReferences;
+            
+            return mediaElements;
+        }
+
+        private static XElement SaveLevelObjects()
+        {
+            XElement levelObjects = new XElement("levelobjects");
+
+            return levelObjects;
         }
     }
 }

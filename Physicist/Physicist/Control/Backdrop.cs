@@ -32,21 +32,32 @@
 
         public Texture2D Texture { get; set; }
 
-        public XElement Serialize()
+        public XElement XmlSerialize()
         {
             XElement element = new XElement(
-                "Backdrop",
-                this.Location.Serialize("Location"),
-                this.Dimensions.Serialize(),
-                new XElement("Depth", this.Depth),
-                new XElement("TextureRef", this.Texture.Name));
+                "backdrop",
+                this.Location.Serialize("location"),
+                this.Dimensions.XmlSerialize(),
+                new XElement("depth", this.Depth),
+                new XElement("textureref", this.Texture.Name),
+                new XAttribute("class", this.GetType().ToString()));
 
             return element;
         }
 
-        public void Deserialize(XElement element)
+        public void XmlDeserialize(XElement element)
         {
-            throw new NotImplementedException();
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            this.Location = ExtensionMethods.DeserializeVector2(element.Element("location"));
+            this.Dimensions = new Size();
+            this.Dimensions.XmlDeserialize(element.Element("dimensions"));
+            this.Depth = float.Parse(element.Element("depth").Value);
+
+            // TODO: Pull sound effect from global content
         }
     }
 }

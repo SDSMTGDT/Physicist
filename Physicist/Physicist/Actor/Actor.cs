@@ -154,12 +154,12 @@
         }
 
         // Implementing Interface   
-        public XElement Serialize()
+        public XElement XmlSerialize()
         {
             return null;
         }
 
-        public void Deserialize(XElement element)
+        public void XmlDeserialize(XElement element)
         {
             // Find all Vector elements
             XElement positionElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "Position") == 0 select e1).First();
@@ -205,7 +205,7 @@
             foreach (XElement gameSpriteElement in gameSpriteElements)
             {
                 GameSprite newSprite = new GameSprite();
-                newSprite.Deserialize(gameSpriteElement);
+                newSprite.XmlDeserialize(gameSpriteElement);
                 this.AddSprite(gameSpriteElement.Name.ToString(), newSprite);
             }
 

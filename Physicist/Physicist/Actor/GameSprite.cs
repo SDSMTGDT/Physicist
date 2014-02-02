@@ -188,12 +188,12 @@
             this.animations[animationName] = animation;
         }
 
-        public XElement Serialize()
+        public XElement XmlSerialize()
         {
             return null;
         }
 
-        public void Deserialize(XElement element)
+        public void XmlDeserialize(XElement element)
         {
             return;
         }
