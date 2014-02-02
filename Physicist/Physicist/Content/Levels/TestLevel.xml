@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<map>
+  <media>
+    <texture name="NOTSTOLEN" location="Textures/NOTSTOLEN">
+      <testtag/>
+    </texture>
+    <texture name="NOTSTOLEN2" location="NOTAPATH"/>
+    <texture name="MoreTesting" location="Textures/NOTSTOLEN"/>
+  	<sound name="test" location="blabblahbalh"/>    
+    <video name="SomethingNotPG" location="SomewhereHidden"/>
+  </media>
+  
+  <levelobjects>
+	  <backgrounds>
+		  <backdrop class="backdrop" textureref="" depth="">
+			  <location x="" y=""/>
+			  <dimensions width="" height=""/>
+		  </backdrop>
+		 
+		  <backgroundmusic class="backgroundmusic" soundref="">
+			  <location x="" y=""/>
+			  <dimension width="" height=""/>
+		  </backgroundmusic>
+		 
+		  <backgroudvideo class="backgroundvideo"/>		  
+	  </backgrounds>
+	
+	  <foregrounds>
+		  <mapObject class="mapObject">
+			  <body bodytype="" collideswith="" fixedrotation="">
+					<dimension width="" height=""/>
+			  </body>
+			  <textureref/>
+		  </mapObject>
+		</foregrounds>
+	
+	  <actors>
+		  <NPC class="" textureref="NOTSTOLEN">
+		  </NPC>
+		  
+		  <Player class="Physicist.Actors.Player" textureref="NOTSTOLEN">
+		  </Player>
+	  </actors>
+  </levelobjects>
+</map>

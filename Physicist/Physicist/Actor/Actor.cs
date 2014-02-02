@@ -251,6 +251,6 @@
             this.Velocity = newVelocity;
             this.Acceleration = newAcceleration;
             this.MovementSpeed = newMovementSpeed;
-        }       
+        }
     }
 }

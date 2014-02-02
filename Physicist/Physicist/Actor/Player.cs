@@ -4,12 +4,17 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml.Linq;
     using FarseerPhysics;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Physicist.Controls;
+    using Physicist.Enums;
+    using Physicist.Extensions;
 
-    public class Player : Actor
+    public class Player : Actor, IXmlSerializable
     {
         public Player() : 
             base()
@@ -76,9 +81,42 @@
             
             base.Update(time);
         }
+        
+        public XElement XmlSerialize()
+        {            
+            throw new NotImplementedException();
+        }
+
+        public void XmlDeserialize(XElement classData)
+        {
+            if (classData != null)
+            {
+                Texture2D texture = ContentController.Instance.GetContent<Texture2D>(classData.Attribute("textureref").Value);
+
+                GameSprite testSprite = new GameSprite(texture, new Size(19, 40));
+                testSprite.AddAnimation(StandardAnimation.Idle, new SpriteAnimation(0, 1, 1));
+                testSprite.AddAnimation(StandardAnimation.Down, new SpriteAnimation(0, 8, 1));
+                testSprite.AddAnimation(StandardAnimation.Up, new SpriteAnimation(0, 8, 1) { FlipVertical = true });
+                testSprite.AddAnimation(StandardAnimation.Right, new SpriteAnimation(1, 8, 1));
+                testSprite.AddAnimation(StandardAnimation.Left, new SpriteAnimation(1, 8, 1) { FlipHorizontal = true });
+                testSprite.CurrentAnimationString = StandardAnimation.Idle.ToString();
+
+                Player test = new Player();
+                test.AddSprite("test", testSprite);
+
+                test.Body = FarseerPhysics.Factories.BodyFactory.CreateRectangle(MainGame.World, 19f, 40f, 1f);
+                test.Body.BodyType = BodyType.Dynamic;
+                test.Body.CollidesWith = Category.All;
+                test.Body.FixedRotation = true;
+                test.Body.Friction = 2f;
+                test.Position = Vector2.Zero;
+
+                MainGame.RegisterActor(test);
+            }
+        }
 
         private bool Body_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
-        {            
+        {
             return true;
         }
     }

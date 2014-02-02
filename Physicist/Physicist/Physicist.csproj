@@ -65,6 +65,22 @@
     <Compile Include="Enum\StandardKeyActions.cs" />
     <Compile Include="Enum\Visibility.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
+    <Compile Include="Controls\CameraController.cs" />
+    <Compile Include="Controls\ContentController.cs" />
+    <Compile Include="Controls\GameController.cs" />
+    <Compile Include="Controls\IXmlSerializable.cs" />
+    <Compile Include="Controls\KeyboardController.cs" />
+    <Compile Include="Controls\Map.cs" />
+    <Compile Include="Controls\Maploader.cs" />
+    <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Controls\Viewport.cs" />
+    <Compile Include="Enums\MediaFormat.cs" />
+    <Compile Include="Enums\StandardAnimations.cs" />
+    <Compile Include="Enums\StandardKeyActions.cs" />
+    <Compile Include="Enums\Visibility.cs" />
+    <Compile Include="Extensions\MediaDictionary.cs" />
+    <Compile Include="Extensions\Primatives\IMediaInfo.cs" />
+    <Compile Include="Extensions\Primatives\MediaElement.cs" />
     <Compile Include="Extensions\Primatives\Size.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainGame.cs" />
@@ -72,6 +88,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tools\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Reference Include="FarseerPhysics MonoGame">
       <HintPath>$(ProjectDir)Tools\FarseerPhysics\FarseerPhysics MonoGame.dll</HintPath>
     </Reference>
@@ -84,6 +103,8 @@
     <Reference Include="Lidgren.Network">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
@@ -99,6 +120,10 @@
     <CodeAnalysisDictionary Include="CustomDictionary.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </CodeAnalysisDictionary>
+    <Content Include="Content\Levels\TestLevel.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup />
