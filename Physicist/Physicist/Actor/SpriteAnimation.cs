@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml;
+    using System.Xml.Linq;
     using Microsoft.Xna.Framework;
 
-    public struct SpriteAnimation
+    public struct SpriteAnimation : IXmlSerializable
     {
         private uint rowIndex;
         private uint frameCount;
@@ -121,6 +123,31 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public XElement Serialize()
+        {
+            XElement animationElement = new XElement(XName.Get("SpriteAnimation"));
+            animationElement.Add(new XAttribute(XName.Get("class"), typeof(SpriteAnimation).ToString()));
+
+            animationElement.Add(new XAttribute(XName.Get("rowIndex"), this.rowIndex));
+            animationElement.Add(new XAttribute(XName.Get("frameCount"), this.frameCount));
+            animationElement.Add(new XAttribute(XName.Get("defaultFrameRate"), this.defaultFrameRate));
+            animationElement.Add(new XAttribute(XName.Get("playInReverse"), this.playInReverse));
+            animationElement.Add(new XAttribute(XName.Get("flipVertical"), this.flipVertical));
+            animationElement.Add(new XAttribute(XName.Get("flipHorizontal"), this.flipHorizontal));
+
+            return animationElement;
+        }
+
+        public void Deserialize(XElement element)
+        {
+            this.rowIndex = uint.Parse(element.Attribute("frameLength").Value);
+            this.frameCount = uint.Parse(element.Attribute("currentFrame").Value);
+            this.defaultFrameRate = float.Parse(element.Attribute("currentAnimationString").Value);
+            this.playInReverse = bool.Parse(element.Attribute("markedTime").Value);
+            this.flipVertical = bool.Parse(element.Attribute("depth").Value);
+            this.flipHorizontal = bool.Parse(element.Attribute("frameLength").Value);
         }
     }
 }

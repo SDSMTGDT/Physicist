@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\BodyInfo.cs" />
     <Compile Include="Actor\Door.cs" />
     <Compile Include="Actor\Field\FieldContainer.cs" />
     <Compile Include="Actor\Field\AccelerationField.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
+    <Compile Include="Actor\IXmlSerializable.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
@@ -78,6 +80,7 @@
     <Reference Include="Lidgren.Network">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
     </Reference>
