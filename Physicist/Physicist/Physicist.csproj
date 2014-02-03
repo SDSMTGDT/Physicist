@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\BodyInfo.cs" />
     <Compile Include="Actor\Door.cs" />
     <Compile Include="Actor\Field\FieldContainer.cs" />
     <Compile Include="Actor\Field\AccelerationField.cs" />

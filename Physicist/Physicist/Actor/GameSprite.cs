@@ -190,11 +190,84 @@
 
         public XElement Serialize()
         {
-            return null;
+            XElement spriteElement = new XElement(XName.Get("GameSprite"));
+
+            XElement offsetElement = new XElement(XName.Get("Offset"));
+            XElement animationsElement = new XElement(XName.Get("Animations"));
+            XElement frameSizeElement = new XElement(XName.Get("FrameSize"));
+
+            // get the offset
+            offsetElement.Add(new XAttribute(XName.Get("X"), this.Offset.X));
+            offsetElement.Add(new XAttribute(XName.Get("Y"), this.Offset.Y));
+            spriteElement.Add(offsetElement);
+
+            // get the framesize
+            frameSizeElement.Add(new XAttribute(XName.Get("width"), this.FrameSize.Width));
+            frameSizeElement.Add(new XAttribute(XName.Get("height"), this.FrameSize.Height));
+            spriteElement.Add(offsetElement);
+
+            // add every animation to the animations element
+            foreach (SpriteAnimation animation in this.animations.Values)
+            {
+                XElement animationElement = animation.Serialize();
+                animationsElement.Add(animationElement);
+            }
+
+            spriteElement.Add(animationsElement);
+
+            // Create Texture2D information
+            // spriteElement.Add(new XAttribute(XName.Get("TextureReference"), TextureReference ?);
+            // TODO: TEXTURE REFERENCE
+
+            // Now create the five attributes
+            spriteElement.Add(new XAttribute(XName.Get("frameLength"), this.frameLength));
+            spriteElement.Add(new XAttribute(XName.Get("currentFrame"), this.currentFrame));
+            spriteElement.Add(new XAttribute(XName.Get("currentAnimationString"), this.currentAnimationString));
+            spriteElement.Add(new XAttribute(XName.Get("markedTime"), this.markedTime));
+            spriteElement.Add(new XAttribute(XName.Get("depth"), this.depth));
+
+            return spriteElement;
         }
 
         public void Deserialize(XElement element)
         {
+            // 4 elements and 5 attributes in the top level
+            //--------------------------------------------
+            // Find all child elements
+            XElement offsetElement = element.Element("Offset");
+            XElement animationsElement = element.Element("Animations");
+            XElement frameSizeElement = element.Element("FrameSize");
+
+            // Get the offset
+            this.Offset = new Vector2(
+                                    float.Parse(offsetElement.Attribute("X").Value),
+                                    float.Parse(offsetElement.Attribute("Y").Value));
+
+            // Find all elements in the Dictionary element
+            IEnumerable<XElement> animationElements = element.Descendants("SpriteAnimation");
+
+            // Create SpriteAnimations out of the Deserialze functions in SpriteAnimation
+            foreach (XElement animationElement in animationElements)
+            {
+                SpriteAnimation animation = new SpriteAnimation();
+                animation.Deserialize(animationElement);
+                this.AddAnimation(animationElement.Name.ToString(), animation);
+            }
+
+            // Pull Size information from the framsize element
+            this.FrameSize = new Size(int.Parse(frameSizeElement.Attribute("width").Value), int.Parse(frameSizeElement.Attribute("height").Value));
+
+            // Pull Texture2D information
+            string textureReference = element.Attribute("TextureReference").Value;
+            //// TODO: USE CONTENT MANAGER TO FIND THE TEXTURE2D AND ASSIGN THE SPRITE SHEET
+
+            // Now find the 5 attributes and assign them
+            this.frameLength = float.Parse(element.Attribute("frameLength").Value);
+            this.currentFrame = uint.Parse(element.Attribute("currentFrame").Value);
+            this.currentAnimationString = element.Attribute("currentAnimationString").Value;
+            this.markedTime = float.Parse(element.Attribute("markedTime").Value);
+            this.depth = float.Parse(element.Attribute("depth").Value);
+
             return;
         }
     }
