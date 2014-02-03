@@ -8,6 +8,7 @@
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Controls;
     using Physicist.Enums;
     using Physicist.Extensions;
 

@@ -7,7 +7,7 @@
     using System.Text;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
+    using Physicist.Controls;
 
     public struct Size : IXmlSerializable
     {

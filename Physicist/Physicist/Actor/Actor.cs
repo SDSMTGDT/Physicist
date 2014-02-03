@@ -11,6 +11,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Physicist.Controls;
 
     public class Actor : IXmlSerializable
     {
