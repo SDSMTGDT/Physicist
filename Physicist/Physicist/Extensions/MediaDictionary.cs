@@ -16,7 +16,7 @@
 
         protected MediaDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
-        {            
+        {
         }
 
         public string Location(string key)

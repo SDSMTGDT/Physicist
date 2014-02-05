@@ -14,7 +14,7 @@
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
-        
+
         public Actor()
         {            
             this.VisibleState = Visibility.Visible;
@@ -148,7 +148,7 @@
                 {
                     sprite.Update(time);
                 }
-            }           
+            }
         }
     }
 }
