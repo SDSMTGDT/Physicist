@@ -4,19 +4,14 @@
     using System.Collections.Generic;
     using System.Globalization;
     using FarseerPhysics;
-    using FarseerPhysics.Collision.Shapes;
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.GamerServices;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Microsoft.Xna.Framework.Storage;
     using Physicist.Actors;
     using Physicist.Controls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
 
     /// <summary>
     /// This is the main type for your game

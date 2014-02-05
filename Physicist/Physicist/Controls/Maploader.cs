@@ -8,10 +8,34 @@
     using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Media;
+    using Physicist.Extensions;
 
     public static class MapLoader
     {
         private static List<string> loadErrors = new List<string>();
+        private static Dictionary<string, Type> assemblyTypes = new Dictionary<string, Type>();
+        private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
+
+        static MapLoader()
+        {
+            Dictionary<Assembly, List<Tuple<Type, Type>>> collisions = new Dictionary<Assembly, List<Tuple<Type, Type>>>();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (!MapLoader.assemblyTypes.ContainsKey(type.Name))
+                    {
+                        MapLoader.assemblyTypes.Add(type.Name, type);
+                    }
+
+                    if (!MapLoader.quantifiedAssemblyTypes.ContainsKey(type.FullName))
+                    {
+                        MapLoader.quantifiedAssemblyTypes.Add(type.FullName, type);
+                    }
+                }
+            }
+        }
 
         public static bool HasFailed
         {
@@ -127,7 +151,15 @@
 
                 try
                 {
+                    // Try to create type from fully quantified name in current assembly
                     Type classType = Type.GetType(element.Attribute(classAttribute).Value);
+
+                    // If failure, try to find type in registered assemblies, first by short name, then by full name
+                    if (classType == null && !MapLoader.assemblyTypes.TryGetValue(element.Attribute(classAttribute).Value, out classType))
+                    {
+                        classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
+                    }
+
                     if (!classType.IsValueType && classType.GetConstructor(Type.EmptyTypes) != null)
                     {
                         IXmlSerializable instance = Activator.CreateInstance(classType) as IXmlSerializable;
@@ -138,18 +170,16 @@
                     }
                     else
                     {
-                        throw new TargetInvocationException("Class does not contain parameterless constructor or is a value type", null);
+                         MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain parameterless constructor or is a value type");
                     }
+                }
+                catch (KeyNotFoundException)
+                {
+                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
                 }
                 catch (NullReferenceException)
                 {
-                    string nullErrorStr = ", 'class' attribute not found!";
-                    if (element.Attribute(classAttribute) != null)
-                    {
-                        nullErrorStr = " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!";                       
-                    }
-
-                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + nullErrorStr);
+                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
                 }
                 catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
                 {
