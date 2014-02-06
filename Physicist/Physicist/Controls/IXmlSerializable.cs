@@ -6,6 +6,6 @@
     {
         XElement XmlSerialize();
 
-        void XmlDeserialize(XElement classData);
+        void XmlDeserialize(XElement element);
     }
 }

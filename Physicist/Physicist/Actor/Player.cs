@@ -87,11 +87,11 @@
             throw new NotImplementedException();
         }
 
-        public void XmlDeserialize(XElement classData)
+        public void XmlDeserialize(XElement element)
         {
-            if (classData != null)
+            if (element != null)
             {
-                Texture2D texture = ContentController.Instance.GetContent<Texture2D>(classData.Attribute("textureref").Value);
+                Texture2D texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
 
                 GameSprite testSprite = new GameSprite(texture, new Size(19, 40));
                 testSprite.AddAnimation(StandardAnimation.Idle, new SpriteAnimation(0, 1, 1));
