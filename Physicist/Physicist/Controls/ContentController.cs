@@ -19,7 +19,7 @@
         private static ContentController instance = null;
         private Dictionary<MediaFormat, MediaDictionary<MediaElement>> media = null;
 
-        private ContentController() 
+        private ContentController()
         {
             this.IsInitialized = false;
         }
@@ -76,19 +76,19 @@
             if (content != null)
             {
                 this.Content = content;
-                this.Content.RootDirectory = rootDirectory; 
-                
+                this.Content.RootDirectory = rootDirectory;
+
                 this.media = new Dictionary<MediaFormat, MediaDictionary<MediaElement>>();
 
                 foreach (MediaFormat typename in Enum.GetValues(typeof(MediaFormat)))
-                {                  
+                {
                     this.media.Add(typename, new MediaDictionary<MediaElement>());
                 }
 
                 this.IsInitialized = true;
             }
         }
-      
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Follows Monogame Content Pattern")]
         public void LoadContent<T>(string assetName, string assetPath) where T : class
         {

@@ -12,6 +12,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Physicist.Controls;
 
     public class Actor : IXmlSerializable
     {
@@ -20,7 +21,7 @@
         private BodyInfo bodyInfo;
 
         public Actor(XElement element)
-        {            
+        {
             this.XmlDeserialize(element);
         }
 
@@ -35,8 +36,8 @@
         }
 
         // Farseer Structures
-        public Body Body 
-        { 
+        public Body Body
+        {
             get
             {
                 return this.body;
@@ -49,7 +50,7 @@
         }
 
         // 2space variables
-        public Vector2 Position 
+        public Vector2 Position
         {
             get
             {
@@ -63,10 +64,10 @@
         }
 
         public Vector2 Velocity { get; set; }
-        
+
         public Vector2 Acceleration { get; set; }
-        
-        public float Rotation 
+
+        public float Rotation
         {
             get
             {
@@ -83,10 +84,10 @@
 
         // gameplay state variables
         public int Health { get; set; }
-        
+
         public bool IsEnabled { get; set; }
-        
-        public bool IsDead 
+
+        public bool IsDead
         {
             get
             {
@@ -95,7 +96,7 @@
         }
 
         // draw properties
-        public Dictionary<string, GameSprite> Sprites 
+        public Dictionary<string, GameSprite> Sprites
         {
             get
             {
@@ -152,7 +153,7 @@
         }
 
         public virtual void Update(GameTime time)
-        {           
+        {
             // update every sprite in the sprite collection
             if (this.IsEnabled)
             {
@@ -201,7 +202,7 @@
             bodyElement.Add(new XAttribute(XName.Get("Density"), this.Body.FixtureList[0].Shape.Density));
             bodyElement.Add(new XAttribute(XName.Get("Width"), this.bodyInfo.Width));
             bodyElement.Add(new XAttribute(XName.Get("Height"), this.bodyInfo.Height));
-            
+
             // Add several other attributes to the body
             bodyElement.Add(new XAttribute(XName.Get("BodyType"), Enum.GetName(typeof(BodyType), this.Body.BodyType)));
             bodyElement.Add(new XAttribute(XName.Get("FixedRotation"), this.Body.FixedRotation));
@@ -247,7 +248,7 @@
             // Find the Body element
             XElement bodyElement = element.Element("Body");
 
-            // Manually extract all relevant information from the Body element                      
+            // Manually extract all relevant information from the Body element
             // assign the body properties to a new body
             this.Body = BodyFactory.CreateRectangle(
                                     MainGame.World,

@@ -8,6 +8,7 @@
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
+    using Physicist.Controls;
 
     public struct SpriteAnimation : IXmlSerializable
     {
@@ -39,7 +40,7 @@
 
             this.XmlDeserialize(element);
         }
-        
+
         public uint RowIndex
         {
             get

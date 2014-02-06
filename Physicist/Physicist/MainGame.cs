@@ -152,7 +152,7 @@
                 System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
                 throw new AggregateException("Error: Map Load Failure!");
             }
-            
+
             Vertices borderVerts = new Vertices();
             borderVerts.Add(Vector2.Zero);
             borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));

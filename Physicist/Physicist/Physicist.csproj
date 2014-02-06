@@ -46,12 +46,16 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
-    <Compile Include="Actor\IXmlSerializable.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
+    <Compile Include="Controls\Backdrop.cs" />
+    <Compile Include="Controls\BackgroundMusic.cs" />
+    <Compile Include="Controls\IXmlSerializable.cs" />
+    <Compile Include="Controls\MapSaver.cs" />
+    <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
     <Compile Include="Controls\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
     <Compile Include="Controls\GameController.cs" />

@@ -64,7 +64,7 @@
             XDocument rootDocument = XDocument.Load(filePath);
 
             XElement rootElement = rootDocument.Root;
-            if (rootElement != null  && (rootElement.Name.ToString() == "map"))
+            if (rootElement != null && (rootElement.Name.ToString() == "map"))
             {
                 try
                 {
@@ -165,7 +165,7 @@
                     }
                     else
                     {
-                         MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain parameterless constructor or is a value type");
+                        MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain parameterless constructor or is a value type");
                     }
                 }
                 catch (KeyNotFoundException)
