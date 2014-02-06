@@ -18,6 +18,35 @@
     {
         private BodyInfo bodyInfo;
         private Body mapBody;
+        private BreakableBody breakableMapBody = null;
+        
+        public Body MapBody
+        {
+            get
+            {
+                Body body = null;
+                if (this.bodyInfo.Category != BodyCategory.BreakableBody)
+                {
+                    body = this.mapBody;
+                }
+
+                return body;
+            }
+        }
+
+        public BreakableBody BreakableMapBody
+        {
+            get
+            {
+                BreakableBody body = null;
+                if (this.bodyInfo.Category == BodyCategory.BreakableBody)
+                {
+                    body = this.breakableMapBody;
+                }
+
+                return body;
+            }
+        }
 
         public void Deserialize(XElement element)
         {
@@ -25,9 +54,9 @@
 
             switch (this.bodyInfo.Category)
             {
-                // case bodycategory.breakablebody:                   
-                //    this.mapbody = bodyfactory.createbreakablebody(maingame.world, this.bodyinfo.vertices.elementat(0), this.bodyinfo.density, this.bodyinfo.position);
-                //    break;
+                 case BodyCategory.BreakableBody:                   
+                    this.breakableMapBody = BodyFactory.CreateBreakableBody(MainGame.World, this.bodyInfo.Vertices.ElementAt(0), this.bodyInfo.Density, this.bodyInfo.Position);
+                    break;
                 case BodyCategory.Capsule:
                     this.mapBody = BodyFactory.CreateCapsule(MainGame.World, this.bodyInfo.Height, this.bodyInfo.TopRadius, this.bodyInfo.TopEdge, this.bodyInfo.BottomRadius, this.bodyInfo.BottomEdge, this.bodyInfo.Density, this.bodyInfo.Position);
                     break;
