@@ -16,6 +16,12 @@
 
     public class Player : Actor, IXmlSerializable
     {
+        public Player(XElement element)
+            : this()
+        {
+            this.XmlDeserialize(element);
+        }
+
         public Player() : 
             base()
         {

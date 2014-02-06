@@ -56,7 +56,7 @@
     <Compile Include="Controls\IXmlSerializable.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\Map.cs" />
-    <Compile Include="Controls\Maploader.cs" />
+    <Compile Include="Controls\MapLoader.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
     <Compile Include="Controls\Viewport.cs" />
     <Compile Include="Enums\MediaFormat.cs" />

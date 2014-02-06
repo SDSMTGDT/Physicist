@@ -18,7 +18,6 @@
 
         static MapLoader()
         {
-            Dictionary<Assembly, List<Tuple<Type, Type>>> collisions = new Dictionary<Assembly, List<Tuple<Type, Type>>>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
@@ -162,11 +161,7 @@
 
                     if (!classType.IsValueType && classType.GetConstructor(Type.EmptyTypes) != null)
                     {
-                        IXmlSerializable instance = Activator.CreateInstance(classType) as IXmlSerializable;
-                        if (instance != null)
-                        {
-                            instance.XmlDeserialize(element);
-                        }
+                        Activator.CreateInstance(classType, new object[] { element });
                     }
                     else
                     {
