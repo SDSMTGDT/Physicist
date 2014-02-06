@@ -240,7 +240,7 @@
             foreach (XElement gameSpriteElement in gameSpriteElements)
             {
                 GameSprite sprite = new GameSprite(gameSpriteElement);
-                this.AddSprite(gameSpriteElement.Name.LocalName, sprite);
+                this.Sprites.Add(gameSpriteElement.Name.LocalName, sprite);
             }
 
             // ----------------------
