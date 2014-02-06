@@ -54,7 +54,8 @@
             this.Dimensions = new Size();
             this.Dimensions.XmlDeserialize(element.Element("dimensions"));
 
-            // TODO: Pull sound effect from global content
+            this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
+                element.Element("soundref").Value);
         }
     }
 }

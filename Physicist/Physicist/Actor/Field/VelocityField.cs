@@ -6,9 +6,10 @@
     using System.Text;
     using Microsoft.Xna.Framework;
 
-    public class VelocityField : Field 
+    public class VelocityField : Field
     {
-        public VelocityField(Vector2 vector) : base(vector)
+        public VelocityField(Vector2 vector)
+            : base(vector)
         {
         }
 

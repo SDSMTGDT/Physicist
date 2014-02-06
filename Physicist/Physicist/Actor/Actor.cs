@@ -19,14 +19,14 @@
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
         private BodyInfo bodyInfo;
-        
+
         public Actor(XElement element)
-        {            
+        {
             this.XmlDeserialize(element);
         }
 
         public Actor()
-        {            
+        {
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
@@ -36,8 +36,8 @@
         }
 
         // Farseer Structures
-        public Body Body 
-        { 
+        public Body Body
+        {
             get
             {
                 return this.body;
@@ -50,7 +50,7 @@
         }
 
         // 2space variables
-        public Vector2 Position 
+        public Vector2 Position
         {
             get
             {
@@ -64,10 +64,10 @@
         }
 
         public Vector2 Velocity { get; set; }
-        
+
         public Vector2 Acceleration { get; set; }
-        
-        public float Rotation 
+
+        public float Rotation
         {
             get
             {
@@ -84,10 +84,10 @@
 
         // gameplay state variables
         public int Health { get; set; }
-        
+
         public bool IsEnabled { get; set; }
-        
-        public bool IsDead 
+
+        public bool IsDead
         {
             get
             {
@@ -96,7 +96,7 @@
         }
 
         // draw properties
-        public Dictionary<string, GameSprite> Sprites 
+        public Dictionary<string, GameSprite> Sprites
         {
             get
             {
@@ -153,7 +153,7 @@
         }
 
         public virtual void Update(GameTime time)
-        {           
+        {
             // update every sprite in the sprite collection
             if (this.IsEnabled)
             {
@@ -161,7 +161,7 @@
                 {
                     sprite.Update(time);
                 }
-            }           
+            }
         }
 
         // Implementing Interface   
@@ -187,7 +187,7 @@
 
             // Add GameSprites using the Serialize functions in GameSprite
             foreach (GameSprite sprite in this.sprites.Values)
-        {
+            {
                 XElement spriteElement = sprite.XmlSerialize();
                 spritesElement.Add(spriteElement);
             }
@@ -271,6 +271,6 @@
             this.IsEnabled = bool.Parse(element.Attribute("IsEnabled").Value);
 
             this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("VisibleState").Value);
-        }       
+        }
     }
 }

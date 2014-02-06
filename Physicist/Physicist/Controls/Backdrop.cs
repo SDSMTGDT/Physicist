@@ -58,8 +58,8 @@
             this.Dimensions = new Size();
             this.Dimensions.XmlDeserialize(element.Element("dimensions"));
             this.Depth = float.Parse(element.Element("depth").Value, CultureInfo.CurrentCulture);
-
-            // TODO: Pull sound effect from global content
+            this.Texture = ContentController.Instance.GetContent<Texture2D>(
+                element.Element("textureref").Value);
         }
     }
 }

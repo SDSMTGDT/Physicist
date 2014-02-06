@@ -20,7 +20,7 @@
             this.height = height;
         }
 
-        public int Width 
+        public int Width
         {
             get
             {
@@ -33,7 +33,7 @@
             }
         }
 
-        public int Height 
+        public int Height
         {
             get
             {

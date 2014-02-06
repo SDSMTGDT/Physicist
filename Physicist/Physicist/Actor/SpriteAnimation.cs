@@ -40,7 +40,7 @@
 
             this.XmlDeserialize(element);
         }
-        
+
         public uint RowIndex
         {
             get

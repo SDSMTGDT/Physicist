@@ -53,7 +53,7 @@
         }
 
         public float Depth
-        {       
+        {
             get
             {
                 return this.depth;
@@ -68,11 +68,11 @@
         public Rectangle CurrentSprite
         {
             get
-            {              
+            {
                 return new Rectangle(
-                    (int)(this.CurrentFrame * this.FrameSize.Width), 
-                    (int)(this.CurrentAnimationIndex * this.FrameSize.Height), 
-                    (int)this.FrameSize.Width, 
+                    (int)(this.CurrentFrame * this.FrameSize.Width),
+                    (int)(this.CurrentAnimationIndex * this.FrameSize.Height),
+                    (int)this.FrameSize.Width,
                     (int)this.FrameSize.Height);
             }
         }
@@ -92,9 +92,9 @@
                 }
             }
         }
-        
+
         // animation state variables
-        public SpriteAnimation CurrentAnimation 
+        public SpriteAnimation CurrentAnimation
         {
             get
             {
@@ -117,7 +117,7 @@
                 return (uint)this.animations.Values.Count;
             }
         }
-        
+
         public uint MaxFrames
         {
             get
@@ -265,7 +265,7 @@
 
             // Pull Texture2D information
             this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
-            
+
             // Now find the 5 attributes and assign them
             this.frameLength = float.Parse(element.Attribute("frameLength").Value, CultureInfo.CurrentCulture);
             this.currentFrame = uint.Parse(element.Attribute("currentFrame").Value, CultureInfo.CurrentCulture);

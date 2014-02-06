@@ -56,6 +56,7 @@
         {
             XElement levelObjects = new XElement("levelobjects");
 
+            // Save background objects
             XElement backgrounds = new XElement("backgrounds");
 
             foreach (IXmlSerializable backdrop in map.Backdrops)
@@ -70,6 +71,7 @@
 
             levelObjects.Add(backgrounds);
 
+            // Save foreground objects
             XElement foregrounds = new XElement("foregrounds");
 
             foreach (IXmlSerializable mapObject in map.MapObjects)
@@ -79,6 +81,7 @@
 
             levelObjects.Add(foregrounds);
 
+            // Save actors
             XElement actorElements = new XElement("actors");
 
             foreach (IXmlSerializable actor in actors)
