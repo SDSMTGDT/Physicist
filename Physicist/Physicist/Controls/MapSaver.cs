@@ -8,28 +8,30 @@
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
+    using Physicist.Actors;
     using Physicist.Extensions;
+    using Physicist.Extensions.Primitives;
 
     public static class MapSaver
     {
-        public static void SaveMap(Map map, Stream stream)
+        public static void SaveMap(Map map, IEnumerable<Actor> actors, Stream stream)
         {
             XDocument document = new XDocument();
 
             XElement mapRoot = new XElement("map");
 
             mapRoot.Add(SaveMedia());
-            mapRoot.Add(SaveLevelObjects());
+            mapRoot.Add(SaveLevelObjects(map, actors));
 
             document.Add(mapRoot);
             document.Save(stream);
         }
 
-        public static void SaveMap(Map map, string fileName)
+        public static void SaveMap(Map map, IEnumerable<Actor> actors, string fileName)
         {
             using (Stream stream = File.Create(fileName))
             {
-                SaveMap(map, stream);
+                SaveMap(map, actors, stream);
             }
         }
 
@@ -37,15 +39,54 @@
         {
             XElement mediaElements = new XElement("media");
 
-            // TODO: Pull references from 
-            IEnumerable<Tuple<Type, string, string>> mediaReferences;
-            
+            foreach (IMediaInfo info in ContentController.Instance.MediaReferences)
+            {
+                XElement mediaElement = new XElement(
+                    info.Format.ToString(),
+                    new XAttribute("name", info.Name),
+                    new XAttribute("location", info.Location));
+
+                mediaElements.Add(mediaElement);
+            }
+
             return mediaElements;
         }
 
-        private static XElement SaveLevelObjects()
+        private static XElement SaveLevelObjects(Map map, IEnumerable<Actor> actors)
         {
             XElement levelObjects = new XElement("levelobjects");
+
+            XElement backgrounds = new XElement("backgrounds");
+
+            foreach (IXmlSerializable backdrop in map.Backdrops)
+            {
+                backgrounds.Add(backdrop.XmlSerialize());
+            }
+
+            foreach (IXmlSerializable music in map.BackgroundMusic)
+            {
+                backgrounds.Add(music.XmlSerialize());
+            }
+
+            levelObjects.Add(backgrounds);
+
+            XElement foregrounds = new XElement("foregrounds");
+
+            foreach (IXmlSerializable mapObject in map.MapObjects)
+            {
+                foregrounds.Add(mapObject.XmlSerialize());
+            }
+
+            levelObjects.Add(foregrounds);
+
+            XElement actorElements = new XElement("actors");
+
+            foreach (IXmlSerializable actor in actors)
+            {
+                actorElements.Add(actor.XmlSerialize());
+            }
+
+            levelObjects.Add(actorElements);
 
             return levelObjects;
         }

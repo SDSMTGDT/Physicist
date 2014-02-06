@@ -51,7 +51,6 @@
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
     <Compile Include="Controls\Backdrop.cs" />
-    <Compile Include="Controls\Background.cs" />
     <Compile Include="Controls\BackgroundMusic.cs" />
     <Compile Include="Controls\MapSaver.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />

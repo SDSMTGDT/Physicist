@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
@@ -12,8 +13,9 @@
 
     public class Backdrop : IXmlSerializable
     {
-        public Backdrop()
+        public Backdrop(XElement classData)
         {
+            this.XmlDeserialize(classData);
         }
 
         public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
@@ -34,7 +36,7 @@
 
         public XElement XmlSerialize()
         {
-            XElement element = new XElement(
+            XElement classData = new XElement(
                 "backdrop",
                 this.Location.Serialize("location"),
                 this.Dimensions.XmlSerialize(),
@@ -42,20 +44,20 @@
                 new XElement("textureref", this.Texture.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
-            return element;
+            return classData;
         }
 
-        public void XmlDeserialize(XElement element)
+        public void XmlDeserialize(XElement classData)
         {
-            if (element == null)
+            if (classData == null)
             {
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException("classData");
             }
 
-            this.Location = ExtensionMethods.DeserializeVector2(element.Element("location"));
+            this.Location = ExtensionMethods.DeserializeVector2(classData.Element("location"));
             this.Dimensions = new Size();
-            this.Dimensions.XmlDeserialize(element.Element("dimensions"));
-            this.Depth = float.Parse(element.Element("depth").Value);
+            this.Dimensions.XmlDeserialize(classData.Element("dimensions"));
+            this.Depth = float.Parse(classData.Element("depth").Value, CultureInfo.CurrentCulture);
 
             // TODO: Pull sound effect from global content
         }

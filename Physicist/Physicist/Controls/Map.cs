@@ -9,11 +9,36 @@
 
     public class Map
     {
-        private Dictionary<string, Texture2D> textures;
-        private List<Background> backgrounds;
+        private List<Backdrop> backdrops = new List<Backdrop>();
+        private List<BackgroundMusic> backgroundMusic = new List<BackgroundMusic>();
+        private List<IXmlSerializable> mapObjects = new List<IXmlSerializable>();
 
         public Map()
         {
+        }
+
+        public IEnumerable<Backdrop> Backdrops
+        {
+            get
+            {
+                return this.backdrops;
+            }
+        }
+
+        public IEnumerable<BackgroundMusic> BackgroundMusic
+        {
+            get
+            {
+                return this.backgroundMusic;
+            }
+        }
+
+        public IEnumerable<IXmlSerializable> MapObjects
+        {
+            get
+            {
+                return this.mapObjects;
+            }
         }
     }
 }

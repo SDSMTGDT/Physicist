@@ -13,8 +13,9 @@
 
     public class BackgroundMusic : IXmlSerializable
     {
-        public BackgroundMusic()
+        public BackgroundMusic(XElement classData)
         {
+            this.XmlDeserialize(classData);
         }
 
         public BackgroundMusic(Vector2 location, Size dimensions, SoundEffect soundEffect)
@@ -32,26 +33,26 @@
 
         public XElement XmlSerialize()
         {
-            XElement element = new XElement(
+            XElement classData = new XElement(
                 "backdrop",
                 this.Location.Serialize("location"),
                 this.Dimensions.XmlSerialize(),
                 new XElement("soundref", this.SoundEffect.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
-            return element;
+            return classData;
         }
 
-        public void XmlDeserialize(XElement element)
+        public void XmlDeserialize(XElement classData)
         {
-            if (element == null)
+            if (classData == null)
             {
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException("classData");
             }
 
-            this.Location = ExtensionMethods.DeserializeVector2(element.Element("location"));
+            this.Location = ExtensionMethods.DeserializeVector2(classData.Element("location"));
             this.Dimensions = new Size();
-            this.Dimensions.XmlDeserialize(element.Element("dimensions"));
+            this.Dimensions.XmlDeserialize(classData.Element("dimensions"));
 
             // TODO: Pull sound effect from global content
         }

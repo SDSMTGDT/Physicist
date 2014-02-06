@@ -86,15 +86,15 @@
             return element;
         }
 
-        public void XmlDeserialize(XElement element)
+        public void XmlDeserialize(XElement classData)
         {
-            if (element == null)
+            if (classData == null)
             {
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException("classData");
             }
 
-            this.Width = int.Parse(element.Attribute("Width").Value, CultureInfo.CurrentCulture);
-            this.Height = int.Parse(element.Attribute("Height").Value, CultureInfo.CurrentCulture);
+            this.Width = int.Parse(classData.Attribute("Width").Value, CultureInfo.CurrentCulture);
+            this.Height = int.Parse(classData.Attribute("Height").Value, CultureInfo.CurrentCulture);
         }
     }
 }

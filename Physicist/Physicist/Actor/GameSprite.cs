@@ -194,7 +194,7 @@
             return null;
         }
 
-        public void XmlDeserialize(XElement element)
+        public void XmlDeserialize(XElement classData)
         {
             return;
         }
