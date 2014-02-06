@@ -84,7 +84,7 @@
                 {                  
                     this.media.Add(typename, new MediaDictionary<MediaElement>());
                 }
-               
+
                 this.IsInitialized = true;
             }
         }
@@ -124,11 +124,11 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Follows Monogame Content Pattern")]
         public IMediaInfo GetMediaReference<T>(string key) where T : class
         {
-            IMediaInfo reference = null;            
+            IMediaInfo reference = null;
             MediaFormat assetFormat;
             if (this.IsInitialized && Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat))
             {
-                reference = this.media[assetFormat][key];   
+                reference = this.media[assetFormat][key];
             }
 
             return reference;

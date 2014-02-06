@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\BodyInfo.cs" />
     <Compile Include="Actor\Door.cs" />
     <Compile Include="Actor\Field\FieldContainer.cs" />
     <Compile Include="Actor\Field\AccelerationField.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="Controls\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
     <Compile Include="Controls\GameController.cs" />
-    <Compile Include="Controls\IXmlSerializable.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\Map.cs" />
     <Compile Include="Controls\MapLoader.cs" />

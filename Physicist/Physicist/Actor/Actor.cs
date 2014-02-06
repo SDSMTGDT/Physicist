@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -17,12 +18,21 @@
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
+        private BodyInfo bodyInfo;
+        
+        public Actor(XElement element)
+        {            
+            this.XmlDeserialize(element);
+        }
 
         public Actor()
         {            
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
+            this.bodyInfo.Width = 0;
+            this.bodyInfo.Height = 0;
+            this.bodyInfo.CollidesWith = Category.None;
         }
 
         // Farseer Structures
@@ -151,107 +161,116 @@
                 {
                     sprite.Update(time);
                 }
-            }
+            }           
         }
 
         // Implementing Interface   
         public XElement XmlSerialize()
         {
-            return null;
+            // define the Actor element
+            XElement actorElement = new XElement(XName.Get("Actor"));
+            actorElement.Add(new XAttribute(XName.Get("class"), typeof(Actor).ToString()));
+            actorElement.Add(new XAttribute(XName.Get("Health"), this.Health));
+            actorElement.Add(new XAttribute(XName.Get("Rotation"), this.Rotation));
+            actorElement.Add(new XAttribute(XName.Get("IsEnabled"), this.IsEnabled));
+            actorElement.Add(new XAttribute(XName.Get("VisibleState"), Enum.GetName(typeof(Visibility), this.VisibleState)));
+
+            // Add all Vector elements
+            XElement movementSpeedElement = new XElement(XName.Get("MovementSpeed"));
+            movementSpeedElement.Add(new XAttribute(XName.Get("X"), this.MovementSpeed.X));
+            movementSpeedElement.Add(new XAttribute(XName.Get("Y"), this.MovementSpeed.Y));
+            actorElement.Add(movementSpeedElement);
+
+            // ----------------------------
+            // Define the Dictionary element
+            XElement spritesElement = new XElement(XName.Get("Sprites"));
+
+            // Add GameSprites using the Serialize functions in GameSprite
+            foreach (GameSprite sprite in this.sprites.Values)
+        {
+                XElement spriteElement = sprite.XmlSerialize();
+                spritesElement.Add(spriteElement);
+            }
+
+            actorElement.Add(spritesElement);
+
+            // ----------------------
+            // Create and add the Body element
+            XElement bodyElement = new XElement(XName.Get("Body"));
+
+            // Manually extract all relevant information from the Body and put it into an element                    
+            bodyElement.Add(new XAttribute(XName.Get("Density"), this.Body.FixtureList[0].Shape.Density));
+            bodyElement.Add(new XAttribute(XName.Get("Width"), this.bodyInfo.Width));
+            bodyElement.Add(new XAttribute(XName.Get("Height"), this.bodyInfo.Height));
+
+            // Add several other attributes to the body
+            bodyElement.Add(new XAttribute(XName.Get("BodyType"), Enum.GetName(typeof(BodyType), this.Body.BodyType)));
+            bodyElement.Add(new XAttribute(XName.Get("FixedRotation"), this.Body.FixedRotation));
+            bodyElement.Add(new XAttribute(XName.Get("CollidesWith"), Enum.GetName(typeof(Category), this.bodyInfo.CollidesWith)));
+
+            // add the body's position
+            XElement bodyPositionElement = new XElement(XName.Get("Position"));
+            bodyPositionElement.Add(new XAttribute(XName.Get("X"), this.Body.Position.X));
+            bodyPositionElement.Add(new XAttribute(XName.Get("Y"), this.Body.Position.Y));
+            bodyElement.Add(bodyPositionElement);
+
+            actorElement.Add(bodyElement);
+
+            return actorElement;
         }
 
         public void XmlDeserialize(XElement element)
         {
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
             // Find all Vector elements
-            XElement positionElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "Position") == 0 select e1).First();
-            XElement velocityElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "Velocity") == 0 select e1).First();
-            XElement accelerationElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "AccelerationElement") == 0 select e1).First();
-            XElement movementSpeedElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "MovementSpeed") == 0 select e1).First();
+            XElement movementSpeedElement = element.Element("MovementSpeed");
 
-            Vector2 newPosition = new Vector2(0, 0);
-            float.TryParse(((XAttribute)positionElement.Attribute("X")).Value, out newPosition.X);
-            float.TryParse(((XAttribute)positionElement.Attribute("Y")).Value, out newPosition.Y);
-
-            Vector2 newVelocity = new Vector2(0, 0);
-            float.TryParse(((XAttribute)velocityElement.Attribute("X")).Value, out newVelocity.X);
-            float.TryParse(((XAttribute)velocityElement.Attribute("Y")).Value, out newVelocity.Y);
-
-            Vector2 newAcceleration = new Vector2(0, 0);
-            float.TryParse(((XAttribute)accelerationElement.Attribute("X")).Value, out newAcceleration.X);
-            float.TryParse(((XAttribute)accelerationElement.Attribute("Y")).Value, out newAcceleration.Y);
-
-            Vector2 newMovementSpeed = new Vector2(0, 0);
-            float.TryParse(((XAttribute)movementSpeedElement.Attribute("X")).Value, out newMovementSpeed.X);
-            float.TryParse(((XAttribute)movementSpeedElement.Attribute("Y")).Value, out newMovementSpeed.Y);
+            this.MovementSpeed = new Vector2(
+                                    float.Parse(movementSpeedElement.Attribute("X").Value, CultureInfo.CurrentCulture),
+                                    float.Parse(movementSpeedElement.Attribute("Y").Value, CultureInfo.CurrentCulture));
 
             // ----------------------------
             // Find the Dictionary element
-            XElement spritesElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "Sprites") == 0 select e1).First();
-
-            // Find all elements in the Dictionary element
-            IEnumerable<XElement> gameSpriteElements = from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "GameSprite") == 0 select e1;
-
-            // Extract all attributes and assign them as the primitive properties of the actor
-            int newHealth = 1;
-            float newRotation = 0;
-            bool newIsEnabled = true;
-            Visibility newVisibleState = Visibility.Visible;
-
-            float.TryParse(((XAttribute)element.Attribute("Rotation")).Value, out newRotation);
-            int.TryParse(((XAttribute)element.Attribute("Health")).Value, out newHealth);
-            bool.TryParse(((XAttribute)element.Attribute("IsEnabled")).Value, out newIsEnabled);
-            Enum.TryParse<Visibility>(((XAttribute)element.Attribute("VisibleState")).Value, out newVisibleState);
+            IEnumerable<XElement> gameSpriteElements = element.Descendants("GameSprite");
 
             // Create GameSprites out of the Deserialze functions in GameSprite
             foreach (XElement gameSpriteElement in gameSpriteElements)
             {
-                GameSprite newSprite = new GameSprite();
-                newSprite.XmlDeserialize(gameSpriteElement);
-                this.AddSprite(gameSpriteElement.Name.ToString(), newSprite);
+                GameSprite sprite = new GameSprite(gameSpriteElement);
+                this.Sprites.Add(gameSpriteElement.Name.LocalName, sprite);
             }
 
             // ----------------------
             // Find the Body element
-            XElement bodyElement = (XElement)(from e1 in element.Descendants() where string.Compare(e1.Name.ToString(), "Body") == 0 select e1).First();
+            XElement bodyElement = element.Element("Body");
 
             // Manually extract all relevant information from the Body element
-            // This includes the Vector 2 Element, several properties and a few construction parameters - Width, Height, and Density
-            XElement bodyPositionElement = (XElement)(from e1 in bodyElement.Descendants() where string.Compare(e1.Name.ToString(), "Position") == 0 select e1).First();
-            BodyType newBodyType = BodyType.Dynamic;
-            Category newCollidesWith = Category.All;
-            bool newFixedRotation = true;
-            Vector2 newBodyPosition = new Vector2(0, 0);
-            float newWidth, newHeight, newDensity = 1f;
-
-            float.TryParse(((XAttribute)bodyPositionElement.Attribute("X")).Value, out newBodyPosition.X);
-            float.TryParse(((XAttribute)bodyPositionElement.Attribute("Y")).Value, out newBodyPosition.Y);
-            Enum.TryParse<BodyType>(((XAttribute)bodyElement.Attribute("BodyType")).Value, out newBodyType);
-            Enum.TryParse<Category>(((XAttribute)bodyElement.Attribute("BodyType")).Value, out newCollidesWith);
-            bool.TryParse(((XAttribute)bodyElement.Attribute("FixedRotation")).Value, out newFixedRotation);
-            float.TryParse(((XAttribute)bodyElement.Attribute("Width")).Value, out newWidth);
-            float.TryParse(((XAttribute)bodyElement.Attribute("Height")).Value, out newHeight);
-            float.TryParse(((XAttribute)bodyElement.Attribute("Density")).Value, out newDensity);
-
             // assign the body properties to a new body
-            Body newBody = BodyFactory.CreateRectangle(MainGame.World, newWidth, newHeight, newDensity); // width, height, density
+            this.Body = BodyFactory.CreateRectangle(
+                                    MainGame.World,
+                                    float.Parse(bodyElement.Attribute("Width").Value, CultureInfo.CurrentCulture),
+                                    float.Parse(bodyElement.Attribute("Height").Value, CultureInfo.CurrentCulture),
+                                    float.Parse(bodyElement.Attribute("Density").Value, CultureInfo.CurrentCulture)); // width, height, density
 
-            newBody.BodyType = newBodyType;
-            newBody.Position = newBodyPosition;
-            newBody.CollidesWith = newCollidesWith;
-            newBody.FixedRotation = newFixedRotation;
+            this.Body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), bodyElement.Attribute("BodyType").Value);
+            this.Body.Position = new Vector2(
+                                    float.Parse(bodyElement.Element("Position").Attribute("X").Value, CultureInfo.CurrentCulture),
+                                    float.Parse(bodyElement.Element("Position").Attribute("Y").Value, CultureInfo.CurrentCulture));
 
-            // -----------------------------------------
-            // Assign the new values to the Actor, starting with the body so the velocity, position etc. properties can override the default body values
-            this.Body = newBody;
+            this.Body.CollidesWith = (Category)Enum.Parse(typeof(Category), bodyElement.Attribute("CollidesWith").Value);
+            this.Body.FixedRotation = bool.Parse(bodyElement.Attribute("FixedRotation").Value);
 
-            this.Health = newHealth;
-            this.Rotation = newHealth;
-            this.IsEnabled = newIsEnabled;
-            this.VisibleState = newVisibleState;
-            this.Position = newPosition;
-            this.Velocity = newVelocity;
-            this.Acceleration = newAcceleration;
-            this.MovementSpeed = newMovementSpeed;
-        }
+            // ----------------------------------
+            // Assign the new values to the Actor
+            this.Health = int.Parse(element.Attribute("Health").Value, CultureInfo.CurrentCulture);
+            this.Rotation = float.Parse(element.Attribute("Rotation").Value, CultureInfo.CurrentCulture);
+            this.IsEnabled = bool.Parse(element.Attribute("IsEnabled").Value);
+
+            this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("VisibleState").Value);
+        }       
     }
 }

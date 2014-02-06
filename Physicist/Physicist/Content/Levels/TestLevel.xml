@@ -38,7 +38,7 @@
 		  <NPC class="" textureref="NOTSTOLEN">
 		  </NPC>
 		  
-		  <Player class="Physicist.Actors.Player" textureref="NOTSTOLEN">
+		  <Player class="Player" textureref="NOTSTOLEN">
 		  </Player>
 	  </actors>
   </levelobjects>

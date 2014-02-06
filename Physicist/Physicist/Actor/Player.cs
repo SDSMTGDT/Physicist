@@ -16,6 +16,12 @@
 
     public class Player : Actor, IXmlSerializable
     {
+        public Player(XElement element)
+            : this()
+        {
+            this.XmlDeserialize(element);
+        }
+
         public Player() : 
             base()
         {
@@ -82,12 +88,12 @@
             base.Update(time);
         }
         
-        public XElement XmlSerialize()
+        public new XElement XmlSerialize()
         {            
             throw new NotImplementedException();
         }
 
-        public void XmlDeserialize(XElement element)
+        public new void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
