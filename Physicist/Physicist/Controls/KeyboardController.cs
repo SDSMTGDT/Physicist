@@ -1,4 +1,4 @@
-﻿namespace Physicist.Control
+﻿namespace Physicist.Controls
 {
     using System;
     using System.Collections.Generic;

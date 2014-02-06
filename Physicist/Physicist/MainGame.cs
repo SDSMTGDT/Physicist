@@ -2,19 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using FarseerPhysics;
-    using FarseerPhysics.Collision.Shapes;
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.GamerServices;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Microsoft.Xna.Framework.Storage;
     using Physicist.Actors;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Controls;
 
     /// <summary>
     /// This is the main type for your game
@@ -22,20 +19,16 @@
     public class MainGame : Game
     {
         private static World world;
+        private static List<Actor> actors;
+        private static List<string> maps;
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private Texture2D testText;
-        
-        // TEST OBJECTS
-        private Player test;
-
-        private Texture2D texture;
 
         public MainGame()
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
         }
 
         public static World World
@@ -46,6 +39,11 @@
             }
         }
 
+        public static void RegisterActor(Actor actor)
+        {
+            MainGame.actors.Add(actor);
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -54,8 +52,10 @@
         /// </summary>
         protected override void Initialize()
         {
+            ContentController.Instance.Initialize(this.Content, "Content");
+            MainGame.actors = new List<Actor>();
+            MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
             //// TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -68,10 +68,8 @@
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.SetupWorld();
+            this.SetupWorld(MainGame.maps[0]);
 
-            this.CreateActors();
-            
             // TODO: use this.Content to load your game content here
         }
 
@@ -100,7 +98,18 @@
 
                 MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
-                this.test.Update(gameTime, Keyboard.GetState());
+                foreach (var actor in MainGame.actors)
+                {
+                    Player player = actor as Player;
+                    if (player != null)
+                    {
+                        player.Update(gameTime, Keyboard.GetState());
+                    }
+                    else
+                    {
+                        actor.Update(gameTime);
+                    }
+                }
 
                 // TODO: Add your update logic here
             }
@@ -117,10 +126,7 @@
             GraphicsDevice.Clear(Color.CornflowerBlue);
             this.spriteBatch.Begin();
 
-            this.test.Draw(this.spriteBatch);
-
-            // TEST WITH MADE TEXTURE
-            this.spriteBatch.Draw(this.testText, this.test.Body.Position, Color.White); 
+            MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
 
             base.Draw(gameTime);
 
@@ -128,51 +134,32 @@
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
-        private void SetupWorld()
+        private void SetupWorld(string mapPath)
         {
             MainGame.world = new World(new Vector2(0f, 9.81f));
             ConvertUnits.SetDisplayUnitToSimUnitRatio(100f);
 
+            if (MapLoader.LoadMap(mapPath))
+            {
+                foreach (var error in MapLoader.Errors)
+                {
+                    System.Console.WriteLine(error);
+                }
+            }
+
+            if (MapLoader.HasFailed)
+            {
+                System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
+                throw new AggregateException("Error: Map Load Failure!");
+            }
+            
             Vertices borderVerts = new Vertices();
             borderVerts.Add(Vector2.Zero);
             borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));
             borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height));
             borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, 0));
 
-            var border = BodyFactory.CreateLoopShape(MainGame.World, borderVerts);
-            border.Friction = 1f;
-        }
-
-        private void CreateActors()
-        {
-            this.texture = this.Content.Load<Texture2D>("Textures\\NOTSTOLEN");
-
-            // TEST TEXTURE AT CENTER POINT
-            this.testText = new Texture2D(this.GraphicsDevice, 2, 2);
-            Color[] colors = new Color[4];
-            for (int i = 0; i < 4; i++)
-            {
-                colors[i] = new Color(255, 255, 0);
-            }
-
-            this.testText.SetData(colors);
-
-            GameSprite testSprite = new GameSprite(this.texture, new Size(19, 40));
-            testSprite.AddAnimation(StandardAnimation.Idle, new SpriteAnimation(0, 1, 1));
-            testSprite.AddAnimation(StandardAnimation.Down, new SpriteAnimation(0, 8, 1));
-            testSprite.AddAnimation(StandardAnimation.Up, new SpriteAnimation(0, 8, 1) { FlipVertical = true });
-            testSprite.AddAnimation(StandardAnimation.Right, new SpriteAnimation(1, 8, 1));
-            testSprite.AddAnimation(StandardAnimation.Left, new SpriteAnimation(1, 8, 1) { FlipHorizontal = true });
-            testSprite.CurrentAnimationString = StandardAnimation.Idle.ToString();
-
-            this.test = new Player();
-            this.test.AddSprite("test", testSprite);
-
-            this.test.Body = BodyFactory.CreateRectangle(MainGame.world, 19f, 40f, 1f);
-            this.test.Body.BodyType = BodyType.Dynamic;
-            this.test.Body.CollidesWith = Category.All;
-            this.test.Body.FixedRotation = true;
-            this.test.Position = Vector2.Zero;
+            BodyFactory.CreateLoopShape(MainGame.World, borderVerts).Friction = 10f;
         }
     }
 }
