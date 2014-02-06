@@ -22,7 +22,7 @@
             this.XmlDeserialize(element);
         }
 
-        public Player() : 
+        public Player() :
             base()
         {
             this.MovementSpeed = new Vector2(1f, 1f);
@@ -77,17 +77,17 @@
             {
                 spriteStateString = "Idle";
             }
-            
+
             this.Body.LinearVelocity += dp;
 
             foreach (var sprite in this.Sprites.Values)
             {
                 sprite.CurrentAnimationString = spriteStateString;
             }
-            
+
             base.Update(time);
         }
-        
+
         public new XElement XmlSerialize()
         {
             throw new NotImplementedException();
