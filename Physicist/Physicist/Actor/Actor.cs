@@ -19,8 +19,13 @@
         private Body body;
         private BodyInfo bodyInfo;
 
-        public Actor()
+        public Actor(XElement element)
         {            
+            this.XmlDeserialize(element);
+        }
+
+        public Actor()
+        {
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
