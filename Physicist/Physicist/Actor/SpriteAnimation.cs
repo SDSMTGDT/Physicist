@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -25,6 +26,18 @@
             this.flipHorizontal = false;
             this.flipVertical = false;
             this.playInReverse = false;
+        }
+
+        public SpriteAnimation(XElement element)
+        {
+            this.rowIndex = 0;
+            this.frameCount = 0;
+            this.defaultFrameRate = 0;
+            this.flipHorizontal = false;
+            this.flipVertical = false;
+            this.playInReverse = false;
+
+            this.XmlDeserialize(element);
         }
         
         public uint RowIndex
@@ -125,7 +138,7 @@
             return base.GetHashCode();
         }
 
-        public XElement Serialize()
+        public XElement XmlSerialize()
         {
             XElement animationElement = new XElement(XName.Get("SpriteAnimation"));
             animationElement.Add(new XAttribute(XName.Get("class"), typeof(SpriteAnimation).ToString()));
@@ -140,11 +153,16 @@
             return animationElement;
         }
 
-        public void Deserialize(XElement element)
+        public void XmlDeserialize(XElement element)
         {
-            this.rowIndex = uint.Parse(element.Attribute("frameLength").Value);
-            this.frameCount = uint.Parse(element.Attribute("currentFrame").Value);
-            this.defaultFrameRate = float.Parse(element.Attribute("currentAnimationString").Value);
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            this.rowIndex = uint.Parse(element.Attribute("frameLength").Value, CultureInfo.CurrentCulture);
+            this.frameCount = uint.Parse(element.Attribute("currentFrame").Value, CultureInfo.CurrentCulture);
+            this.defaultFrameRate = float.Parse(element.Attribute("currentAnimationString").Value, CultureInfo.CurrentCulture);
             this.playInReverse = bool.Parse(element.Attribute("markedTime").Value);
             this.flipVertical = bool.Parse(element.Attribute("depth").Value);
             this.flipHorizontal = bool.Parse(element.Attribute("frameLength").Value);

@@ -10,8 +10,8 @@
     public interface IXmlSerializable
     {
         // overloading
-        XElement Serialize();
+        XElement XmlSerialize();
 
-        void Deserialize(XElement element);
+        void XmlDeserialize(XElement element);
     }
 }
