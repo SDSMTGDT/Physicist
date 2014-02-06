@@ -55,7 +55,6 @@
     <Compile Include="Controls\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
     <Compile Include="Controls\GameController.cs" />
-    <Compile Include="Controls\IXmlSerializable.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\Map.cs" />
     <Compile Include="Controls\MapLoader.cs" />

@@ -9,6 +9,7 @@
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Controls;
     using Physicist.Enums;
     using Physicist.Extensions;
 
@@ -263,9 +264,8 @@
             this.FrameSize = new Size(int.Parse(frameSizeElement.Attribute("width").Value, CultureInfo.CurrentCulture), int.Parse(frameSizeElement.Attribute("height").Value, CultureInfo.CurrentCulture));
 
             // Pull Texture2D information
-            string textureReference = element.Attribute("TextureReference").Value;
-            //// TODO: USE CONTENT MANAGER TO FIND THE TEXTURE2D AND ASSIGN THE SPRITE SHEET
-
+            this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
+            
             // Now find the 5 attributes and assign them
             this.frameLength = float.Parse(element.Attribute("frameLength").Value, CultureInfo.CurrentCulture);
             this.currentFrame = uint.Parse(element.Attribute("currentFrame").Value, CultureInfo.CurrentCulture);
