@@ -37,7 +37,7 @@
                 "backdrop",
                 this.Location.Serialize("location"),
                 this.Dimensions.XmlSerialize(),
-                new XElement("soundref", this.SoundEffect.Name),
+                new XAttribute("soundref", this.SoundEffect.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
             return element;
@@ -55,7 +55,7 @@
             this.Dimensions.XmlDeserialize(element.Element("dimensions"));
 
             this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
-                element.Element("soundref").Value);
+                element.Attribute("soundref").Value);
         }
     }
 }
