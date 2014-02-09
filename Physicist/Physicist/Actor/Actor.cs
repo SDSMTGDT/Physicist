@@ -200,7 +200,8 @@
             // Create GameSprites out of the Deserialze functions in GameSprite
             foreach (XElement gameSpriteEle in element.Element("Sprites").Elements("GameSprite"))
             {
-                this.AddSprite(new GameSprite(gameSpriteEle));
+                GameSprite gameSprite = new GameSprite(gameSpriteEle);
+                this.sprites.Add(gameSprite.SpriteName, gameSprite);
             }
 
             // ----------------------

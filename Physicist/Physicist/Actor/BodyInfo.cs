@@ -478,7 +478,7 @@
             this.topedge = int.Parse(element.Attribute("topEdge").Value, CultureInfo.CurrentCulture);
             this.bottomedge = int.Parse(element.Attribute("bottomEdge").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
-            this.shapeoffset = new Vector2(MathHelper.Max(bottomradius.Value, topradius.Value) * 2.0f, this.height.Value) / 2.0f;
+            this.shapeoffset = new Vector2(MathHelper.Max(this.bottomradius.Value, this.topradius.Value) * 2.0f, this.height.Value) / 2.0f;
         }
 
         private void MakeChainShape(XElement element)
@@ -520,7 +520,6 @@
             }
 
             this.shapeoffset = Vector2.Zero;
-
         }
 
         private void MakeEdge(XElement element)
@@ -549,8 +548,7 @@
             this.tippercentage = float.Parse(element.Attribute("tipPercentage").Value, CultureInfo.CurrentCulture);
             this.toothheight = float.Parse(element.Attribute("toothHeight").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
-
-            this.shapeoffset = new Vector2(this.radius.Value + toothheight.Value, this.radius.Value+toothheight.Value);
+            this.shapeoffset = new Vector2(this.radius.Value + this.toothheight.Value, this.radius.Value + this.toothheight.Value);
         }
 
         private void MakeLineArc(XElement element)
