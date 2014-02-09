@@ -10,7 +10,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public struct SpriteAnimation : IXmlSerializable
+    public struct SpriteAnimation 
     {
         private uint rowIndex;
         private uint frameCount;
@@ -24,21 +24,19 @@
             this.rowIndex = rowIndex;
             this.frameCount = frameCount;
             this.defaultFrameRate = defaultFrameRate;
-            this.flipHorizontal = false;
-            this.flipVertical = false;
             this.playInReverse = false;
+            this.flipVertical = false;
+            this.flipHorizontal = false;
         }
 
-        public SpriteAnimation(XElement element)
+        public SpriteAnimation(uint rowIndex, uint frameCount, float defaultFrameRate, bool playInReverse, bool flipVertical, bool flipHorizontal)
         {
-            this.rowIndex = 0;
-            this.frameCount = 0;
-            this.defaultFrameRate = 0;
-            this.flipHorizontal = false;
-            this.flipVertical = false;
-            this.playInReverse = false;
-
-            this.XmlDeserialize(element);
+            this.rowIndex = rowIndex;
+            this.frameCount = frameCount;
+            this.defaultFrameRate = defaultFrameRate;
+            this.playInReverse = playInReverse;
+            this.flipVertical = flipVertical;
+            this.flipHorizontal = flipHorizontal;
         }
 
         public uint RowIndex
@@ -137,36 +135,6 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public XElement XmlSerialize()
-        {
-            XElement animationElement = new XElement(XName.Get("SpriteAnimation"));
-            animationElement.Add(new XAttribute(XName.Get("class"), typeof(SpriteAnimation).ToString()));
-
-            animationElement.Add(new XAttribute(XName.Get("rowIndex"), this.rowIndex));
-            animationElement.Add(new XAttribute(XName.Get("frameCount"), this.frameCount));
-            animationElement.Add(new XAttribute(XName.Get("defaultFrameRate"), this.defaultFrameRate));
-            animationElement.Add(new XAttribute(XName.Get("playInReverse"), this.playInReverse));
-            animationElement.Add(new XAttribute(XName.Get("flipVertical"), this.flipVertical));
-            animationElement.Add(new XAttribute(XName.Get("flipHorizontal"), this.flipHorizontal));
-
-            return animationElement;
-        }
-
-        public void XmlDeserialize(XElement element)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            this.rowIndex = uint.Parse(element.Attribute("frameLength").Value, CultureInfo.CurrentCulture);
-            this.frameCount = uint.Parse(element.Attribute("currentFrame").Value, CultureInfo.CurrentCulture);
-            this.defaultFrameRate = float.Parse(element.Attribute("currentAnimationString").Value, CultureInfo.CurrentCulture);
-            this.playInReverse = bool.Parse(element.Attribute("markedTime").Value);
-            this.flipVertical = bool.Parse(element.Attribute("depth").Value);
-            this.flipHorizontal = bool.Parse(element.Attribute("frameLength").Value);
         }
     }
 }
