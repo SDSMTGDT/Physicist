@@ -67,7 +67,7 @@
             this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
 
             this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
-                element.Element("soundref").Value);
+                element.Attribute("soundref").Value);
         }
     }
 }
