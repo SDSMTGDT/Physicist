@@ -17,15 +17,18 @@
     public class Player : Actor, IXmlSerializable
     {
         public Player(XElement element)
-            : this()
         {
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
             this.XmlDeserialize(element);
         }
 
         public Player() :
             base()
         {
-            this.MovementSpeed = new Vector2(1f, 1f);
         }
 
         public new Body Body
@@ -90,34 +93,14 @@
 
         public new XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            return new XElement("Player", new XAttribute("class", typeof(Player).ToString()), base.XmlSerialize());
         }
 
         public new void XmlDeserialize(XElement element)
-        {
+        {            
             if (element != null)
             {
-                Texture2D texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
-
-                GameSprite testSprite = new GameSprite(texture, new Size(19, 40));
-                testSprite.AddAnimation(StandardAnimation.Idle, new SpriteAnimation(0, 1, 1));
-                testSprite.AddAnimation(StandardAnimation.Down, new SpriteAnimation(0, 8, 1));
-                testSprite.AddAnimation(StandardAnimation.Up, new SpriteAnimation(0, 8, 1) { FlipVertical = true });
-                testSprite.AddAnimation(StandardAnimation.Right, new SpriteAnimation(1, 8, 1));
-                testSprite.AddAnimation(StandardAnimation.Left, new SpriteAnimation(1, 8, 1) { FlipHorizontal = true });
-                testSprite.CurrentAnimationString = StandardAnimation.Idle.ToString();
-
-                Player test = new Player();
-                test.AddSprite("test", testSprite);
-
-                test.Body = FarseerPhysics.Factories.BodyFactory.CreateRectangle(MainGame.World, 19f, 40f, 1f);
-                test.Body.BodyType = BodyType.Dynamic;
-                test.Body.CollidesWith = Category.All;
-                test.Body.FixedRotation = true;
-                test.Body.Friction = 2f;
-                test.Position = Vector2.Zero;
-
-                MainGame.RegisterActor(test);
+                base.XmlDeserialize(element.Element("Actor"));
             }
         }
 

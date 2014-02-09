@@ -31,12 +31,25 @@
 
         public SoundEffect SoundEffect { get; set; }
 
+        public void Update(GameTime gameTime)
+        {
+            if (gameTime != null)
+            {
+                if (gameTime.ElapsedGameTime > this.SoundEffect.Duration)
+                {
+                    this.SoundEffect.Play();
+                }
+            }
+
+            throw new NotImplementedException("Updates on play/pause?");
+        }
+
         public XElement XmlSerialize()
         {
             XElement element = new XElement(
                 "backdrop",
-                this.Location.Serialize("location"),
-                this.Dimensions.XmlSerialize(),
+                this.Location.XmlSerialize("location"),
+                this.Dimensions.XmlSerialize("dimensions"),
                 new XElement("soundref", this.SoundEffect.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
@@ -50,9 +63,8 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.Location = ExtensionMethods.DeserializeVector2(element.Element("location"));
-            this.Dimensions = new Size();
-            this.Dimensions.XmlDeserialize(element.Element("dimensions"));
+            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("location"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
 
             this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
                 element.Element("soundref").Value);
