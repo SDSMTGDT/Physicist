@@ -5,13 +5,16 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using Physicist.Actors;
     using Physicist.Extensions;
-
+    
     public class CameraController
     {
         private Matrix originScaleRotationMatrix;
-        
+
+        private Matrix translationMatrix;
+
         private Matrix originMatrix;
         
         private Matrix scaleMatrix;
@@ -19,6 +22,8 @@
         private Matrix rotationMatrix;
         
         private Vector2 origin;
+
+        private Vector2 position;
         
         private float zoom;
         
@@ -26,6 +31,7 @@
 
         public CameraController()
         {
+            this.Bounds = Vector2.Zero;
             this.Following = null;
             this.Zoom = 1;
             this.Position = Vector2.Zero;
@@ -33,8 +39,9 @@
             this.Origin = Vector2.Zero;
         }
 
-        public CameraController(Vector2 position, Vector2 origin, Actor following, float zoom, float rotation)
+        public CameraController(Vector2 position, Vector2 origin, Actor following, float zoom, float rotation, Vector2 bounds)
         {
+            this.Bounds = bounds;
             this.Following = following;
             this.Zoom = zoom;
             this.Position = position;
@@ -60,8 +67,22 @@
                 this.originScaleRotationMatrix = this.rotationMatrix * this.scaleMatrix * this.originMatrix;
             }
         }
-        
-        public Vector2 Position { get; set; }
+
+        public Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+
+            set
+            {
+                this.position = value;
+                this.translationMatrix = Matrix.CreateTranslation(new Vector3(this.Position.X, this.Position.Y, 0));
+            }
+        }
+
+        public Vector2 Bounds { get; set; }
 
         public float Rotation
         {
@@ -97,8 +118,7 @@
         {
             get
             {
-                var translationMatrix = Matrix.CreateTranslation(new Vector3(this.Position.X, this.Position.Y, 0));
-                return translationMatrix * this.originScaleRotationMatrix;
+                return this.translationMatrix * this.originScaleRotationMatrix;
             }
         }
 
@@ -125,7 +145,9 @@
         public void CenterOnFollowing()
         {
             // Define the camera's position as centered on the player (or other object, if so desired)
-            this.Position = new Vector2(Math.Max(0, this.Following.Position.X - (this.CameraViewport.ViewportSize.Width / 2)), Math.Max(0, this.Following.Position.Y - (this.CameraViewport.ViewportSize.Height / 2)));
+            this.Position = new Vector2(
+                (-1) * Math.Min(this.Bounds.X, Math.Max(0, this.Following.Position.X - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
+                (-1) * Math.Min(this.Bounds.Y, Math.Max(0, this.Following.Position.Y - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
         }
     }
 }
