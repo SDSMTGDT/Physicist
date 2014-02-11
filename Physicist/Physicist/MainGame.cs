@@ -22,6 +22,8 @@
         private static List<Actor> actors;
         private static List<string> maps;
 
+        private Physicist.Controls.Viewport viewport;
+        private CameraController camera;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -67,7 +69,9 @@
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            this.camera = new CameraController();
+            this.camera.CameraViewport = this.viewport;
             this.SetupWorld(MainGame.maps[0]);
 
             // TODO: use this.Content to load your game content here
@@ -103,6 +107,7 @@
                     Player player = actor as Player;
                     if (player != null)
                     {
+                        this.camera.Following = player;
                         player.Update(gameTime, Keyboard.GetState());
                     }
                     else
@@ -112,6 +117,7 @@
                 }
 
                 // TODO: Add your update logic here
+                this.camera.CenterOnFollowing();
             }
 
             base.Update(gameTime);
@@ -124,8 +130,7 @@
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            this.spriteBatch.Begin();
-
+            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
 
             base.Draw(gameTime);
@@ -145,6 +150,9 @@
                 {
                     System.Console.WriteLine(error);
                 }
+                
+                // TODO: give the bounds of the map to the camera
+                // this.camera.Bounds = new Vector2(this.map.width, this.map.height);
             }
 
             if (MapLoader.HasFailed)
