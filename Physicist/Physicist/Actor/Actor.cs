@@ -162,10 +162,10 @@
             // define the Actor element
             XElement actorElement = new XElement("Actor");
             actorElement.Add(new XAttribute("class", typeof(Actor).ToString()));
-            actorElement.Add(new XAttribute("Health", this.Health));
-            actorElement.Add(new XAttribute("Rotation", this.Rotation));
-            actorElement.Add(new XAttribute("IsEnabled", this.IsEnabled));
-            actorElement.Add(new XAttribute("VisibleState", Enum.GetName(typeof(Visibility), this.VisibleState)));
+            actorElement.Add(new XAttribute("health", this.Health));
+            actorElement.Add(new XAttribute("rotation", this.Rotation));
+            actorElement.Add(new XAttribute("isEnabled", this.IsEnabled));
+            actorElement.Add(new XAttribute("visibleState", Enum.GetName(typeof(Visibility), this.VisibleState)));
 
             actorElement.Add(ExtensionMethods.XmlSerialize(this.MovementSpeed, "MovementSpeed"));
 
@@ -216,11 +216,11 @@
             
             // ----------------------------------
             // Assign the new values to the Actor
-            this.Health = int.Parse(element.Attribute("Health").Value, CultureInfo.CurrentCulture);
-            this.Rotation = float.Parse(element.Attribute("Rotation").Value, CultureInfo.CurrentCulture);
-            this.IsEnabled = bool.Parse(element.Attribute("IsEnabled").Value);
+            this.Health = int.Parse(element.Attribute("health").Value, CultureInfo.CurrentCulture);
+            this.Rotation = float.Parse(element.Attribute("rotation").Value, CultureInfo.CurrentCulture);
+            this.IsEnabled = bool.Parse(element.Attribute("isEnabled").Value);
 
-            this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("VisibleState").Value);
+            this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("visibleState").Value);
         }
     }
 }

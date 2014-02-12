@@ -210,7 +210,7 @@
             spriteElement.Add(ExtensionMethods.XmlSerialize(this.Offset, "Offset"));
 
             // Create Texture2D information
-            spriteElement.Add(new XAttribute("textureref", ContentController.Instance.GetMediaReference<Texture2D>(this.SpriteSheet).Name));
+            spriteElement.Add(new XAttribute("textureRef", ContentController.Instance.GetMediaReference<Texture2D>(this.SpriteSheet).Name));
 
             // Now create the five attributes
             spriteElement.Add(new XAttribute("frameLength", this.frameLength));
@@ -239,7 +239,7 @@
             }
 
             // Pull Texture2D information
-            this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
+            this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 
             // Pull Size information from the framsize element
             this.FrameSize = ExtensionMethods.XmlDeserializeSize(element.Element("FrameSize"));

@@ -153,6 +153,7 @@
 
             body.BodyType = bodyInfo.BodyType;
             body.FixedRotation = bodyInfo.FixedRotation;
+            body.Rotation = bodyInfo.Rotation;
 
             return new Tuple<Body, BodyInfo>(body, bodyInfo);
         }

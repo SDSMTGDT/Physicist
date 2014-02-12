@@ -53,14 +53,23 @@
         {
             if (sb != null)
             {
-                sb.Draw(this.texture, this.MapBodyInfo.Position - this.MapBodyInfo.ShapeOffset, Color.White);
+                sb.Draw(
+                        this.texture, 
+                        this.MapBodyInfo.Position,
+                        null,
+                        Color.White,
+                        this.MapBody.Rotation,
+                        this.MapBodyInfo.ShapeOffset,
+                        1f,
+                        SpriteEffects.None,
+                        .5f);
             }
         }
        
         public XElement XmlSerialize()
         {
             var bodyXml = this.MapBodyInfo.XmlSerialize();
-            bodyXml.Add(new XAttribute("textureref", this.TextureReference));
+            bodyXml.Add(new XAttribute("textureRef", this.TextureReference));
             return bodyXml;
         }
 
@@ -74,7 +83,7 @@
             var bodyData = XmlBodyFactory.DeserializeBody(element);
             this.MapBody = bodyData.Item1;
             this.MapBodyInfo = bodyData.Item2;
-            this.TextureReference = element.Attribute("textureref").Value;
+            this.TextureReference = element.Attribute("textureRef").Value;
             this.texture = ContentController.Instance.GetContent<Texture2D>(this.TextureReference);
         }
     }

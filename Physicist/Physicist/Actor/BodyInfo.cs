@@ -13,10 +13,10 @@
 
     public class BodyInfo
     {
-        private BodyCategory? bodycategory = null;
+        private BodyCategory? bodyCategory = null;
         private List<Vertices> vertices = null;
         private Vector2? position = null;
-        private Vector2? shapeoffset = null;
+        private Vector2? shapeOffset = null;
         private float? density = null;
         private float? height = null;
         private float? width = null;
@@ -29,21 +29,22 @@
         private int? segments = null;
         private int? edges = null;
         private bool? closed = null;
-        private float? topradius = null;
-        private float? bottomradius = null;
+        private float? topRadius = null;
+        private float? bottomRadius = null;
         private int? topedge = null;
-        private int? bottomedge = null;
+        private int? bottomEdge = null;
         private Vector2? start = null;
         private Vector2? end = null;
-        private float? tippercentage = null;
-        private float? toothheight = null;
-        private int? numberofteeth = null;
-        
+        private float? tipPercentage = null;
+        private float? toothHeight = null;
+        private int? numberOfTeeth = null;
+
         // Non-null Defaults
-        private bool fixedrotation = false;
-        private Category collideswith = FarseerPhysics.Dynamics.Category.All;
-        private BodyType bodytype = BodyType.Static;
+        private bool fixedRotation = false;
+        private Category collidesWith = FarseerPhysics.Dynamics.Category.All;
+        private BodyType bodyType = BodyType.Static;
         private float friction = 0f;
+        private float rotation = 0f;
 
         public BodyInfo(XElement element)
         {
@@ -53,17 +54,22 @@
         // Global to all Body
         public FarseerPhysics.Dynamics.Category CollidesWith
         {
-            get { return this.collideswith; }
+            get { return this.collidesWith; }
+        }
+
+        public float Rotation
+        {
+            get { return this.rotation; }
         }
 
         public BodyType BodyType
         {
-            get { return this.bodytype; }
+            get { return this.bodyType; }
         }
 
         public bool FixedRotation
         {
-            get { return this.fixedrotation; }
+            get { return this.fixedRotation; }
         }
 
         public float Friction
@@ -73,7 +79,7 @@
 
         public BodyCategory BodyCategory
         {
-            get { return this.bodycategory.Value; }
+            get { return this.bodyCategory.Value; }
         }
 
         public Vector2 Position 
@@ -84,7 +90,7 @@
 
         public Vector2 ShapeOffset
         {
-            get { return this.shapeoffset.Value; }
+            get { return this.shapeOffset.Value; }
         }
         
         // Common
@@ -157,12 +163,12 @@
         // Capsule
         public float TopRadius 
         {
-            get { return this.topradius.Value; } 
+            get { return this.topRadius.Value; } 
         }
 
         public float BottomRadius 
         {
-            get { return this.bottomradius.Value; } 
+            get { return this.bottomRadius.Value; } 
         }
 
         public int TopEdge 
@@ -172,7 +178,7 @@
 
         public int BottomEdge 
         {
-            get { return this.bottomedge.Value; } 
+            get { return this.bottomEdge.Value; } 
         }
 
         // Edge
@@ -189,38 +195,43 @@
         // Gear
         public float TipPercentage 
         {
-            get { return this.tippercentage.Value; } 
+            get { return this.tipPercentage.Value; } 
         }
 
         public float ToothHeight 
         {
-            get { return this.toothheight.Value; } 
+            get { return this.toothHeight.Value; } 
         }
 
         public int NumberOfTeeth 
         {
-            get { return this.numberofteeth.Value; } 
+            get { return this.numberOfTeeth.Value; } 
         }
 
         public XElement XmlSerialize()
         {
-            XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodycategory.Value));
+            XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
 
             bodyInfoXml.Add(ExtensionMethods.XmlSerialize(this.position.Value, "position"));
 
-            if (this.CollidesWith != FarseerPhysics.Dynamics.Category.All)
+            if (this.rotation != 0)
             {
-                bodyInfoXml.Add(new XAttribute("collidesWith", this.collideswith.ToString())); 
+                bodyInfoXml.Add(new XAttribute("rotation", this.rotation));
             }
 
-            if (this.fixedrotation)
+            if (this.collidesWith != FarseerPhysics.Dynamics.Category.All)
             {
-                bodyInfoXml.Add(new XAttribute("fixedrotation", this.fixedrotation));
+                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString())); 
             }
 
-            if (this.bodytype != FarseerPhysics.Dynamics.BodyType.Static)
+            if (this.fixedRotation)
             {
-                bodyInfoXml.Add(new XAttribute("bodytype", this.bodytype.ToString()));
+                bodyInfoXml.Add(new XAttribute("fixedRotation", this.fixedRotation));
+            }
+
+            if (this.bodyType != FarseerPhysics.Dynamics.BodyType.Static)
+            {
+                bodyInfoXml.Add(new XAttribute("bodyType", this.bodyType.ToString()));
             }
 
             if (this.friction != 0f)
@@ -300,14 +311,14 @@
                 bodyInfoXml.Add(new XAttribute("edges", this.edges.Value));
             }
 
-            if (this.topradius.HasValue)
+            if (this.topRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("topRad", this.topradius.Value));
+                bodyInfoXml.Add(new XAttribute("topRad", this.topRadius.Value));
             }
 
-            if (this.bottomradius.HasValue)
+            if (this.bottomRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botRad", this.bottomradius.Value));
+                bodyInfoXml.Add(new XAttribute("botRad", this.bottomRadius.Value));
             }
 
             if (this.topedge.HasValue)
@@ -315,9 +326,9 @@
                 bodyInfoXml.Add(new XAttribute("topEdge", this.topedge.Value));
             }
 
-            if (this.bottomedge.HasValue)
+            if (this.bottomEdge.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botEdge", this.bottomedge.Value));
+                bodyInfoXml.Add(new XAttribute("botEdge", this.bottomEdge.Value));
             }
 
             if (this.start.HasValue)
@@ -335,19 +346,19 @@
                 bodyInfoXml.Add(new XAttribute("closed", this.closed.Value));
             }
 
-            if (this.tippercentage.HasValue)
+            if (this.tipPercentage.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("tipPercentage", this.tippercentage.Value));
+                bodyInfoXml.Add(new XAttribute("tipPercentage", this.tipPercentage.Value));
             }
 
-            if (this.toothheight.HasValue)
+            if (this.toothHeight.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("toothHeight", this.toothheight.Value));
+                bodyInfoXml.Add(new XAttribute("toothHeight", this.toothHeight.Value));
             }
 
-            if (this.numberofteeth.HasValue)
+            if (this.numberOfTeeth.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("numberOfTeeth", this.numberofteeth.Value));
+                bodyInfoXml.Add(new XAttribute("numberOfTeeth", this.numberOfTeeth.Value));
             }
 
             return bodyInfoXml;
@@ -360,26 +371,26 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.bodycategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
+            this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
             this.position = ExtensionMethods.XmlDeserializeVector2(element.Element("position"));
 
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null) 
             {
-                this.collideswith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
+                this.collidesWith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
             }
 
-            XAttribute fixedRotEle = element.Attribute("fixedrotation");
+            XAttribute fixedRotEle = element.Attribute("fixedRotation");
             if (fixedRotEle != null)
             {
-                this.fixedrotation = bool.Parse(fixedRotEle.Value);
+                this.fixedRotation = bool.Parse(fixedRotEle.Value);
             }
 
-            XAttribute bodyTypeEle = element.Attribute("bodytype");
+            XAttribute bodyTypeEle = element.Attribute("bodyType");
             if (bodyTypeEle != null)
             {
-                this.bodytype = (BodyType)Enum.Parse(typeof(BodyType), bodyTypeEle.Value);
+                this.bodyType = (BodyType)Enum.Parse(typeof(BodyType), bodyTypeEle.Value);
             }
 
             XAttribute frictionEle = element.Attribute("friction");
@@ -388,7 +399,13 @@
                 this.friction = float.Parse(frictionEle.Value, CultureInfo.CurrentCulture);
             }
 
-            switch (this.bodycategory)
+            XAttribute rotationEle = element.Attribute("rotation");
+            if (rotationEle != null)
+            {
+                this.rotation = float.Parse(rotationEle.Value, CultureInfo.CurrentCulture);
+            }
+
+            switch (this.bodyCategory)
             {
                 case BodyCategory.BreakableBody:
                     this.MakeBreakableBody(element);
@@ -467,18 +484,18 @@
 
             this.vertices = new List<Vertices>() { verts };
 
-            this.shapeoffset = new Vector2(xmax - xmin, ymax - ymin) / 2.0f;
+            this.shapeOffset = new Vector2(xmax - xmin, ymax - ymin) / 2.0f;
         }
 
         private void MakeCapsule(XElement element)
         {
             this.height = float.Parse(element.Attribute("height").Value, CultureInfo.CurrentCulture);
-            this.topradius = float.Parse(element.Attribute("topRadius").Value, CultureInfo.CurrentCulture);
-            this.bottomradius = float.Parse(element.Attribute("bottomRadius").Value, CultureInfo.CurrentCulture);
+            this.topRadius = float.Parse(element.Attribute("topRadius").Value, CultureInfo.CurrentCulture);
+            this.bottomRadius = float.Parse(element.Attribute("bottomRadius").Value, CultureInfo.CurrentCulture);
             this.topedge = int.Parse(element.Attribute("topEdge").Value, CultureInfo.CurrentCulture);
-            this.bottomedge = int.Parse(element.Attribute("bottomEdge").Value, CultureInfo.CurrentCulture);
+            this.bottomEdge = int.Parse(element.Attribute("bottomEdge").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
-            this.shapeoffset = new Vector2(MathHelper.Max(this.bottomradius.Value, this.topradius.Value) * 2.0f, this.height.Value) / 2.0f;
+            this.shapeOffset = new Vector2(MathHelper.Max(this.bottomRadius.Value, this.topRadius.Value) * 2.0f, this.height.Value) / 2.0f;
         }
 
         private void MakeChainShape(XElement element)
@@ -492,14 +509,14 @@
 
             this.vertices = new List<Vertices>() { verts };
 
-            this.shapeoffset = Vector2.Zero;
+            this.shapeOffset = Vector2.Zero;
         }
 
         private void MakeCircle(XElement element)
         {
             this.radius = float.Parse(element.Attribute("radius").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
-            this.shapeoffset = new Vector2(this.radius.Value, this.radius.Value);
+            this.shapeOffset = new Vector2(this.radius.Value, this.radius.Value);
         }
 
         private void MakeCompoundPolygon(XElement element)
@@ -519,7 +536,7 @@
                 this.vertices.Add(nextVerts);
             }
 
-            this.shapeoffset = Vector2.Zero;
+            this.shapeOffset = Vector2.Zero;
         }
 
         private void MakeEdge(XElement element)
@@ -528,7 +545,7 @@
 
             this.end = ExtensionMethods.XmlDeserializeVector2(element.Element("end"));
 
-            this.shapeoffset = Vector2.Zero;
+            this.shapeOffset = Vector2.Zero;
         }
 
         private void MakeEllipse(XElement element)
@@ -538,17 +555,17 @@
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
             this.edges = int.Parse(element.Attribute("edges").Value, CultureInfo.CurrentCulture);
 
-            this.shapeoffset = new Vector2(this.xradius.Value, this.yradius.Value);
+            this.shapeOffset = new Vector2(this.xradius.Value, this.yradius.Value);
         }
 
         private void MakeGear(XElement element)
         {
             this.radius = float.Parse(element.Attribute("radius").Value, CultureInfo.CurrentCulture);
-            this.numberofteeth = int.Parse(element.Attribute("numberOfTeeth").Value, CultureInfo.CurrentCulture);
-            this.tippercentage = float.Parse(element.Attribute("tipPercentage").Value, CultureInfo.CurrentCulture);
-            this.toothheight = float.Parse(element.Attribute("toothHeight").Value, CultureInfo.CurrentCulture);
+            this.numberOfTeeth = int.Parse(element.Attribute("numberOfTeeth").Value, CultureInfo.CurrentCulture);
+            this.tipPercentage = float.Parse(element.Attribute("tipPercentage").Value, CultureInfo.CurrentCulture);
+            this.toothHeight = float.Parse(element.Attribute("toothHeight").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
-            this.shapeoffset = new Vector2(this.radius.Value + this.toothheight.Value, this.radius.Value + this.toothheight.Value);
+            this.shapeOffset = new Vector2(this.radius.Value + this.toothHeight.Value, this.radius.Value + this.toothHeight.Value);
         }
 
         private void MakeLineArc(XElement element)
@@ -559,7 +576,7 @@
             this.angle = float.Parse(element.Attribute("angle").Value, CultureInfo.CurrentCulture);
             this.closed = bool.Parse(element.Attribute("closed").Value);
 
-            this.shapeoffset = new Vector2(this.radius.Value, this.radius.Value);
+            this.shapeOffset = new Vector2(this.radius.Value, this.radius.Value);
         }
 
         private void MakeLoopShape(XElement element)
@@ -573,7 +590,7 @@
 
             this.vertices = new List<Vertices>() { verts };
 
-            this.shapeoffset = Vector2.Zero;
+            this.shapeOffset = Vector2.Zero;
         }
 
         private void MakePolygon(XElement element)
@@ -588,7 +605,7 @@
 
             this.vertices = new List<Vertices>() { verts };
 
-            this.shapeoffset = Vector2.Zero;
+            this.shapeOffset = Vector2.Zero;
         }
 
         private void MakeRectangle(XElement element)
@@ -597,7 +614,7 @@
             this.width = float.Parse(element.Attribute("width").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
 
-            this.shapeoffset = new Vector2(this.width.Value, this.height.Value) / 2.0f;
+            this.shapeOffset = new Vector2(this.width.Value, this.height.Value) / 2.0f;
         }
 
         private void MakeRoundedRectangle(XElement element)
@@ -609,7 +626,7 @@
             this.segments = int.Parse(element.Attribute("segments").Value, CultureInfo.CurrentCulture);
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
 
-            this.shapeoffset = new Vector2(this.width.Value, this.height.Value) / 2.0f;
+            this.shapeOffset = new Vector2(this.width.Value, this.height.Value) / 2.0f;
         }
 
         private void MakeSolidArc(XElement element)
@@ -620,7 +637,7 @@
             this.radius = float.Parse(element.Attribute("radius").Value, CultureInfo.CurrentCulture);
             this.angle = float.Parse(element.Attribute("angle").Value, CultureInfo.CurrentCulture);
 
-            this.shapeoffset = new Vector2(this.radius.Value, this.radius.Value);
+            this.shapeOffset = new Vector2(this.radius.Value, this.radius.Value);
         }
     }
 }

@@ -17,8 +17,8 @@
         {
             XElement element = new XElement(
                 tag,
-                new XAttribute("Width", size.Width),
-                new XAttribute("Height", size.Height));
+                new XAttribute("width", size.Width),
+                new XAttribute("height", size.Height));
 
             return element;
         }
@@ -27,8 +27,8 @@
         {
             XElement element = new XElement(
                 name,
-                new XAttribute("X", vector.X),
-                new XAttribute("Y", vector.Y));
+                new XAttribute("x", vector.X),
+                new XAttribute("y", vector.Y));
 
             return element;
         }
@@ -36,8 +36,6 @@
         public static XElement XmlSerialize(this SpriteAnimation animation, string tag)
         {
             XElement animationElement = new XElement(tag);
-            animationElement.Add(new XAttribute("struct", typeof(SpriteAnimation).ToString()));
-
             animationElement.Add(new XAttribute("rowIndex", animation.RowIndex));
             animationElement.Add(new XAttribute("frameCount", animation.FrameCount));
             animationElement.Add(new XAttribute("defaultFrameRate", animation.DefaultFrameRate));
@@ -71,7 +69,7 @@
                 throw new ArgumentNullException("element");
             }
 
-            return new Size(int.Parse(element.Attribute("Width").Value, CultureInfo.CurrentCulture), int.Parse(element.Attribute("Height").Value, CultureInfo.CurrentCulture));
+            return new Size(int.Parse(element.Attribute("width").Value, CultureInfo.CurrentCulture), int.Parse(element.Attribute("height").Value, CultureInfo.CurrentCulture));
         }
 
         public static Vector2 XmlDeserializeVector2(XElement element)
@@ -81,8 +79,8 @@
                 throw new ArgumentNullException("element");
             }
 
-            float x = float.Parse(element.Attribute("X").Value, CultureInfo.CurrentCulture);
-            float y = float.Parse(element.Attribute("Y").Value, CultureInfo.CurrentCulture);
+            float x = float.Parse(element.Attribute("x").Value, CultureInfo.CurrentCulture);
+            float y = float.Parse(element.Attribute("y").Value, CultureInfo.CurrentCulture);
 
             return new Vector2(x, y);
         }
