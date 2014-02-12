@@ -1,18 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <map>
   <media>
-    <texture name="NOTSTOLEN" location="Textures/NOTSTOLEN">
-      <testtag/>
-    </texture>
-    <texture name="NOTSTOLEN2" location="NOTAPATH"/>
-    <texture name="MoreTesting" location="Textures/NOTSTOLEN"/>
-  	<sound name="test" location="blabblahbalh"/>    
-    <video name="SomethingNotPG" location="SomewhereHidden"/>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="Platform" location="Textures/Platform"/>
+    <Texture2D name="MoreTesting" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="Circle" location="Textures/Circle"/>
+    <Texture2D name="Chain" location="Textures/Chain"/>
+    <Texture2D name="CompoundPolygon" location="Textures/CompoundPolygon"/>
+    <Texture2D name="Edge" location="Textures/Edge"/>
+    <Texture2D name="Ellipse" location="Textures/Ellipse"/>
+    <Texture2D name="Gear" location="Textures/Gear"/>
+    <Texture2D name="LineArc" location="Textures/LineArc"/>
+    <Texture2D name="LoopShape" location="Textures/LoopShape"/>
+    <Texture2D name="Polygon" location="Textures/Polygon"/>
+    <Texture2D name="RoundedRectangle" location="Textures/RoundedRectangle"/>
+    <Texture2D name="Capsule" location="Textures/Capsule"/>
+    <Texture2D name="SolidArc" location="Textures/SolidArc"/>
+  	<SoundEffect name="test" location="blabblahbalh"/>    
+    <Video name="SomethingNotPG" location="SomewhereHidden"/>
   </media>
   
   <levelobjects>
 	  <backgrounds>
-		  <backdrop class="backdrop" textureref="" depth="">
+		  <backdrop class="backdrop" textureRef="" depth="">
 			  <location x="" y=""/>
 			  <dimensions width="" height=""/>
 		  </backdrop>
@@ -26,20 +36,130 @@
 	  </backgrounds>
 	
 	  <foregrounds>
-		  <mapObject class="mapObject">
-			  <body bodytype="" collideswith="" fixedrotation="">
-					<dimension width="" height=""/>
-			  </body>
-			  <textureref/>
-		  </mapObject>
-		</foregrounds>
+      
+      <!--Rectangle-->
+      <Rectangle class="MapObject" textureRef ="Platform" width="100" height="20" density="1" rotation ="1.57">
+        <position x="100" y="100"/>
+      </Rectangle>
+            
+       <!--Capsule-->
+      <Capsule class="MapObject" textureRef="Capsule" density="1" height="80" topRadius="23" topEdge="10" bottomRadius="23" bottomEdge="10">
+        <position x="200" y="100"/>
+      </Capsule>
+
+      <!--ChainShape-->
+      <ChainShape class="MapObject" textureRef="Chain" >
+        <position x="300" y="100"/> 
+        <vertice> 
+          <Vector2 x="10" y="10"/> <!--This is a list of vectors, not just one-->
+          <Vector2 x="20" y="20"/>
+          <Vector2 x="30" y="30"/>
+        </vertice>
+      </ChainShape>
+
+      <!--CompoundPolygon-->
+      <CompoundPolygon class="MapObject" textureRef="CompoundPolygon" density="1">
+        <position x="400" y="100"/>
+        <vertices> <!--This is a list of vertices, not just one-->
+          <vertice>
+            <Vector2 x="2" y="8" /> <!--This is a list of vectors, not just one-->
+            <Vector2 x="20" y="26" />
+            <Vector2 x="38" y="8" />
+          </vertice>
+          <vertice>
+            <Vector2 x="20" y="2" />
+            <Vector2 x="2" y="38" />
+            <Vector2 x="38" y="38" />
+            <Vector2 x="20" y="2" />
+          </vertice>
+        </vertices>
+      </CompoundPolygon>
+
+      <!--Ellipse-->
+      <Ellipse class="MapObject" textureRef="Ellipse" density="1" xRadius="39" yRadius="20" edges="16">
+        <position x="600" y="100"/>
+      </Ellipse>
+
+      <!--Gear-->
+      <Gear class="MapObject" textureRef="Gear" density="1" radius="13" numberOfTeeth="8" tipPercentage="20" toothHeight="7">
+        <position x="100" y="400"/>
+      </Gear>
+
+      <!--LineArc-->
+      <LineArc class="MapObject" textureRef="LineArc" radians="4" sides="10" radius="20" angle="3.14" closed="false">
+        <position x="200" y="400"/>
+      </LineArc>
+
+      <!--LoopShape-->
+      <LoopShape class="MapObject" textureRef="LoopShape" >
+        <position x="300" y="400"/>
+        <vertice>
+          <Vector2 x="0" y="40"/> <!--This is a list of vectors, not just one-->
+          <Vector2 x="20" y="0" />
+          <Vector2 x="40" y="40" />
+          <Vector2 x="20" y="20" />
+        </vertice>
+      </LoopShape>
+
+      <!--Polygon-->
+      <Polygon class="MapObject" textureRef="Polygon" density="1">
+        <position x="400" y="400"/>
+        <vertice>
+          <Vector2 x="40" y="0"/>
+          <Vector2 x="16" y="0"/>
+          <Vector2 x="0" y="16"/>
+          <Vector2 x="0" y="40"/>
+          <Vector2 x="40" y="40"/>
+          <Vector2 x="40" y="16"/>
+          <Vector2 x="24" y="16"/>
+          <Vector2 x="40" y="0"/>
+        </vertice>
+      </Polygon>
+
+      <!--RoundedRectangle-->
+      <RoundedRectangle class="MapObject" textureRef="RoundedRectangle" density="1" width="80" height="20" xRadius="7" yRadius="3" segments="10">
+        <position x="500" y="400"/>
+      </RoundedRectangle>
+
+      <!--SolidArc-->
+      <SolidArc class="MapObject" textureRef="SolidArc" density="1" radians="4" radius="20" sides="10" angle="3.14">
+        <position x="600" y="400"/>
+      </SolidArc>
+    
+      <!--Circle-->
+      <Circle class="MapObject" textureRef ="Circle" radius="23" density="1">
+        <position x="300" y="200"/>
+      </Circle>
+
+    </foregrounds>
 	
 	  <actors>
-		  <NPC class="" textureref="NOTSTOLEN">
-		  </NPC>
+		  <NPC class="" textureRef="NOTSTOLEN"/>
 		  
-		  <Player class="Player" textureref="NOTSTOLEN">
-		  </Player>
+		  <Player class="Player">
+        <Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+          <MovementSpeed x="3" y="3"/>
+          <Sprites>
+            <GameSprite spritename="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
+              <Offset x="0" y="0"/>
+              <FrameSize width="19" height="40"/>
+              <Animations>
+                <Idle struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Down struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Up struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
+                <Right struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Left struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+              </Animations>
+            </GameSprite>
+          </Sprites>
+          <BodyInfo>
+            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
+              <position x="19" y="40"/>
+            </Rectangle>
+          </BodyInfo>
+        </Actor>
+      </Player>
+      
 	  </actors>
   </levelobjects>
 </map>
