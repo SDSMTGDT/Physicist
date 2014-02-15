@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<map>
+
+<!--Must have a width and height-->
+<map width="800" height="480">
   <media>
     <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
     <Texture2D name="Platform" location="Textures/Platform"/>
@@ -16,15 +18,16 @@
     <Texture2D name="RoundedRectangle" location="Textures/RoundedRectangle"/>
     <Texture2D name="Capsule" location="Textures/Capsule"/>
     <Texture2D name="SolidArc" location="Textures/SolidArc"/>
+    <Texture2D name="BrickBackground" location="Textures/Background"/>
   	<SoundEffect name="test" location="blabblahbalh"/>    
     <Video name="SomethingNotPG" location="SomewhereHidden"/>
   </media>
   
   <levelobjects>
 	  <backgrounds>
-		  <backdrop class="backdrop" textureRef="" depth="">
-			  <location x="" y=""/>
-			  <dimensions width="" height=""/>
+		  <backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="false">
+			  <location x="0" y="0"/>
+			  <dimensions width="600" height="400"/>
 		  </backdrop>
 		 
 		  <backgroundmusic class="backgroundmusic" soundref="">

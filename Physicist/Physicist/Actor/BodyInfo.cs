@@ -8,9 +8,10 @@
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
+    using Physicist.Controls;
     using Physicist.Enums;
     using Physicist.Extensions;
-
+    
     public class BodyInfo
     {
         private BodyCategory? bodyCategory = null;
@@ -212,7 +213,7 @@
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
 
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(this.position.Value, "position"));
+            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, Map.CurrentMapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
             {
@@ -250,10 +251,20 @@
                         vertice.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
                     }
 
-                    verts.Add(vertice);
+                    if (this.vertices.Count > 1)
+                    {
+                        verts.Add(vertice);
+                    }
+                    else
+                    {
+                        bodyInfoXml.Add(vertice);
+                    }
                 }
 
-                bodyInfoXml.Add(verts);
+                if (this.vertices.Count > 1)
+                {
+                    bodyInfoXml.Add(verts);
+                }
             }
 
             if (this.density.HasValue)
@@ -313,12 +324,12 @@
 
             if (this.topRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("topRad", this.topRadius.Value));
+                bodyInfoXml.Add(new XAttribute("topRadius", this.topRadius.Value));
             }
 
             if (this.bottomRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botRad", this.bottomRadius.Value));
+                bodyInfoXml.Add(new XAttribute("bottomRadius", this.bottomRadius.Value));
             }
 
             if (this.topedge.HasValue)
@@ -328,7 +339,7 @@
 
             if (this.bottomEdge.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botEdge", this.bottomEdge.Value));
+                bodyInfoXml.Add(new XAttribute("bottomEdge", this.bottomEdge.Value));
             }
 
             if (this.start.HasValue)
@@ -373,8 +384,9 @@
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
-            this.position = ExtensionMethods.XmlDeserializeVector2(element.Element("position"));
-
+            Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("position"));
+            this.position = new Vector2(designPosition.X, Map.CurrentMapHeight - designPosition.Y); 
+            
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null) 
             {

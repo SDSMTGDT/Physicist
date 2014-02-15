@@ -145,5 +145,11 @@
 
             return reference;
         }
+
+        public void Reset()
+        {
+            this.media.Clear();
+            this.IsInitialized = false;
+        }
     }
 }

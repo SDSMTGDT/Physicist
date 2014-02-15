@@ -58,6 +58,7 @@
             ContentController.Instance.Initialize(this.Content, "Content");
             MainGame.actors = new List<Actor>();
             MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
+                        
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -71,7 +72,22 @@
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.SetupWorld(MainGame.maps[0]);
+            MainGame.world = new World(new Vector2(0f, 9.81f));
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+
+            MainGame.map = MapLoader.LoadMap(MainGame.maps[0]);
+            if (MapLoader.HasErrors)
+            {
+                foreach (var error in MapLoader.Errors)
+                {
+                    System.Console.WriteLine(error);
+                }
+            }
+
+            if (MapLoader.HasFailed || map == null)
+            {
+                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
+            }
 
             // TODO: use this.Content to load your game content here
         }
@@ -127,7 +143,7 @@
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            this.spriteBatch.Begin();
+            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
             MainGame.map.Draw(this.spriteBatch);
@@ -135,35 +151,6 @@
             base.Draw(gameTime);
 
             this.spriteBatch.End();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
-        private void SetupWorld(string mapPath)
-        {
-            MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
-            MainGame.map = new Map();
-
-            if (MapLoader.LoadMap(mapPath, MainGame.map))
-            {
-                foreach (var error in MapLoader.Errors)
-                {
-                    System.Console.WriteLine(error);
-                }
-            }
-
-            if (MapLoader.HasFailed)
-            {
-                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
-            }
-
-            Vertices borderVerts = new Vertices();
-            borderVerts.Add(Vector2.Zero);
-            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, 0));
-
-            BodyFactory.CreateLoopShape(MainGame.World, borderVerts.ToSimUnits()).Friction = 10f;
         }
     }
 }

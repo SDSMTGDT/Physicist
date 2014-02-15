@@ -204,7 +204,7 @@
             XElement spriteElement = new XElement("GameSprite");
 
             // get the name
-            spriteElement.Add(new XAttribute("name", this.SpriteName));
+            spriteElement.Add(new XAttribute("spritename", this.SpriteName));
 
             // get the offset
             spriteElement.Add(ExtensionMethods.XmlSerialize(this.Offset, "Offset"));

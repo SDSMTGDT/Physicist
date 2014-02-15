@@ -70,6 +70,7 @@
         {
             var bodyXml = this.MapBodyInfo.XmlSerialize();
             bodyXml.Add(new XAttribute("textureRef", this.TextureReference));
+            bodyXml.Add(new XAttribute("class", this.GetType().FullName));
             return bodyXml;
         }
 
