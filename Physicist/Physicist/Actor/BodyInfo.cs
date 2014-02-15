@@ -12,8 +12,14 @@
 
     public struct BodyInfo
     {
-        public Category CollidesWith;
-        public float Width;
-        public float Height;
+        private Category collidesWith;
+        private float width;
+        private float height;
+
+        public Category CollidesWith { get; set; }
+
+        public float Width { get; set; }
+
+        public float Height { get; set; }
     }
 }

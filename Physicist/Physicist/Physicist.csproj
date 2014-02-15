@@ -53,6 +53,7 @@
     <Compile Include="Actor\SpriteAnimation.cs" />
     <Compile Include="Controls\Backdrop.cs" />
     <Compile Include="Controls\BackgroundMusic.cs" />
+    <Compile Include="Controls\IPosition.cs" />
     <Compile Include="Controls\IXmlSerializable.cs" />
     <Compile Include="Controls\MapSaver.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />

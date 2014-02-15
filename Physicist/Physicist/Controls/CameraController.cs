@@ -6,9 +6,16 @@
     using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Actors;
     using Physicist.Extensions;
-    
+
+    /// <summary>
+    /// The camera controller.  Should be present in the main game only, 
+    /// although multiple instances could be used for cinematic purposes. 
+    /// 
+    /// To modify a camera's property, use the following:
+    ///     -   Camera.Following: sets the object for the camera to follow
+    ///     -   
+    /// </summary>
     public class CameraController
     {
         private Matrix originScaleRotationMatrix;
@@ -39,7 +46,7 @@
             this.Origin = Vector2.Zero;
         }
 
-        public CameraController(Vector2 position, Vector2 origin, Actor following, float zoom, float rotation, Vector2 bounds)
+        public CameraController(Vector2 position, Vector2 origin, IPosition following, float zoom, float rotation, Vector2 bounds)
         {
             this.Bounds = bounds;
             this.Following = following;
@@ -51,7 +58,7 @@
 
         public Viewport CameraViewport { get; set; }
         
-        public Actor Following { get; set; }
+        public IPosition Following { get; set; }
 
         public float Zoom
         { 
@@ -146,8 +153,8 @@
         {
             // Define the camera's position as centered on the player (or other object, if so desired)
             this.Position = new Vector2(
-                (-1) * Math.Min(this.Bounds.X, Math.Max(0, this.Following.Position.X - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
-                (-1) * Math.Min(this.Bounds.Y, Math.Max(0, this.Following.Position.Y - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
+                (-1) * Math.Min(this.Bounds.X - this.CameraViewport.ViewportSize.Width, Math.Max(0, this.Following.XPosition() - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
+                (-1) * Math.Min(this.Bounds.Y - this.CameraViewport.ViewportSize.Height, Math.Max(0, this.Following.YPosition() - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
         }
     }
 }

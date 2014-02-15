@@ -72,6 +72,7 @@
             this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
             this.camera = new CameraController();
             this.camera.CameraViewport = this.viewport;
+            this.camera.Bounds = new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2);
             this.SetupWorld(MainGame.maps[0]);
 
             // TODO: use this.Content to load your game content here
@@ -163,9 +164,9 @@
 
             Vertices borderVerts = new Vertices();
             borderVerts.Add(Vector2.Zero);
-            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, 0));
+            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height * 2));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, 0));
 
             BodyFactory.CreateLoopShape(MainGame.World, borderVerts).Friction = 10f;
         }
