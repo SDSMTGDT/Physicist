@@ -30,14 +30,14 @@
             return valid;
         }
 
-        public override void AddSprite(string name, GameSprite sprite)
+        public override void AddSprite(GameSprite sprite)
         {
             if (sprite != null && sprite.AnimationKeys.Contains("Activate"))
             {
                 throw new NotImplementedException();
             }
 
-            base.AddSprite(name, sprite);
+            base.AddSprite(sprite);
         }
 
         public void ActivateDoor(Actor player)

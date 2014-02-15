@@ -9,7 +9,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public struct Size : IXmlSerializable
+    public struct Size 
     {
         private int width;
         private int height;
@@ -74,27 +74,6 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public XElement XmlSerialize()
-        {
-            XElement element = new XElement(
-                "Size",
-                new XAttribute("Width", this.Width),
-                new XAttribute("Height", this.Height));
-
-            return element;
-        }
-
-        public void XmlDeserialize(XElement element)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            this.Width = int.Parse(element.Attribute("Width").Value, CultureInfo.CurrentCulture);
-            this.Height = int.Parse(element.Attribute("Height").Value, CultureInfo.CurrentCulture);
         }
     }
 }

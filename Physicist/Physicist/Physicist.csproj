@@ -51,18 +51,20 @@
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
-    <Compile Include="Controls\Backdrop.cs" />
-    <Compile Include="Controls\BackgroundMusic.cs" />
     <Compile Include="Controls\IPosition.cs" />
+    <Compile Include="Controls\Map\MapObject.cs" />
+    <Compile Include="Enums\BodyCategory.cs" />
+    <Compile Include="Controls\Map\Backdrop.cs" />
+    <Compile Include="Controls\Map\BackgroundMusic.cs" />
     <Compile Include="Controls\IXmlSerializable.cs" />
-    <Compile Include="Controls\MapSaver.cs" />
+    <Compile Include="Controls\Map\MapSaver.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
     <Compile Include="Controls\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
     <Compile Include="Controls\GameController.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
-    <Compile Include="Controls\Map.cs" />
-    <Compile Include="Controls\MapLoader.cs" />
+    <Compile Include="Controls\Map\Map.cs" />
+    <Compile Include="Controls\Map\MapLoader.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
     <Compile Include="Controls\Viewport.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Extensions\Primatives\IMediaInfo.cs" />
     <Compile Include="Extensions\Primatives\MediaElement.cs" />
     <Compile Include="Extensions\Primatives\Size.cs" />
+    <Compile Include="Extensions\XmlBodyFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
@@ -119,7 +122,46 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Content\Textures\Capsule.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Chain.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Circle.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\CompoundPolygon.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Edge.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Ellipse.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Gear.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\LineArc.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\LoopShape.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Textures\NOTSTOLEN.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Platform.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Polygon.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\RoundedRectangle.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\SolidArc.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

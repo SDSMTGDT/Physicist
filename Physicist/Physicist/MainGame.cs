@@ -12,6 +12,7 @@
     using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
     using Physicist.Controls;
+    using Physicist.Extensions;
 
     /// <summary>
     /// This is the main type for your game
@@ -19,6 +20,7 @@
     public class MainGame : Game
     {
         private static World world;
+        private static Map map;
         private static List<Actor> actors;
         private static List<string> maps;
 
@@ -54,6 +56,7 @@
         /// </summary>
         protected override void Initialize()
         {
+            FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
             MainGame.actors = new List<Actor>();
             MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
@@ -119,6 +122,7 @@
 
                 // TODO: Add your update logic here
                 this.camera.CenterOnFollowing();
+                MainGame.map.Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -133,6 +137,7 @@
             GraphicsDevice.Clear(Color.CornflowerBlue);
             this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
+            MainGame.map.Draw(this.spriteBatch);
 
             base.Draw(gameTime);
 
@@ -143,9 +148,10 @@
         private void SetupWorld(string mapPath)
         {
             MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(100f);
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+            MainGame.map = new Map();
 
-            if (MapLoader.LoadMap(mapPath))
+            if (MapLoader.LoadMap(mapPath, MainGame.map))
             {
                 foreach (var error in MapLoader.Errors)
                 {
@@ -158,8 +164,7 @@
 
             if (MapLoader.HasFailed)
             {
-                System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
-                throw new AggregateException("Error: Map Load Failure!");
+                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
             }
 
             Vertices borderVerts = new Vertices();
@@ -168,7 +173,7 @@
             borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2));
             borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, 0));
 
-            BodyFactory.CreateLoopShape(MainGame.World, borderVerts).Friction = 10f;
+            BodyFactory.CreateLoopShape(MainGame.World, borderVerts.ToSimUnits()).Friction = 10f;
         }
     }
 }

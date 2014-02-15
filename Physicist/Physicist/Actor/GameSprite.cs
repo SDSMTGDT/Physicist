@@ -16,9 +16,9 @@
     public class GameSprite : IXmlSerializable
     {
         // animation fields
-        private float frameLength = 0.1f;
+        private float frameLength = 0.2f;
         private uint currentFrame = 0;
-        private string currentAnimationString;
+        private string currentAnimationString = null;
         private Dictionary<string, SpriteAnimation> animations;
         private float markedTime = 0;
         private float depth = 0f;
@@ -29,12 +29,13 @@
             this.XmlDeserialize(element);
         }
 
-        public GameSprite(Texture2D spriteSheet, Size frameSize)
+        public GameSprite(Texture2D spriteSheet, Size frameSize, string spriteName)
         {
             this.SpriteSheet = spriteSheet;
             this.FrameSize = frameSize;
-            this.FrameLength = 0.2f;
             this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
+            this.Offset = Vector2.Zero;
+            this.SpriteName = spriteName;
         }
 
         // sprite properties
@@ -43,6 +44,8 @@
         public Size FrameSize { get; private set; }
 
         public Vector2 Offset { get; set; }
+
+        public string SpriteName { get; set; }
 
         public List<string> AnimationKeys
         {
@@ -81,6 +84,11 @@
         {
             get
             {
+                if (this.currentAnimationString == null && this.animations.Count > 0)
+                {
+                    this.currentAnimationString = this.animations.ElementAt(0).Key;
+                }
+
                 return this.currentAnimationString;
             }
 
@@ -193,41 +201,32 @@
 
         public XElement XmlSerialize()
         {
-            XElement spriteElement = new XElement(XName.Get("GameSprite"));
+            XElement spriteElement = new XElement("GameSprite");
 
-            XElement offsetElement = new XElement(XName.Get("Offset"));
-            XElement animationsElement = new XElement(XName.Get("Animations"));
-            XElement frameSizeElement = new XElement(XName.Get("FrameSize"));
+            // get the name
+            spriteElement.Add(new XAttribute("name", this.SpriteName));
 
             // get the offset
-            offsetElement.Add(new XAttribute(XName.Get("X"), this.Offset.X));
-            offsetElement.Add(new XAttribute(XName.Get("Y"), this.Offset.Y));
-            spriteElement.Add(offsetElement);
+            spriteElement.Add(ExtensionMethods.XmlSerialize(this.Offset, "Offset"));
+
+            // Create Texture2D information
+            spriteElement.Add(new XAttribute("textureRef", ContentController.Instance.GetMediaReference<Texture2D>(this.SpriteSheet).Name));
+
+            // Now create the five attributes
+            spriteElement.Add(new XAttribute("frameLength", this.frameLength));
+            spriteElement.Add(new XAttribute("depth", this.depth));
 
             // get the framesize
-            frameSizeElement.Add(new XAttribute(XName.Get("width"), this.FrameSize.Width));
-            frameSizeElement.Add(new XAttribute(XName.Get("height"), this.FrameSize.Height));
-            spriteElement.Add(offsetElement);
+            spriteElement.Add(this.FrameSize.XmlSerialize("FrameSize"));
 
             // add every animation to the animations element
-            foreach (SpriteAnimation animation in this.animations.Values)
+            XElement animationsElement = new XElement("Animations");
+            foreach (var animationPair in this.animations)
             {
-                XElement animationElement = animation.XmlSerialize();
-                animationsElement.Add(animationElement);
+                animationsElement.Add(animationPair.Value.XmlSerialize(animationPair.Key));
             }
 
             spriteElement.Add(animationsElement);
-
-            // Create Texture2D information
-            // spriteElement.Add(new XAttribute(XName.Get("TextureReference"), TextureReference ?);
-            // TODO: TEXTURE REFERENCE
-
-            // Now create the five attributes
-            spriteElement.Add(new XAttribute(XName.Get("frameLength"), this.frameLength));
-            spriteElement.Add(new XAttribute(XName.Get("currentFrame"), this.currentFrame));
-            spriteElement.Add(new XAttribute(XName.Get("currentAnimationString"), this.currentAnimationString));
-            spriteElement.Add(new XAttribute(XName.Get("markedTime"), this.markedTime));
-            spriteElement.Add(new XAttribute(XName.Get("depth"), this.depth));
 
             return spriteElement;
         }
@@ -239,39 +238,30 @@
                 throw new ArgumentNullException("element");
             }
 
-            // 4 elements and 5 attributes in the top level
-            //--------------------------------------------
-            // Find all child elements
-            XElement offsetElement = element.Element("Offset");
-            XElement frameSizeElement = element.Element("FrameSize");
-
-            // Get the offset
-            this.Offset = new Vector2(
-                                    float.Parse(offsetElement.Attribute("X").Value, CultureInfo.CurrentCulture),
-                                    float.Parse(offsetElement.Attribute("Y").Value, CultureInfo.CurrentCulture));
-
-            // Find all elements in the Dictionary element
-            IEnumerable<XElement> animationElements = element.Descendants("SpriteAnimation");
-
-            // Create SpriteAnimations out of the Deserialze functions in SpriteAnimation
-            foreach (XElement animationElement in animationElements)
-            {
-                SpriteAnimation animation = new SpriteAnimation(animationElement);
-                this.AddAnimation(animationElement.Name.ToString(), animation);
-            }
+            // Pull Texture2D information
+            this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 
             // Pull Size information from the framsize element
-            this.FrameSize = new Size(int.Parse(frameSizeElement.Attribute("width").Value, CultureInfo.CurrentCulture), int.Parse(frameSizeElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+            this.FrameSize = ExtensionMethods.XmlDeserializeSize(element.Element("FrameSize"));
 
-            // Pull Texture2D information
-            this.SpriteSheet = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureref").Value);
+            // Create animation dictionay
+            this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
 
             // Now find the 5 attributes and assign them
             this.frameLength = float.Parse(element.Attribute("frameLength").Value, CultureInfo.CurrentCulture);
-            this.currentFrame = uint.Parse(element.Attribute("currentFrame").Value, CultureInfo.CurrentCulture);
-            this.currentAnimationString = element.Attribute("currentAnimationString").Value;
-            this.markedTime = float.Parse(element.Attribute("markedTime").Value, CultureInfo.CurrentCulture);
             this.depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
+
+            // Get the name
+            this.SpriteName = element.Attribute("spritename").Value;
+
+            // Get the offset
+            this.Offset = ExtensionMethods.XmlDeserializeVector2(element.Element("Offset"));
+
+            // Create SpriteAnimations out of the Deserialze functions in SpriteAnimation
+            foreach (XElement animationElement in element.Element("Animations").Elements())
+            {
+                this.AddAnimation(animationElement.Name.LocalName, ExtensionMethods.XmlDeserializeSpriteAnimation(animationElement));
+            }
 
             return;
         }

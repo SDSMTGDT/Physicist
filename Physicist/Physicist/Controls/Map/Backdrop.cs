@@ -34,14 +34,22 @@
 
         public Texture2D Texture { get; set; }
 
+        public void Draw(SpriteBatch sb)
+        {
+            if (sb != null)
+            {
+                sb.Draw(this.Texture, this.Location, Color.White);
+            }
+        }
+
         public XElement XmlSerialize()
         {
             XElement element = new XElement(
                 "backdrop",
-                this.Location.Serialize("location"),
-                this.Dimensions.XmlSerialize(),
+                this.Location.XmlSerialize("location"),
+                this.Dimensions.XmlSerialize("dimensions"),
                 new XElement("depth", this.Depth),
-                new XAttribute("textureref", this.Texture.Name),
+                new XAttribute("textureRef", this.Texture.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
             return element;
@@ -54,12 +62,11 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.Location = ExtensionMethods.DeserializeVector2(element.Element("location"));
-            this.Dimensions = new Size();
-            this.Dimensions.XmlDeserialize(element.Element("dimensions"));
+            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("location"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
             this.Depth = float.Parse(element.Element("depth").Value, CultureInfo.CurrentCulture);
             this.Texture = ContentController.Instance.GetContent<Texture2D>(
-                element.Attribute("textureref").Value);
+                element.Attribute("textureRef").Value);
         }
     }
 }
