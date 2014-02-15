@@ -15,7 +15,7 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Actor : IXmlSerializable
+    public class Actor : IXmlSerializable, IPosition
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;

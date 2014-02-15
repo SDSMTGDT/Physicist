@@ -24,6 +24,8 @@
         private static List<Actor> actors;
         private static List<string> maps;
 
+        private Physicist.Controls.Viewport viewport;
+        private CameraController camera;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -89,7 +91,10 @@
                 throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
             }
 
-            // TODO: use this.Content to load your game content here
+            this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            this.camera = new CameraController();
+            this.camera.CameraViewport = this.viewport;
+            this.camera.Bounds = new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2);
         }
 
         /// <summary>
@@ -122,6 +127,7 @@
                     Player player = actor as Player;
                     if (player != null)
                     {
+                        this.camera.Following = player;
                         player.Update(gameTime, Keyboard.GetState());
                     }
                     else
@@ -130,6 +136,8 @@
                     }
                 }
 
+                // TODO: Add your update logic here
+                this.camera.CenterOnFollowing();
                 MainGame.map.Update(gameTime);
             }
 
@@ -143,7 +151,7 @@
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
 
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
             MainGame.map.Draw(this.spriteBatch);
