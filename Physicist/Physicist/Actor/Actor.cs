@@ -222,17 +222,5 @@
 
             this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("visibleState").Value);
         }
-
-        public float XPosition()
-        {
-            return this.Position.X;
-            throw new NotImplementedException();
-        }
-
-        public float YPosition()
-        {
-            return this.Position.Y;
-            throw new NotImplementedException();
-        }
     }
 }

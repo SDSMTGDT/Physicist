@@ -14,7 +14,10 @@
     /// 
     /// To modify a camera's property, use the following:
     ///     -   Camera.Following: sets the object for the camera to follow
-    ///     -   
+    ///     -   ZoomIn(): zooms in a given amount
+    ///     -   ZoomOut(): zooms out a given amount
+    ///     -   Move(): moves the camera around
+    ///     -   CenterOnFollowing(): focuses on Following, should be used like an update step.
     /// </summary>
     public class CameraController
     {
@@ -153,8 +156,8 @@
         {
             // Define the camera's position as centered on the player (or other object, if so desired)
             this.Position = new Vector2(
-                (-1) * Math.Min(this.Bounds.X - this.CameraViewport.ViewportSize.Width, Math.Max(0, this.Following.XPosition() - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
-                (-1) * Math.Min(this.Bounds.Y - this.CameraViewport.ViewportSize.Height, Math.Max(0, this.Following.YPosition() - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
+                (-1) * Math.Min(this.Bounds.X - this.CameraViewport.ViewportSize.Width, Math.Max(0, this.Following.Position.X - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
+                (-1) * Math.Min(this.Bounds.Y - this.CameraViewport.ViewportSize.Height, Math.Max(0, this.Following.Position.Y - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
         }
     }
 }
