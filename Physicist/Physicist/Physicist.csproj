@@ -51,6 +51,7 @@
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
+    <Compile Include="Controls\IPosition.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
     <Compile Include="Controls\Map\Backdrop.cs" />
