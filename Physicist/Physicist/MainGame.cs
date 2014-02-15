@@ -24,6 +24,8 @@
         private static List<Actor> actors;
         private static List<string> maps;
 
+        private Physicist.Controls.Viewport viewport;
+        private CameraController camera;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -70,7 +72,10 @@
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            this.camera = new CameraController();
+            this.camera.CameraViewport = this.viewport;
+            this.camera.Bounds = new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2);
             this.SetupWorld(MainGame.maps[0]);
 
             // TODO: use this.Content to load your game content here
@@ -106,6 +111,7 @@
                     Player player = actor as Player;
                     if (player != null)
                     {
+                        this.camera.Following = player;
                         player.Update(gameTime, Keyboard.GetState());
                     }
                     else
@@ -114,6 +120,8 @@
                     }
                 }
 
+                // TODO: Add your update logic here
+                this.camera.CenterOnFollowing();
                 MainGame.map.Update(gameTime);
             }
 
@@ -127,8 +135,7 @@
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            this.spriteBatch.Begin();
-
+            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
             MainGame.map.Draw(this.spriteBatch);
 
@@ -150,6 +157,9 @@
                 {
                     System.Console.WriteLine(error);
                 }
+                
+                // TODO: give the bounds of the map to the camera
+                // this.camera.Bounds = new Vector2(this.map.width, this.map.height);
             }
 
             if (MapLoader.HasFailed)
@@ -159,9 +169,9 @@
 
             Vertices borderVerts = new Vertices();
             borderVerts.Add(Vector2.Zero);
-            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width, 0));
+            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height * 2));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2));
+            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, 0));
 
             BodyFactory.CreateLoopShape(MainGame.World, borderVerts.ToSimUnits()).Friction = 10f;
         }
