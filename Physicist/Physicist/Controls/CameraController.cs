@@ -22,21 +22,11 @@
     public class CameraController
     {
         private Matrix originScaleRotationMatrix;
-
         private Matrix translationMatrix;
-
-        private Matrix originMatrix;
-        
-        private Matrix scaleMatrix;
-        
-        private Matrix rotationMatrix;
         
         private Vector2 origin;
-
-        private Vector2 position;
-        
-        private float zoom;
-        
+        private Vector2 position;        
+        private float zoom;        
         private float rotation;
 
         public CameraController()
@@ -70,11 +60,10 @@
                 return this.zoom;
             } 
 
-            set
+            private set
             {
                 this.zoom = value;
-                this.scaleMatrix = Matrix.CreateScale(new Vector3(this.Zoom, this.Zoom, 1));
-                this.originScaleRotationMatrix = this.rotationMatrix * this.scaleMatrix * this.originMatrix;
+                this.UpdateOriginRotateScale();
             }
         }
 
@@ -85,10 +74,10 @@
                 return this.position;
             }
 
-            set
+            private set
             {
                 this.position = value;
-                this.translationMatrix = Matrix.CreateTranslation(new Vector3(this.Position.X, this.Position.Y, 0));
+                this.translationMatrix = Matrix.CreateTranslation(new Vector3(this.position, 0));
             }
         }
 
@@ -99,13 +88,12 @@
             get
             {
                 return this.rotation;
-            } 
+            }
 
-            set
+            private set
             {
                 this.rotation = value;
-                this.rotationMatrix = this.rotationMatrix = Matrix.CreateRotationZ(this.Rotation);
-                this.originScaleRotationMatrix = this.rotationMatrix * this.scaleMatrix * this.originMatrix;
+                this.UpdateOriginRotateScale();
             }
         }
 
@@ -116,11 +104,10 @@
                 return this.origin;
             }
             
-            set
+            private set
             {
                 this.origin = value;
-                this.originMatrix = Matrix.CreateTranslation(new Vector3(this.Origin.X, this.Origin.Y, 0));
-                this.originScaleRotationMatrix = this.rotationMatrix * this.scaleMatrix * this.originMatrix;
+                this.UpdateOriginRotateScale();
             }
         }
 
@@ -144,12 +131,25 @@
 
         public void ZoomIn(float magnitude)
         {
-            this.Zoom += magnitude;
+            if (magnitude > 0)
+            {
+                this.Zoom *= magnitude;
+            }
         }
 
         public void ZoomOut(float magnitude)
         {
-            this.Zoom -= magnitude;
+            if (magnitude > 0)
+            {
+                this.Zoom /= magnitude;
+            }
+        }
+
+        public void Reset()
+        {
+            this.Position = Vector2.Zero;
+            this.Rotation = 0f;
+            this.Zoom = 1f;
         }
 
         public void CenterOnFollowing()
@@ -158,6 +158,14 @@
             this.Position = new Vector2(
                 (-1) * Math.Min(this.Bounds.X - this.CameraViewport.ViewportSize.Width, Math.Max(0, this.Following.Position.X - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))), 
                 (-1) * Math.Min(this.Bounds.Y - this.CameraViewport.ViewportSize.Height, Math.Max(0, this.Following.Position.Y - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
+        }
+
+        private void UpdateOriginRotateScale()
+        {
+            this.originScaleRotationMatrix = Matrix.CreateTranslation(new Vector3(-this.Origin.X, -this.Origin.Y, 0)) *
+                                             Matrix.CreateScale(this.Zoom) *
+                                             Matrix.CreateRotationZ(this.Rotation) *
+                                             Matrix.CreateTranslation(new Vector3(this.Origin.X, this.Origin.Y, 0));
         }
     }
 }
