@@ -16,6 +16,12 @@
         public Backdrop(XElement element)
         {
             this.XmlDeserialize(element);
+
+            if(this.TileToBounds)
+            {
+                this.Texture = this.TileTexture(this.Texture, this.Dimensions);
+                this.Scale = new Vector2(1f, 1f);
+            }
         }
 
         public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
@@ -44,44 +50,16 @@
         {
             if (sb != null)
             {
-                if (!this.TileToBounds)
-                {
-                    sb.Draw(
-                        this.Texture,
-                        this.Location,
-                        null,
-                        Color.White,
-                        0f,
-                        this.Location,
-                        this.Scale,
-                        SpriteEffects.None,
-                        this.Depth);
-                }
-                else
-                {
-                    Vector2 fullTexCount = new Vector2(this.Dimensions.Width / this.Texture.Width, this.Dimensions.Height / this.Texture.Height);
-                    Vector2 partText = new Vector2(this.Scale.X - fullTexCount.X, this.Scale.Y - fullTexCount.Y);
-                    for (int i = 0; i <= fullTexCount.X; i++)
-                    {
-                        for (int j = 0; j <= fullTexCount.Y; j++)
-                        {
-                            sb.Draw(
-                                this.Texture,
-                                new Vector2(this.Location.X + (this.Texture.Width * i), this.Location.Y + (this.Texture.Height * j)),
-                                new Rectangle(
-                                            0, 
-                                            0, 
-                                            (int)(this.Texture.Width * ((this.Scale.X - i) > 1 ? 1 : partText.X)), 
-                                            (int)(this.Texture.Height * ((this.Scale.Y - j) > 1 ? 1 : partText.Y))),
-                                Color.White,
-                                0f,
-                                Vector2.Zero,
-                                1f,
-                                SpriteEffects.None,
-                                this.Depth);
-                        }
-                    }
-                }
+                sb.Draw(
+                    this.Texture,
+                    this.Location,
+                    null,
+                    Color.White,
+                    0f,
+                    this.Location,
+                    this.Scale,
+                    SpriteEffects.None,
+                    this.Depth);
             }
         }
 
@@ -110,8 +88,8 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
+            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
             this.Depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
             this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 
@@ -122,6 +100,26 @@
             {
                 this.TileToBounds = bool.Parse(tileEle.Value);
             }
+        }
+
+        private Texture2D TileTexture(Texture2D texture, Size bounds)
+        {
+            Texture2D tiledTexture;
+            Color[] textColor = new Color[texture.Width * texture.Height];
+            texture.GetData(textColor);
+
+            Color[] tiledTextColor = new Color[bounds.Width * bounds.Height];
+            for (int i = 0; i < bounds.Height; i++)
+            {
+                for (int j = 0; j < bounds.Width; j++)
+                {
+                    tiledTextColor[i*bounds.Width + j] = textColor[(i % texture.Height) * texture.Width + (j % texture.Width) ];
+                }
+            }
+
+            tiledTexture = new Texture2D(MainGame.GraphicsDev, bounds.Width, bounds.Height);
+            tiledTexture.SetData(tiledTextColor);
+            return tiledTexture;
         }
     }
 }

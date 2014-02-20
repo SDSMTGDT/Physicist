@@ -69,7 +69,7 @@
             XDocument rootDocument = XDocument.Load(filePath);
 
             XElement rootElement = rootDocument.Root;
-            if (rootElement != null && (rootElement.Name.ToString() == "map"))
+            if (rootElement != null && (rootElement.Name == "Map"))
             {
                 try
                 {
@@ -79,8 +79,8 @@
 
                     Map.SetCurrentMap(MapLoader.currentMap);
 
-                    MapLoader.LoadMedia(rootElement.Element("media"));
-                    MapLoader.LoadLevelObjects(rootElement.Element("levelobjects"));
+                    MapLoader.LoadMedia(rootElement.Element("Media"));
+                    MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
                 }
                 catch (AggregateException)
                 {
@@ -98,6 +98,7 @@
         private static void ErrorOccured(string errorMsg)
         {
             MapLoader.loadErrors.Add(errorMsg);
+            System.Console.WriteLine(errorMsg);
             MapLoader.HasErrors = true;
         }
 
@@ -141,7 +142,7 @@
         {
             if (levelRoots != null)
             {
-                XElement backgroundsEle = levelRoots.Element("backgrounds");
+                XElement backgroundsEle = levelRoots.Element("Backgrounds");
                 if (backgroundsEle != null)
                 {                    
                     var backgrounds = MapLoader.CreateInstances(backgroundsEle.Elements(), "class");
@@ -163,7 +164,7 @@
                     }                       
                 }
 
-                XElement foregroundsEle = levelRoots.Element("foregrounds");
+                XElement foregroundsEle = levelRoots.Element("Foregrounds");
                 if (foregroundsEle != null)
                 {
                     var foregrounds = MapLoader.CreateInstances(foregroundsEle.Elements(), "class");
@@ -177,7 +178,7 @@
                     }
                 }
 
-                XElement actorsEle = levelRoots.Element("actors");
+                XElement actorsEle = levelRoots.Element("Actors");
                 if (actorsEle != null)
                 {
                     var actors = MapLoader.CreateInstances(actorsEle.Elements(), "class");

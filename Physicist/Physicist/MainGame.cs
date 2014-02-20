@@ -19,6 +19,7 @@
     /// </summary>
     public class MainGame : Game
     {
+        private static GraphicsDevice graphicsDev;
         private static World world;
         private static Map map;
         private static List<Actor> actors;
@@ -33,6 +34,14 @@
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
+        }
+
+        public static GraphicsDevice GraphicsDev
+        {
+            get
+            {
+                return MainGame.graphicsDev;
+            }
         }
 
         public static World World
@@ -58,6 +67,7 @@
         {
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
+            MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
             MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
                         
@@ -78,14 +88,6 @@
             ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
 
             MainGame.map = MapLoader.LoadMap(MainGame.maps[0]);
-            if (MapLoader.HasErrors)
-            {
-                foreach (var error in MapLoader.Errors)
-                {
-                    System.Console.WriteLine(error);
-                }
-            }
-
             if (MapLoader.HasFailed || map == null)
             {
                 throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
