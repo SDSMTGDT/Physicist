@@ -63,8 +63,8 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
+            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
 
             this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
                 element.Attribute("soundref").Value);
