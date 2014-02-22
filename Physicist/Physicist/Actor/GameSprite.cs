@@ -204,7 +204,7 @@
             XElement spriteElement = new XElement("GameSprite");
 
             // get the name
-            spriteElement.Add(new XAttribute("name", this.SpriteName));
+            spriteElement.Add(new XAttribute("spriteName", this.SpriteName));
 
             // get the offset
             spriteElement.Add(ExtensionMethods.XmlSerialize(this.Offset, "Offset"));
@@ -252,7 +252,7 @@
             this.depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
 
             // Get the name
-            this.SpriteName = element.Attribute("spritename").Value;
+            this.SpriteName = element.Attribute("spriteName").Value;
 
             // Get the offset
             this.Offset = ExtensionMethods.XmlDeserializeVector2(element.Element("Offset"));

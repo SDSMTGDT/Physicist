@@ -16,6 +16,12 @@
         public Backdrop(XElement element)
         {
             this.XmlDeserialize(element);
+
+            if(this.TileToBounds)
+            {
+                this.Texture = this.TileTexture(this.Texture, this.Dimensions);
+                this.Scale = new Vector2(1f, 1f);
+            }
         }
 
         public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
@@ -24,6 +30,8 @@
             this.Dimensions = dimensions;
             this.Depth = depth;
             this.Texture = texture;
+            this.Scale = new Vector2(this.Dimensions.Width / (float)this.Texture.Width, this.Dimensions.Height / (float)this.Texture.Height);
+            this.TileToBounds = false;
         }
 
         public Vector2 Location { get; set; }
@@ -34,11 +42,24 @@
 
         public Texture2D Texture { get; set; }
 
+        public Vector2 Scale { get; private set; }
+
+        public bool TileToBounds { get; private set; }
+
         public void Draw(SpriteBatch sb)
         {
             if (sb != null)
             {
-                sb.Draw(this.Texture, this.Location, Color.White);
+                sb.Draw(
+                    this.Texture,
+                    this.Location,
+                    null,
+                    Color.White,
+                    0f,
+                    this.Location,
+                    this.Scale,
+                    SpriteEffects.None,
+                    this.Depth);
             }
         }
 
@@ -52,6 +73,11 @@
                 new XAttribute("textureRef", this.Texture.Name),
                 new XAttribute("class", this.GetType().ToString()));
 
+            if (this.TileToBounds)
+            {
+                element.Add(new XAttribute("tile", this.TileToBounds));
+            }
+
             return element;
         }
 
@@ -62,11 +88,38 @@
                 throw new ArgumentNullException("element");
             }
 
-            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("dimensions"));
-            this.Depth = float.Parse(element.Element("depth").Value, CultureInfo.CurrentCulture);
-            this.Texture = ContentController.Instance.GetContent<Texture2D>(
-                element.Attribute("textureRef").Value);
+            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
+            this.Depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
+            this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
+
+            this.Scale = new Vector2(this.Dimensions.Width / (float)this.Texture.Width, this.Dimensions.Height / (float)this.Texture.Height);
+
+            XAttribute tileEle = element.Attribute("tile");
+            if (tileEle != null)
+            {
+                this.TileToBounds = bool.Parse(tileEle.Value);
+            }
+        }
+
+        private Texture2D TileTexture(Texture2D texture, Size bounds)
+        {
+            Texture2D tiledTexture;
+            Color[] textColor = new Color[texture.Width * texture.Height];
+            texture.GetData(textColor);
+
+            Color[] tiledTextColor = new Color[bounds.Width * bounds.Height];
+            for (int i = 0; i < bounds.Height; i++)
+            {
+                for (int j = 0; j < bounds.Width; j++)
+                {
+                    tiledTextColor[i*bounds.Width + j] = textColor[(i % texture.Height) * texture.Width + (j % texture.Width) ];
+                }
+            }
+
+            tiledTexture = new Texture2D(MainGame.GraphicsDev, bounds.Width, bounds.Height);
+            tiledTexture.SetData(tiledTextColor);
+            return tiledTexture;
         }
     }
 }
