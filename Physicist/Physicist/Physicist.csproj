@@ -126,6 +126,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Content\Textures\Background.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Textures\Capsule.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

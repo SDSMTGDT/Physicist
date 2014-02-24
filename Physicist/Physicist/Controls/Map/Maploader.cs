@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
@@ -60,7 +61,7 @@
             }
         }
 
-        public static bool LoadMap(string filePath, Map map)
+        public static Map LoadMap(string filePath)
         {
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
@@ -68,13 +69,18 @@
             XDocument rootDocument = XDocument.Load(filePath);
 
             XElement rootElement = rootDocument.Root;
-            if (map != null && rootElement != null && (rootElement.Name.ToString() == "map"))
+            if (rootElement != null && (rootElement.Name == "Map"))
             {
                 try
                 {
-                    MapLoader.currentMap = map;
-                    MapLoader.LoadMedia(rootElement.Element("media"));
-                    MapLoader.LoadLevelObjects(rootElement.Element("levelobjects"));
+                    MapLoader.currentMap = new Map(
+                            int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                            int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+
+                    Map.SetCurrentMap(MapLoader.currentMap);
+
+                    MapLoader.LoadMedia(rootElement.Element("Media"));
+                    MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
                 }
                 catch (AggregateException)
                 {
@@ -86,12 +92,13 @@
                 MapLoader.HasFailed = true;
             }
 
-            return MapLoader.HasErrors;
+            return MapLoader.currentMap;
         }
 
         private static void ErrorOccured(string errorMsg)
         {
             MapLoader.loadErrors.Add(errorMsg);
+            System.Console.WriteLine(errorMsg);
             MapLoader.HasErrors = true;
         }
 
@@ -135,7 +142,7 @@
         {
             if (levelRoots != null)
             {
-                XElement backgroundsEle = levelRoots.Element("backgrounds");
+                XElement backgroundsEle = levelRoots.Element("Backgrounds");
                 if (backgroundsEle != null)
                 {                    
                     var backgrounds = MapLoader.CreateInstances(backgroundsEle.Elements(), "class");
@@ -157,7 +164,7 @@
                     }                       
                 }
 
-                XElement foregroundsEle = levelRoots.Element("foregrounds");
+                XElement foregroundsEle = levelRoots.Element("Foregrounds");
                 if (foregroundsEle != null)
                 {
                     var foregrounds = MapLoader.CreateInstances(foregroundsEle.Elements(), "class");
@@ -171,7 +178,7 @@
                     }
                 }
 
-                XElement actorsEle = levelRoots.Element("actors");
+                XElement actorsEle = levelRoots.Element("Actors");
                 if (actorsEle != null)
                 {
                     var actors = MapLoader.CreateInstances(actorsEle.Elements(), "class");

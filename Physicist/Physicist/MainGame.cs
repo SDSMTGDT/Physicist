@@ -19,6 +19,7 @@
     /// </summary>
     public class MainGame : Game
     {
+        private static GraphicsDevice graphicsDev;
         private static World world;
         private static Map map;
         private static List<Actor> actors;
@@ -33,6 +34,14 @@
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
+        }
+
+        public static GraphicsDevice GraphicsDev
+        {
+            get
+            {
+                return MainGame.graphicsDev;
+            }
         }
 
         public static World World
@@ -58,9 +67,11 @@
         {
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
-            AssetCreator.Instance.Initialize(this.GraphicsDevice);
+
+            MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\physicistlevel2.xml" };
+            MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
+                        
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -73,13 +84,20 @@
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            MainGame.world = new World(new Vector2(0f, 9.81f));
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+
+            MainGame.map = MapLoader.LoadMap(MainGame.maps[0]);
+            if (MapLoader.HasFailed || map == null)
+            {
+                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
+            }
+
             this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
             this.camera = new CameraController();
             this.camera.CameraViewport = this.viewport;
             this.camera.Bounds = new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2);
-            this.SetupWorld(MainGame.maps[0]);
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -137,44 +155,13 @@
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
+
             MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
             MainGame.map.Draw(this.spriteBatch);
 
             base.Draw(gameTime);
 
             this.spriteBatch.End();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
-        private void SetupWorld(string mapPath)
-        {
-            MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(1f);
-            MainGame.map = new Map();
-
-            if (MapLoader.LoadMap(mapPath, MainGame.map))
-            {
-                foreach (var error in MapLoader.Errors)
-                {
-                    System.Console.WriteLine(error);
-                }
-                
-                // TODO: give the bounds of the map to the camera
-                // this.camera.Bounds = new Vector2(this.map.width, this.map.height);
-            }
-
-            if (MapLoader.HasFailed)
-            {
-                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", mapPath));
-            }
-
-            Vertices borderVerts = new Vertices();
-            borderVerts.Add(Vector2.Zero);
-            borderVerts.Add(new Vector2(0, this.GraphicsDevice.Viewport.Height * 2));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2));
-            borderVerts.Add(new Vector2(this.GraphicsDevice.Viewport.Width * 2, 0));
-
-            BodyFactory.CreateLoopShape(MainGame.World, borderVerts.ToSimUnits()).Friction = 10f;
         }
     }
 }
