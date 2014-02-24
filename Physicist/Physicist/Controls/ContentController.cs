@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
@@ -144,6 +145,44 @@
             }
 
             return reference;
+        }
+
+        public Texture2D GetTextureMaterial(GraphicsDevice graphicsDevice, string assetName)
+        {
+            Texture2D materialTexture = null;
+            var texture = this.GetContent<Texture2D>(assetName);
+            if (texture.Width != texture.Height)
+            {
+                int minBound = (int)MathHelper.Min(texture.Width, texture.Height);
+                Color[] materialColors = new Color[minBound * minBound];
+                Color[] textureColors = new Color[texture.Width * texture.Height];
+                texture.GetData(textureColors);
+
+                for (int i = 0; i < minBound; i++)
+                {
+                    for (int j = 0; j < minBound; j++)
+                    {
+                        materialColors[(i * minBound) + j] = textureColors[(i * texture.Width) + j];
+                    }
+                }
+
+                try
+                {
+                    texture = new Texture2D(graphicsDevice, minBound, minBound);
+                    texture.SetData(materialColors);
+                    materialTexture = texture;
+                    texture = null;
+                }
+                finally
+                {
+                    if (texture != null)
+                    {
+                        texture.Dispose();
+                    }
+                }
+            }
+
+            return materialTexture;
         }
     }
 }

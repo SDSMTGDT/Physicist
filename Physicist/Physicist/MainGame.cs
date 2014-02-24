@@ -58,8 +58,9 @@
         {
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
+            AssetCreator.Instance.Initialize(this.GraphicsDevice);
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
+            MainGame.maps = new List<string>() { "Content\\Levels\\physicistlevel2.xml" };
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -148,7 +149,7 @@
         private void SetupWorld(string mapPath)
         {
             MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(1f);
             MainGame.map = new Map();
 
             if (MapLoader.LoadMap(mapPath, MainGame.map))
