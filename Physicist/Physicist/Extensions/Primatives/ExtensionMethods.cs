@@ -119,11 +119,6 @@
             return ConvertUnits.ToDisplayUnits(value);
         }
 
-        public static Vector2 Round(this Vector2 value)
-        {
-            return new Vector2((float)Math.Round(value.X), (float)Math.Round(value.Y));
-        }
-
         public static Texture2D TileTexture(this Texture2D value, Size bounds)
         {
             Texture2D tiledTexture = null;
@@ -179,7 +174,7 @@
                     case BodyCategory.Polygon:
                     case BodyCategory.RoundedRectangle:
                     case BodyCategory.SolidArc:
-                        offset = bounds.LowerBound - position + shapeOffset;
+                        offset = bounds.LowerBound.ToDisplayUnits() - position + shapeOffset;
                         break;
 
                     case BodyCategory.LineArc:

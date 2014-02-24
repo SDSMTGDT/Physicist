@@ -11,6 +11,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Extensions;
 
     public sealed class AssetCreator : IDisposable
     {
@@ -270,8 +271,8 @@
         /// and it's two connected vertices. Returned vertices 
         /// are in counterclockwise order
         /// </summary>
-        /// <param name="chain"></param>
-        /// <returns></returns>
+        /// <param name="chain">chain shape to work on</param>
+        /// <returns>new Triangularizable Vertices for chain shape</returns>
         private static Vertices CreateChainVertices(ChainShape chain)
         {
             Matrix rotMat = Matrix.CreateRotationZ(MathHelper.PiOver2);
@@ -281,24 +282,24 @@
             for (int i = 0; i < chain.Vertices.Count; i++)
             {
                 var curVertex = chain.Vertices[i];
+                Vector2 direction = Vector2.Zero;
+                Vector2 distance = Vector2.Zero;
                 if (i == 0)
                 {
-                    Vector2 direction = Vector2.Normalize(Vector2.Transform(chain.Vertices[i + 1] - curVertex, rotMat));
-                    posChainTextVerts.Add(curVertex + (direction * 2f));
-                    negChainTextVerts.Insert(0, curVertex - (direction * 2f));
+                    distance = chain.Vertices[i + 1] - curVertex;
                 }
                 else if (i < chain.Vertices.Count - 1)
                 {
-                    Vector2 direction = Vector2.Normalize(Vector2.Transform((chain.Vertices[i + 1] - curVertex) + (curVertex - chain.Vertices[i - 1]), rotMat));
-                    posChainTextVerts.Add(curVertex + (direction * 2f));
-                    negChainTextVerts.Insert(0, curVertex - (direction * 2f));
+                    distance = (chain.Vertices[i + 1] - curVertex) + (curVertex - chain.Vertices[i - 1]);
                 }
                 else
                 {
-                    Vector2 direction = Vector2.Normalize(Vector2.Transform(curVertex - chain.Vertices[i - 1], rotMat));
-                    posChainTextVerts.Add(curVertex + (direction * 2f));
-                    negChainTextVerts.Insert(0, curVertex - (direction * 2f));
+                    distance = curVertex - chain.Vertices[i - 1];
                 }
+
+                direction = Vector2.Normalize(Vector2.Transform(distance, rotMat)).ToSimUnits();
+                posChainTextVerts.Add(curVertex + (direction * 2f));
+                negChainTextVerts.Insert(0, curVertex - (direction * 2f));
             }
 
             chainTextVerts.AddRange(posChainTextVerts);
