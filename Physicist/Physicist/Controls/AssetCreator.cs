@@ -343,12 +343,11 @@
                     this.device.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
                 }
 
-                /* render outline
                 this.effect.TextureEnabled = false;
                 this.effect.Techniques[0].Passes[0].Apply();
-                this.device.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
-                */
 
+                // render outline                
+                // this.device.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
                 this.device.SetRenderTarget(null);
 
                 texture = tempTarget;

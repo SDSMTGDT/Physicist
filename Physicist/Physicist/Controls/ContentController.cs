@@ -149,20 +149,20 @@
 
         public Texture2D GetTextureMaterial(GraphicsDevice graphicsDevice, string assetName)
         {
-            Texture2D materialTexture = null;
-            var texture = this.GetContent<Texture2D>(assetName);
-            if (texture.Width != texture.Height)
+            Texture2D materialTexture = this.GetContent<Texture2D>(assetName);
+            if (materialTexture.Width != materialTexture.Height)
             {
-                int minBound = (int)MathHelper.Min(texture.Width, texture.Height);
+                Texture2D texture = null;
+                int minBound = (int)MathHelper.Min(materialTexture.Width, materialTexture.Height);
                 Color[] materialColors = new Color[minBound * minBound];
-                Color[] textureColors = new Color[texture.Width * texture.Height];
-                texture.GetData(textureColors);
+                Color[] textureColors = new Color[materialTexture.Width * materialTexture.Height];
+                materialTexture.GetData(textureColors);
 
                 for (int i = 0; i < minBound; i++)
                 {
                     for (int j = 0; j < minBound; j++)
                     {
-                        materialColors[(i * minBound) + j] = textureColors[(i * texture.Width) + j];
+                        materialColors[(i * minBound) + j] = textureColors[(i * materialTexture.Width) + j];
                     }
                 }
 
@@ -171,7 +171,6 @@
                     texture = new Texture2D(graphicsDevice, minBound, minBound);
                     texture.SetData(materialColors);
                     materialTexture = texture;
-                    texture = null;
                 }
                 finally
                 {

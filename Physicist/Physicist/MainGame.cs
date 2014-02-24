@@ -20,6 +20,7 @@
     public class MainGame : Game
     {
         private static World world;
+        private static GraphicsDevice graphicsDev;
         private static Map map;
         private static List<Actor> actors;
         private static List<string> maps;
@@ -33,6 +34,14 @@
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
+        }
+
+        public static GraphicsDevice GraphicsDev
+        {
+            get
+            {
+                return MainGame.graphicsDev;
+            }
         }
 
         public static World World
@@ -59,8 +68,9 @@
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
+            MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\physicistlevel2.xml" };
+            MainGame.maps = new List<string>() { "Content\\Levels\\MaterialTest.xml" };
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
