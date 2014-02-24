@@ -8,13 +8,14 @@
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
+    using Physicist.Controls;
     using Physicist.Enums;
     using Physicist.Extensions;
 
     public class BodyInfo
     {
         private BodyCategory? bodyCategory = null;
-        private List<Vertices> vertices = null;
+        private List<Vertices> vertexList = null;
         private Vector2? position = null;
         private Vector2? shapeOffset = null;
         private float? density = null;
@@ -92,11 +93,11 @@
         {
             get { return this.shapeOffset.Value; }
         }
-        
+
         // Common
         public IEnumerable<Vertices> Vertices 
         {
-            get { return this.vertices; }
+            get { return this.vertexList; }
         }
 
         public float Density 
@@ -212,7 +213,7 @@
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
 
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(this.position.Value, "position"));
+            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, Map.CurrentMapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
             {
@@ -239,21 +240,31 @@
                 bodyInfoXml.Add(new XAttribute("friction", this.friction));
             }
 
-            if (this.vertices != null)
+            if (this.vertexList != null)
             {
-                XElement verts = new XElement("vertices");
-                foreach (var vert in this.vertices)
+                XElement verts = new XElement("VertexList");
+                foreach (var vert in this.vertexList)
                 {
-                    XElement vertice = new XElement("vertice");
+                    XElement vertices = new XElement("vertices");
                     foreach (var vector in vert)
                     {
-                        vertice.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
+                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
                     }
 
-                    verts.Add(vertice);
+                    if (this.vertexList.Count > 1)
+                    {
+                        verts.Add(vertices);
+                    }
+                    else
+                    {
+                        bodyInfoXml.Add(vertices);
+                    }
                 }
 
-                bodyInfoXml.Add(verts);
+                if (this.vertexList.Count > 1)
+                {
+                    bodyInfoXml.Add(verts);
+                }
             }
 
             if (this.density.HasValue)
@@ -313,12 +324,12 @@
 
             if (this.topRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("topRad", this.topRadius.Value));
+                bodyInfoXml.Add(new XAttribute("topRadius", this.topRadius.Value));
             }
 
             if (this.bottomRadius.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botRad", this.bottomRadius.Value));
+                bodyInfoXml.Add(new XAttribute("bottomRadius", this.bottomRadius.Value));
             }
 
             if (this.topedge.HasValue)
@@ -328,7 +339,7 @@
 
             if (this.bottomEdge.HasValue)
             {
-                bodyInfoXml.Add(new XAttribute("botEdge", this.bottomEdge.Value));
+                bodyInfoXml.Add(new XAttribute("bottomEdge", this.bottomEdge.Value));
             }
 
             if (this.start.HasValue)
@@ -373,8 +384,9 @@
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
-            this.position = ExtensionMethods.XmlDeserializeVector2(element.Element("position"));
-
+            Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+            this.position = new Vector2(designPosition.X, Map.CurrentMapHeight - designPosition.Y); 
+            
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null) 
             {
@@ -472,7 +484,7 @@
             float xmax = float.MinValue, ymax = float.MinValue;
             float xmin = float.MaxValue, ymin = float.MaxValue;
 
-            foreach (var vert in element.Element("vertices").Elements())
+            foreach (var vert in element.Element("VertexList").Elements())
             {
                 Vector2 nextVect = ExtensionMethods.XmlDeserializeVector2(vert);
                 verts.Add(nextVect);
@@ -482,7 +494,7 @@
                 ymin = MathHelper.Min(nextVect.Y, ymin);
             }
 
-            this.vertices = new List<Vertices>() { verts };
+            this.vertexList = new List<Vertices>() { verts };
 
             this.shapeOffset = new Vector2(xmax - xmin, ymax - ymin) / 2.0f;
         }
@@ -502,12 +514,12 @@
         {
             Vertices verts = new Vertices();
 
-            foreach (var vert in element.Element("vertice").Elements())
+            foreach (var vert in element.Element("Vertices").Elements())
             {
                 verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
-            this.vertices = new List<Vertices>() { verts };
+            this.vertexList = new List<Vertices>() { verts };
 
             this.shapeOffset = Vector2.Zero;
         }
@@ -523,17 +535,17 @@
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
 
-            this.vertices = new List<Vertices>();
+            this.vertexList = new List<Vertices>();
 
-            foreach (var verticeslist in element.Element("vertices").Elements())
+            foreach (var vertexListlist in element.Element("VertexList").Elements())
             {
                 Vertices nextVerts = new Vertices();
-                foreach (var vert in verticeslist.Elements())
+                foreach (var vert in vertexListlist.Elements())
                 {
                     nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
                 }
 
-                this.vertices.Add(nextVerts);
+                this.vertexList.Add(nextVerts);
             }
 
             this.shapeOffset = Vector2.Zero;
@@ -541,9 +553,9 @@
 
         private void MakeEdge(XElement element)
         {
-            this.start = ExtensionMethods.XmlDeserializeVector2(element.Element("start"));
+            this.start = ExtensionMethods.XmlDeserializeVector2(element.Element("Start"));
 
-            this.end = ExtensionMethods.XmlDeserializeVector2(element.Element("end"));
+            this.end = ExtensionMethods.XmlDeserializeVector2(element.Element("End"));
 
             this.shapeOffset = Vector2.Zero;
         }
@@ -583,12 +595,12 @@
         {
             Vertices verts = new Vertices();
 
-            foreach (var vert in element.Element("vertice").Elements())
+            foreach (var vert in element.Element("Vertices").Elements())
             {
                 verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
-            this.vertices = new List<Vertices>() { verts };
+            this.vertexList = new List<Vertices>() { verts };
 
             this.shapeOffset = Vector2.Zero;
         }
@@ -598,12 +610,12 @@
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
             Vertices verts = new Vertices();
 
-            foreach (var vert in element.Element("vertice").Elements())
+            foreach (var vert in element.Element("Vertices").Elements())
             {
                 verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
-            this.vertices = new List<Vertices>() { verts };
+            this.vertexList = new List<Vertices>() { verts };
 
             this.shapeOffset = Vector2.Zero;
         }

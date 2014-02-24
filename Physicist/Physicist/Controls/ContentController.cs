@@ -183,5 +183,11 @@
 
             return materialTexture;
         }
+
+        public void Reset()
+        {
+            this.media.Clear();
+            this.IsInitialized = false;
+        }
     }
 }
