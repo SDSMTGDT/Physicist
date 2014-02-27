@@ -50,7 +50,7 @@
             base.LoadContent();
             this.world = new World(new Vector2(0f, 9.81f));
             
-            MapLoader.InitializeForLoading(this);
+            MapLoader.Initialize(this);
             this.map = MapLoader.LoadMap(this.maps[0]);
             if (MapLoader.HasFailed || this.map == null)
             {

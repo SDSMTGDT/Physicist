@@ -68,7 +68,7 @@
             }
         }
 
-        public static void InitializeForLoading(IPhysicistRegistration registrationObject)
+        public static void Initialize(IPhysicistRegistration registrationObject)
         {
             MapLoader.registration = registrationObject;
             MapLoader.IsInitialized = true;

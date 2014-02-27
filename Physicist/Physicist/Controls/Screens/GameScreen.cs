@@ -6,11 +6,10 @@
     using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework.Input;
 
     public class GameScreen : IDisposable
     {
-        private Color backgroundColor = Color.CornflowerBlue;
         private Dictionary<Keys, KeyDebouncer> keyPressedStates = new Dictionary<Keys, KeyDebouncer>();
 
         public GameScreen(string name)
@@ -19,6 +18,7 @@ using Microsoft.Xna.Framework.Input;
             this.IsPopup = false;
             this.IsModal = true;
             this.IsActive = true;
+            this.BackgroundColor = Color.CornflowerBlue;
         }
 
         public string Name { get; private set; }
@@ -33,18 +33,7 @@ using Microsoft.Xna.Framework.Input;
 
         public GraphicsDevice GraphicsDevice { get; private set; }
 
-        public Color BackgroundColor 
-        {
-            get
-            {
-                return this.backgroundColor;
-            }
-
-            set
-            {
-                this.backgroundColor = value;
-            }
-        }
+        public Color BackgroundColor { get; set; }
 
         public virtual void Initialize(GraphicsDevice graphicsDevice) 
         {

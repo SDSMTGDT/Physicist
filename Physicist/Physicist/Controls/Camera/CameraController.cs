@@ -126,7 +126,7 @@
 
         public void Rotate(float angle)
         {
-            this.Rotation += angle;            
+            this.Rotation += angle;
         }
 
         public void ZoomIn(float magnitude)
