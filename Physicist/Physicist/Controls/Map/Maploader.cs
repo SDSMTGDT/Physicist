@@ -20,6 +20,7 @@
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
         private static Map currentMap = null;
+        private static IPhysicistRegistration registration = null;
 
         static MapLoader()
         {
@@ -53,6 +54,12 @@
             private set;
         }
 
+        public static bool IsInitialized
+        {
+            get;
+            private set;
+        }
+
         public static IEnumerable<string> Errors
         {
             get
@@ -61,28 +68,43 @@
             }
         }
 
-        public static Map LoadMap(string filePath)
+        public static void InitializeForLoading(IPhysicistRegistration registrationObject)
         {
+            MapLoader.registration = registrationObject;
+            MapLoader.IsInitialized = true;
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
+        }
 
-            XDocument rootDocument = XDocument.Load(filePath);
+        public static Map LoadMap(string filePath)
+        {
+            MapLoader.currentMap = null;
 
-            XElement rootElement = rootDocument.Root;
-            if (rootElement != null && (rootElement.Name == "Map"))
+            if (MapLoader.IsInitialized)
             {
-                try
+                XDocument rootDocument = XDocument.Load(filePath);
+
+                XElement rootElement = rootDocument.Root;
+                if (rootElement != null && (rootElement.Name == "Map"))
                 {
-                    MapLoader.currentMap = new Map(
-                            int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
-                            int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+                    try
+                    {
+                        MapLoader.currentMap = new Map(
+                                MapLoader.registration.World,
+                                int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                                int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
 
-                    Map.SetCurrentMap(MapLoader.currentMap);
+                        Map.SetCurrentMap(MapLoader.currentMap);
 
-                    MapLoader.LoadMedia(rootElement.Element("Media"));
-                    MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                        MapLoader.LoadMedia(rootElement.Element("Media"));
+                        MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                    }
+                    catch (AggregateException)
+                    {
+                        MapLoader.HasFailed = true;
+                    }
                 }
-                catch (AggregateException)
+                else
                 {
                     MapLoader.HasFailed = true;
                 }
@@ -90,7 +112,10 @@
             else
             {
                 MapLoader.HasFailed = true;
+                MapLoader.ErrorOccured("Error while loading map at " + filePath + ", MapLoader not Initialized!");
             }
+
+            MapLoader.IsInitialized = false;
 
             return MapLoader.currentMap;
         }
@@ -140,6 +165,7 @@
 
         private static void LoadLevelObjects(XElement levelRoots)
         {
+            XmlBodyFactory.SetWorld(MapLoader.registration.World);
             if (levelRoots != null)
             {
                 XElement backgroundsEle = levelRoots.Element("Backgrounds");
@@ -187,7 +213,7 @@
                         Actor actor = actorObject as Actor;
                         if (actor != null)
                         {
-                            MainGame.RegisterActor(actor);
+                            MapLoader.registration.RegisterActor(actor);
                         }
                     }
                 }

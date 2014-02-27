@@ -5,6 +5,8 @@
     </Unrecognized>
     <Recognized>
       <Word>spriteBatch</Word>
+      <Word>SpriteBatch</Word>
+      <Word>Debouncer</Word>
       <Word>sb</Word>
       <Word>Sim</Word>
     </Recognized>
@@ -12,6 +14,7 @@
   <Acronyms>
     <CasingExceptions>
       <Acronym>NPC</Acronym>
+      <Acronym>FCC</Acronym>
     </CasingExceptions>
   </Acronyms>
 </Dictionary>

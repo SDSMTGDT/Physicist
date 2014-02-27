@@ -17,7 +17,7 @@
     {
         private static object lockObject = new object();
         private static ContentController instance = null;
-        private Dictionary<MediaFormat, MediaDictionary<MediaElement>> media = null;
+        private Dictionary<MediaFormat, MediaElementKeyedDictionary<MediaElement>> media = null;
 
         private ContentController()
         {
@@ -78,11 +78,11 @@
                 this.Content = content;
                 this.Content.RootDirectory = rootDirectory;
 
-                this.media = new Dictionary<MediaFormat, MediaDictionary<MediaElement>>();
+                this.media = new Dictionary<MediaFormat, MediaElementKeyedDictionary<MediaElement>>();
 
                 foreach (MediaFormat typename in Enum.GetValues(typeof(MediaFormat)))
                 {
-                    this.media.Add(typename, new MediaDictionary<MediaElement>());
+                    this.media.Add(typename, new MediaElementKeyedDictionary<MediaElement>());
                 }
 
                 this.IsInitialized = true;
@@ -97,7 +97,55 @@
                 MediaFormat assetFormat = (MediaFormat)Enum.Parse(typeof(MediaFormat), typeof(T).Name);
                 if (this.media.ContainsKey(assetFormat))
                 {
-                    this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.Content.Load<T>(assetPath)));
+                    try
+                    {
+                        this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.Content.Load<T>(assetPath)));
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Don't thorw if the assets are the same
+                        if (this.media[assetFormat][assetName].Location != assetPath)
+                        {
+                            throw;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ContentLoadException("Error, content of type: " + typeof(T).Name + " is not supported!");
+                }
+            }
+        }
+
+        public void UnloadContent(string assetName, MediaFormat assetFormat)
+        {
+            if (this.media.ContainsKey(assetFormat))
+            {
+                this.media[assetFormat].Remove(this.media[assetFormat][assetName]);
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Follows Monogame Content Pattern")]
+        public void UnloadContent<T>(string assetName) where T : class
+        {
+            if (this.IsInitialized)
+            {
+                MediaFormat assetFormat = (MediaFormat)Enum.Parse(typeof(MediaFormat), typeof(T).Name);
+                if (this.media.ContainsKey(assetFormat))
+                {
+                    this.media[assetFormat].Remove(this.media[assetFormat][assetName]);
+                }
+            }
+        }
+
+        public void AddContent<T>(string assetName, T asset) where T : class
+        {
+            if (this.IsInitialized)
+            {
+                MediaFormat assetFormat = (MediaFormat)Enum.Parse(typeof(MediaFormat), typeof(T).Name);
+                if (this.media.ContainsKey(assetFormat))
+                {
+                    this.media[assetFormat].Add(new MediaElement(assetName, null, asset));
                 }
                 else
                 {

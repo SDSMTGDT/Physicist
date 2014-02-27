@@ -49,7 +49,7 @@
             private set;
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {

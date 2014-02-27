@@ -9,6 +9,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Actors;
+    using Physicist.Controls;
     using Physicist.Extensions;
 
     public class Backdrop : IXmlSerializable
@@ -17,7 +18,7 @@
         {
             this.XmlDeserialize(element);
 
-            if(this.TileToBounds)
+            if (this.TileToBounds)
             {
                 this.Texture = this.TileTexture(this.Texture, this.Dimensions);
                 this.Scale = new Vector2(1f, 1f);
@@ -46,7 +47,7 @@
 
         public bool TileToBounds { get; private set; }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
@@ -113,11 +114,11 @@
             {
                 for (int j = 0; j < bounds.Width; j++)
                 {
-                    tiledTextColor[i*bounds.Width + j] = textColor[(i % texture.Height) * texture.Width + (j % texture.Width) ];
+                    tiledTextColor[(i * bounds.Width) + j] = textColor[((i % texture.Height) * texture.Width) + (j % texture.Width)];
                 }
             }
 
-            tiledTexture = new Texture2D(MainGame.GraphicsDev, bounds.Width, bounds.Height);
+            tiledTexture = new Texture2D(ScreenManager.GraphicsDevice, bounds.Width, bounds.Height);
             tiledTexture.SetData(tiledTextColor);
             return tiledTexture;
         }

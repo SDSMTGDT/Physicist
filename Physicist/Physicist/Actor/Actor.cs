@@ -100,7 +100,7 @@
 
         public Visibility VisibleState { get; set; }
 
-        public virtual void Draw(SpriteBatch sb)
+        public virtual void Draw(ISpritebatch sb)
         {
             if (this.IsEnabled)
             {

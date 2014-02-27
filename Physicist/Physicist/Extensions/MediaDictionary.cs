@@ -7,15 +7,15 @@
     using Physicist.Extensions.Primitives;
 
     [Serializable]
-    public class MediaDictionary<T> : Dictionary<string, T> where T : MediaElement
+    public class MediaElementKeyedDictionary<T> : KeyedDictionary<string, T> where T : MediaElement
     {
-        public MediaDictionary()
-            : base()
+        public MediaElementKeyedDictionary() :
+            base()
         {
         }
 
-        protected MediaDictionary(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        protected MediaElementKeyedDictionary(SerializationInfo info, StreamingContext context) :
+            base(info, context)
         {
         }
 
@@ -29,9 +29,14 @@
             return base[key].Asset;
         }
 
-        public void Add(T item)
+        public override string GetKeyForItem(T item)
         {
-            base.Add(item.Name, item);
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            return item.Name;
         }
     }
 }

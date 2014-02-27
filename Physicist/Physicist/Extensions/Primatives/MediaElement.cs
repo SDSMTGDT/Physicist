@@ -9,7 +9,7 @@
         {
             this.Name = assetName;
             this.Location = assetLocation;
-            this.Asset = asset;
+            this.Asset = asset;            
         }
 
         public MediaFormat Format { get; set; }
