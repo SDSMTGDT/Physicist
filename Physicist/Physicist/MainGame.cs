@@ -67,10 +67,10 @@
         {
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
+            AssetCreator.Instance.Initialize(this.GraphicsDevice);
             MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\TestLevel.xml" };
-                        
+            MainGame.maps = new List<string>() { "Content\\Levels\\MaterialTest.xml" };
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
