@@ -52,7 +52,6 @@ using Microsoft.Xna.Framework.Input;
             this.Camera = new CameraController();
             this.Camera.CameraViewport = new Controls.Viewport(new Extensions.Size(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Width));
             this.Camera.Bounds = new Vector2(GraphicsDevice.Viewport.Width * 2, GraphicsDevice.Viewport.Height * 2);
-
         }
         
         public virtual void LoadContent() 

@@ -80,7 +80,7 @@
 
             try
             {
-                tempScreen = new PhysicistGameScreen("MainScreen", "Content\\Levels\\TestLevel.xml");
+                tempScreen = new PhysicistGameScreen("MainScreen", "Content\\Levels\\MaterialTest.xml");
                 screen = tempScreen;
                 tempScreen = null;
             }

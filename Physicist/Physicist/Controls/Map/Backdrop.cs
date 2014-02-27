@@ -20,7 +20,7 @@
 
             if (this.TileToBounds)
             {
-                this.Texture = this.TileTexture(this.Texture, this.Dimensions);
+                this.Texture = this.Texture.TileTexture(this.Dimensions);
                 this.Scale = new Vector2(1f, 1f);
             }
         }
@@ -101,26 +101,6 @@
             {
                 this.TileToBounds = bool.Parse(tileEle.Value);
             }
-        }
-
-        private Texture2D TileTexture(Texture2D texture, Size bounds)
-        {
-            Texture2D tiledTexture;
-            Color[] textColor = new Color[texture.Width * texture.Height];
-            texture.GetData(textColor);
-
-            Color[] tiledTextColor = new Color[bounds.Width * bounds.Height];
-            for (int i = 0; i < bounds.Height; i++)
-            {
-                for (int j = 0; j < bounds.Width; j++)
-                {
-                    tiledTextColor[(i * bounds.Width) + j] = textColor[((i % texture.Height) * texture.Width) + (j % texture.Width)];
-                }
-            }
-
-            tiledTexture = new Texture2D(ScreenManager.GraphicsDevice, bounds.Width, bounds.Height);
-            tiledTexture.SetData(tiledTextColor);
-            return tiledTexture;
         }
     }
 }

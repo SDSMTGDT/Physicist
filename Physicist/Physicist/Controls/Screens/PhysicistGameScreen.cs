@@ -54,7 +54,8 @@
             this.map = MapLoader.LoadMap(this.maps[0]);
             if (MapLoader.HasFailed || this.map == null)
             {
-                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
+                System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
+                this.PopScreen();
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace Physicist.Controls
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
@@ -11,7 +12,8 @@
 
     public class MapObject : IXmlSerializable
     {
-        private Texture2D texture;
+        private List<Tuple<Texture2D, Vector2>> textures = new List<Tuple<Texture2D, Vector2>>();
+        private bool fill = false;
 
         public MapObject(XElement element)
         {
@@ -28,7 +30,7 @@
             this.TextureReference = textureRef;
             this.MapBody = body;
             this.MapBodyInfo = bodyInfo;
-            this.texture = ContentController.Instance.GetContent<Texture2D>(textureRef);
+            this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(textureRef), Vector2.Zero));
         }
 
         public string TextureReference
@@ -53,16 +55,22 @@
         {
             if (sb != null)
             {
-                sb.Draw(
-                        this.texture, 
-                        this.MapBodyInfo.Position,
-                        null,
-                        Color.White,
-                        this.MapBody.Rotation,
-                        this.MapBodyInfo.ShapeOffset,
-                        1f,
-                        SpriteEffects.None,
-                        .5f);
+                foreach (var texture in this.textures)
+                {
+                    if (texture.Item1 != null)
+                    {
+                        sb.Draw(
+                                texture.Item1,
+                                this.MapBodyInfo.Position + texture.Item2,
+                                null,
+                                Color.White,
+                                this.MapBody.Rotation,
+                                this.MapBodyInfo.ShapeOffset,
+                                1f,
+                                SpriteEffects.None,
+                                this.fill ? 0.6f : .5f);
+                    }
+                }
             }
         }
        
@@ -85,7 +93,35 @@
             this.MapBody = bodyData.Item1;
             this.MapBodyInfo = bodyData.Item2;
             this.TextureReference = element.Attribute("textureRef").Value;
-            this.texture = ContentController.Instance.GetContent<Texture2D>(this.TextureReference);
+
+            XAttribute fillAtt = element.Attribute("fill");
+            if (fillAtt != null)
+            {
+                this.fill = bool.Parse(fillAtt.Value);
+            }
+
+            if (this.fill)
+            {
+                if (this.MapBodyInfo.BodyCategory != Enums.BodyCategory.LoopShape)
+                {
+                    foreach (var fixture in this.MapBody.FixtureList)
+                    {
+                        Tuple<Texture2D, Vector2> textureInfo = new Tuple<Texture2D, Vector2>(
+                                                    AssetCreator.Instance.TextureFromShape(fixture.Shape, this.TextureReference, Color.White, 1f),
+                                                    fixture.FixtureOffset(this.MapBodyInfo.BodyCategory, this.MapBodyInfo.Position, this.MapBodyInfo.ShapeOffset));
+
+                        this.textures.Add(textureInfo);
+                    }
+                }
+                else
+                {
+                    System.Console.WriteLine("Error! Loop Shape is not supported for fill");
+                }
+            }
+            else
+            {
+                this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(this.TextureReference), Vector2.Zero));
+            }
         }
     }
 }

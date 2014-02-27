@@ -28,6 +28,8 @@
             this.graphics = new GraphicsDeviceManager(this);
         }
 
+        public static GraphicsDevice GraphicsDev { get; private set; }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -37,7 +39,9 @@
         protected override void Initialize()
         {
             ContentController.Instance.Initialize(this.Content, "Content");
+            MainGame.GraphicsDev = this.GraphicsDevice;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
+            AssetCreator.Instance.Initialize(this.GraphicsDevice);
             ScreenManager.Initialize(this.GraphicsDevice);
             ScreenManager.Quit += this.RequestQuit;
 
