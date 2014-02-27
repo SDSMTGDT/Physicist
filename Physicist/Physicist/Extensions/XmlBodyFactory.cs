@@ -148,6 +148,7 @@
                                                         bodyInfo.Radius.ToSimUnits(),
                                                         bodyInfo.Position.ToSimUnits(),
                                                         bodyInfo.Angle);
+
                     break;
             }
 
