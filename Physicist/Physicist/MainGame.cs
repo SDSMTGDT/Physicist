@@ -64,7 +64,7 @@
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {            
+        {
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
             AssetCreator.Instance.Initialize(this.GraphicsDevice);

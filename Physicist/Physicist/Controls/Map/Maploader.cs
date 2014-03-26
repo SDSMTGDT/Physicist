@@ -16,7 +16,7 @@
     using Physicist.Actors;
     using Physicist.Enums;
     using Physicist.Extensions;
-    
+
     public static class MapLoader
     {
         private static List<string> loadErrors = new List<string>();
@@ -26,7 +26,7 @@
         private static Map currentMap = null;
         private static XmlSchemaSet schemas = new XmlSchemaSet();
         private static List<XslCompiledTransform> transforms = new List<XslCompiledTransform>();
-            
+
         static MapLoader()
         {
             var assemblyNames = new List<string>();
@@ -92,7 +92,7 @@
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
                 
-            List<string> validationErrors = new List<string>();            
+            List<string> validationErrors = new List<string>();
             XDocument rootDocument = new XDocument();
             XDocument transformDoc = new XDocument();
             using (FileStream rstream = File.OpenRead(filePath))
@@ -114,7 +114,7 @@
                 MapLoader.ErrorOccured("Map " + filePath + " failed to validate against schema!\nValidation error list: ");
                 validationErrors.ForEach(error => MapLoader.ErrorOccured(error));
             }
-            else            
+            else
             {
                 using (XmlWriter writer = transformDoc.CreateWriter())
                 {
@@ -247,7 +247,7 @@
                                 MapLoader.currentMap.AddBackgroundMusic(backgroundMusic);
                             }
                         }
-                    }                       
+                    }
                 }
 
                 XElement foregroundsEle = levelRoots.Element("Foregrounds");
