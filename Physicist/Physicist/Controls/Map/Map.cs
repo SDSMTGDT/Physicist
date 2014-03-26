@@ -31,10 +31,6 @@
                             new Vertices() { Vector2.Zero, new Vector2(0, this.Height), new Vector2(this.Width, this.Height), new Vector2(this.Width, 0) }.ToSimUnits()).Friction = 10f;
         }
 
-        public static int CurrentMapWidth { get; private set; }
-
-        public static int CurrentMapHeight { get; private set; }
-
         public int Width { get; private set; }
 
         public int Height { get; private set; }
@@ -68,20 +64,6 @@
             get
             {
                 return this.mediaReferences;
-            }
-        }
-
-        public static void SetCurrentMap(Map map)
-        {
-            if (map != null)
-            {
-                Map.CurrentMapHeight = map.Height;
-                Map.CurrentMapWidth = map.Width;
-            }
-            else
-            {
-                Map.CurrentMapHeight = 0;
-                Map.CurrentMapWidth = 0;
             }
         }
 

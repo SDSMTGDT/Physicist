@@ -109,12 +109,24 @@
 
         public virtual bool IsKeyDown(Keys key)
         {
+            return this.IsKeyDown(key, false);
+        }
+
+        public virtual bool IsKeyDown(Keys key, bool debounceKey)
+        {
             if (!this.keyPressedStates.ContainsKey(key))
             {
                 this.keyPressedStates.Add(key, new KeyDebouncer() { IsPressed = false, PreviousState = KeyState.Down });
             }
 
-            return this.keyPressedStates[key].IsPressed;
+            bool isKeyDown = this.keyPressedStates[key].IsPressed;
+
+            if (!debounceKey)
+            {
+                isKeyDown = Keyboard.GetState().IsKeyDown(key);
+            }
+
+            return isKeyDown;
         }
 
         public void PopScreen()

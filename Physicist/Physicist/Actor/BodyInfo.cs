@@ -14,6 +14,10 @@
 
     public class BodyInfo
     {
+        // Construction information
+        private int mapHeight;
+
+        // Body information
         private BodyCategory? bodyCategory = null;
         private List<Vertices> vertexList = null;
         private Vector2? position = null;
@@ -47,9 +51,9 @@
         private float friction = 0f;
         private float rotation = 0f;
 
-        public BodyInfo(XElement element)
+        public BodyInfo(int mapHeight)
         {
-            this.XmlDeserialize(element);
+            this.mapHeight = mapHeight;
         }
 
         // Global to all Body
@@ -213,7 +217,7 @@
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
 
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, Map.CurrentMapHeight - this.Position.Y), "position"));
+            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
             {
@@ -385,7 +389,7 @@
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
             Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
-            this.position = new Vector2(designPosition.X, Map.CurrentMapHeight - designPosition.Y); 
+            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y); 
             
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null) 

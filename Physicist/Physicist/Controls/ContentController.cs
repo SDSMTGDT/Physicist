@@ -18,7 +18,7 @@
     {
         private static object lockObject = new object();
         private static ContentController instance = null;
-        private Dictionary<MediaFormat, MediaElementKeyedDictionary<MediaElement>> media = null;
+        private Dictionary<MediaFormat, MediaElementKeyedCollection<MediaElement>> media = null;
 
         private ContentController()
         {
@@ -61,7 +61,7 @@
                     {
                         foreach (var mediaInfo in pair.Value)
                         {
-                            mediaReferences.Add(mediaInfo.Value);
+                            mediaReferences.Add(mediaInfo);
                         }
                     }
                 }
@@ -79,11 +79,11 @@
                 this.Content = content;
                 this.Content.RootDirectory = rootDirectory;
 
-                this.media = new Dictionary<MediaFormat, MediaElementKeyedDictionary<MediaElement>>();
+                this.media = new Dictionary<MediaFormat, MediaElementKeyedCollection<MediaElement>>();
 
                 foreach (MediaFormat typename in Enum.GetValues(typeof(MediaFormat)))
                 {
-                    this.media.Add(typename, new MediaElementKeyedDictionary<MediaElement>());
+                    this.media.Add(typename, new MediaElementKeyedCollection<MediaElement>());
                 }
 
                 this.IsInitialized = true;
@@ -161,7 +161,7 @@
             if (this.IsInitialized)
             {
                 MediaFormat assetFormat;
-                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) & this.media.ContainsKey(assetFormat) && this.media[assetFormat].ContainsKey(assetName))
+                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) & this.media.ContainsKey(assetFormat) && this.media[assetFormat].Contains(assetName))
                 {
                     asset = this.media[assetFormat][assetName].Asset as T;
                 }
@@ -189,7 +189,7 @@
             MediaFormat assetFormat;
             if (this.IsInitialized & asset != null && Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat))
             {
-                reference = this.media[assetFormat].FirstOrDefault(media => media.Value.Asset.Equals(asset)).Value;
+                reference = this.media[assetFormat].FirstOrDefault(media => media.Asset.Equals(asset));
             }
 
             return reference;

@@ -11,7 +11,7 @@
 
     public static class ScreenManager
     {
-        private static SystemScreenKeyedDictionary systemScreens = new SystemScreenKeyedDictionary();
+        private static SystemScreenKeyedCollection systemScreens = new SystemScreenKeyedCollection();
         private static List<GameScreen> activeScreens = new List<GameScreen>();
 
         private static bool isInitialized = false;
@@ -142,7 +142,7 @@
                 screen.Dispose();                
             }
 
-            foreach (var screen in ScreenManager.systemScreens.Values)
+            foreach (var screen in ScreenManager.systemScreens)
             {
                 screen.Dispose();
             }

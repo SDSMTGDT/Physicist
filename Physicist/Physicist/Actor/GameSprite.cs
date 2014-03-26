@@ -23,10 +23,8 @@
         private float markedTime = 0;
         private float depth = 0f;
 
-        // Note: Empty constructor for use in deserialization only!
-        public GameSprite(XElement element)
+        public GameSprite()
         {
-            this.XmlDeserialize(element);
         }
 
         public GameSprite(Texture2D spriteSheet, Size frameSize, string spriteName)

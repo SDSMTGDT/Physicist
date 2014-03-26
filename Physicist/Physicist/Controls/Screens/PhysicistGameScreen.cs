@@ -35,6 +35,14 @@
             }
         }
 
+        public Map Map
+        {
+            get
+            {
+                return this.map;
+            }
+        }
+
         public override void Initialize(GraphicsDevice graphicsDevice)
         {
             base.Initialize(graphicsDevice);
@@ -50,9 +58,8 @@
             base.LoadContent();
             this.world = new World(new Vector2(0f, 9.81f));
             
-            MapLoader.Initialize(this);
-            this.map = MapLoader.LoadMap(this.maps[0]);
-            if (MapLoader.HasFailed || this.map == null)
+            this.map = MapLoader.Initialize(this.maps[0], this);
+            if (this.map == null || !MapLoader.LoadCurrentMap())
             {
                 System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
                 this.PopScreen();
@@ -63,7 +70,7 @@
         {
             if (gameTime != null)
             {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.IsKeyDown(Keys.Escape))
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.IsKeyDown(Keys.Escape, true))
                 {
                     this.PopScreen();
                 }
@@ -77,15 +84,7 @@
 
                 foreach (var actor in this.actors)
                 {
-                    Player player = actor as Player;
-                    if (player != null)
-                    {
-                        player.Update(gameTime, Keyboard.GetState());
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
+                    actor.Update(gameTime);
                 }
 
                 // TODO: Add your update logic here

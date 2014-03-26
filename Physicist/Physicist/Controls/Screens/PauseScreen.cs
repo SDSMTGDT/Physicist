@@ -37,7 +37,7 @@
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (this.IsKeyDown(Keys.Escape))
+            if (this.IsKeyDown(Keys.Escape, true))
             {
                 this.PopScreen();
             }

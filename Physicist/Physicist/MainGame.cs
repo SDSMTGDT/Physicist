@@ -44,7 +44,7 @@
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             ScreenManager.Initialize(this.GraphicsDevice);
             ScreenManager.Quit += this.RequestQuit;
-
+           
             //// TODO: Add your initialization logic here
             base.Initialize();
         }

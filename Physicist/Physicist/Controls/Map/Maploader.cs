@@ -19,8 +19,9 @@
         private static Dictionary<string, Type> assemblyTypes = new Dictionary<string, Type>();
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
-        private static Map currentMap = null;
         private static IPhysicistRegistration registration = null;
+
+        private static XElement rootElement = null;
 
         static MapLoader()
         {
@@ -54,12 +55,6 @@
             private set;
         }
 
-        public static bool IsInitialized
-        {
-            get;
-            private set;
-        }
-
         public static IEnumerable<string> Errors
         {
             get
@@ -68,56 +63,59 @@
             }
         }
 
-        public static void Initialize(IPhysicistRegistration registrationObject)
+        public static Map CurrentMap
         {
-            MapLoader.registration = registrationObject;
-            MapLoader.IsInitialized = true;
-            MapLoader.HasFailed = false;
-            MapLoader.HasErrors = false;
+            get;
+            private set;
         }
 
-        public static Map LoadMap(string filePath)
+        public static Map Initialize(string filePath, IPhysicistRegistration registrationObject)
         {
-            MapLoader.currentMap = null;
-
-            if (MapLoader.IsInitialized)
+            MapLoader.CurrentMap = null;
+            MapLoader.HasFailed = false;
+            MapLoader.HasErrors = false;
+            MapLoader.loadErrors.Clear();
+            MapLoader.registration = null;
+            
+            if (registrationObject != null)
             {
+                MapLoader.registration = registrationObject;
+                MapLoader.loadErrors.Clear();
+
                 XDocument rootDocument = XDocument.Load(filePath);
-
-                XElement rootElement = rootDocument.Root;
-                if (rootElement != null && (rootElement.Name == "Map"))
+                MapLoader.rootElement = rootDocument.Root;
+                try
                 {
-                    try
-                    {
-                        MapLoader.currentMap = new Map(
-                                MapLoader.registration.World,
-                                int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
-                                int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
-
-                        Map.SetCurrentMap(MapLoader.currentMap);
-
-                        MapLoader.LoadMedia(rootElement.Element("Media"));
-                        MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
-                    }
-                    catch (AggregateException)
-                    {
-                        MapLoader.HasFailed = true;
-                    }
+                    MapLoader.CurrentMap = new Map(
+                            registrationObject.World,
+                            int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                            int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
                 }
-                else
+                catch (AggregateException)
                 {
                     MapLoader.HasFailed = true;
                 }
             }
-            else
+
+            return MapLoader.CurrentMap;
+        }
+
+        public static bool LoadCurrentMap()
+        {
+            if (!MapLoader.HasFailed)
             {
-                MapLoader.HasFailed = true;
-                MapLoader.ErrorOccured("Error while loading map at " + filePath + ", MapLoader not Initialized!");
+                try
+                {
+                    MapLoader.LoadMedia(rootElement.Element("Media"));
+                    MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                }
+                catch (AggregateException)
+                {
+                    MapLoader.HasFailed = true;
+                }
             }
 
-            MapLoader.IsInitialized = false;
-
-            return MapLoader.currentMap;
+            return !MapLoader.HasFailed;
         }
 
         private static void ErrorOccured(string errorMsg)
@@ -165,7 +163,6 @@
 
         private static void LoadLevelObjects(XElement levelRoots)
         {
-            XmlBodyFactory.SetWorld(MapLoader.registration.World);
             if (levelRoots != null)
             {
                 XElement backgroundsEle = levelRoots.Element("Backgrounds");
@@ -177,14 +174,14 @@
                         Backdrop backdrop = backgroundObject as Backdrop;
                         if (backdrop != null)
                         {
-                            MapLoader.currentMap.AddBackdrop(backdrop);
+                            MapLoader.CurrentMap.AddBackdrop(backdrop);
                         }
                         else
                         {
                             BackgroundMusic backgroundMusic = backgroundObject as BackgroundMusic;
                             if (backgroundMusic != null)
                             {
-                                MapLoader.currentMap.AddBackgroundMusic(backgroundMusic);
+                                MapLoader.CurrentMap.AddBackgroundMusic(backgroundMusic);
                             }
                         }
                     }                       
@@ -199,7 +196,7 @@
                         MapObject mapObject = foregroundObject as MapObject;
                         if (mapObject != null)
                         {
-                            MapLoader.currentMap.AddMapObject(mapObject);
+                            MapLoader.CurrentMap.AddMapObject(mapObject);
                         }
                     }
                 }
@@ -247,22 +244,37 @@
                     classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
                 }
 
-                if (!classType.IsValueType && classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
+                if (!classType.IsValueType && classType.GetConstructor(new Type[] { }) != null)
                 {
-                    instance = Activator.CreateInstance(classType, new object[] { element });
+                    instance = Activator.CreateInstance(classType);
+                    var gameScreenItem = instance as IGameScreenItem;
+                    if (gameScreenItem != null)
+                    {
+                        gameScreenItem.Screen = MapLoader.registration as GameScreen;
+                    }
+
+                    var deserialize = instance as IXmlSerializable;
+                    if (deserialize != null)
+                    {
+                        deserialize.XmlDeserialize(element);
+                    }
+                    else
+                    {
+                        MapLoader.ErrorOccured("Warning while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not implement Physicist.IXmlSerializable");
+                    }
                 }
                 else
                 {
-                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain a constructor accepting a single XElement");
+                    MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class is value type or does not contain a default constructor");
                 }
             }
             catch (KeyNotFoundException)
             {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
+                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
             }
             catch (NullReferenceException)
             {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
+                MapLoader.ErrorOccured("Error while loading " + objecttype + ", 'class' attribute not found!");
             }
             catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
             {

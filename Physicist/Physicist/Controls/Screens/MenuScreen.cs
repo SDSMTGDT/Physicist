@@ -42,13 +42,24 @@
 
         public override void Update(GameTime gameTime)
         {
-            if (this.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            if (this.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
             {
                 this.PopScreen();
             }
             else if (this.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
             {
-                ScreenManager.AddScreen(MenuScreen.MakePhysicistScreen());
+                using (System.Windows.Forms.OpenFileDialog selectMap = new System.Windows.Forms.OpenFileDialog())
+                {
+                    selectMap.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"Content\Levels";
+                    selectMap.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+                    selectMap.FilterIndex = 1;
+                    selectMap.RestoreDirectory = true;
+
+                    if (selectMap.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        ScreenManager.AddScreen(MenuScreen.MakePhysicistScreen(selectMap.FileName));
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -73,14 +84,14 @@
             }
         }
 
-        private static GameScreen MakePhysicistScreen()
+        private static GameScreen MakePhysicistScreen(string filePath)
         {
             PhysicistGameScreen screen = null;
             PhysicistGameScreen tempScreen = null;
 
             try
             {
-                tempScreen = new PhysicistGameScreen("MainScreen", "Content\\Levels\\MaterialTest.xml");
+                tempScreen = new PhysicistGameScreen("MainScreen", filePath);
                 screen = tempScreen;
                 tempScreen = null;
             }

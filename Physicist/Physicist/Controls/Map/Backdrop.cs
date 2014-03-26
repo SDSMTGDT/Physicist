@@ -14,15 +14,8 @@
 
     public class Backdrop : IXmlSerializable
     {
-        public Backdrop(XElement element)
+        public Backdrop()
         {
-            this.XmlDeserialize(element);
-
-            if (this.TileToBounds)
-            {
-                this.Texture = this.Texture.TileTexture(this.Dimensions);
-                this.Scale = new Vector2(1f, 1f);
-            }
         }
 
         public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
@@ -100,6 +93,12 @@
             if (tileEle != null)
             {
                 this.TileToBounds = bool.Parse(tileEle.Value);
+            }
+
+            if (this.TileToBounds)
+            {
+                this.Texture = this.Texture.TileTexture(this.Dimensions);
+                this.Scale = new Vector2(1f, 1f);
             }
         }
     }
