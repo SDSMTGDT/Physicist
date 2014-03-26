@@ -11,7 +11,7 @@
     using Physicist.Actors;
     using Physicist.Extensions;
 
-    public class Backdrop : IXmlSerializable
+    public class Backdrop : IXmlSerializable, IDraw
     {
         public Backdrop(XElement element)
         {

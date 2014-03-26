@@ -47,6 +47,10 @@
         private float friction = 0f;
         private float rotation = 0f;
 
+        public BodyInfo()
+        {
+        }
+
         public BodyInfo(XElement element)
         {
             this.XmlDeserialize(element);
@@ -213,7 +217,7 @@
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
 
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, Map.CurrentMapHeight - this.Position.Y), "position"));
+            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, MainGame.Map.Height - this.Position.Y), "position"));
 
             if (this.rotation != 0)
             {
@@ -383,12 +387,17 @@
             }
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
+            Vector2 designPosition = new Vector2(0, 0);
+            var positionEle = element.Element("Position");
+            if (positionEle != null)
+            {
+                designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+            }
 
-            Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
-            this.position = new Vector2(designPosition.X, Map.CurrentMapHeight - designPosition.Y); 
-            
+            this.position = new Vector2(designPosition.X, MainGame.Map.Height - designPosition.Y);
+
             XAttribute collidesWithEle = element.Attribute("collidesWith");
-            if (collidesWithEle != null) 
+            if (collidesWithEle != null)
             {
                 this.collidesWith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
             }
@@ -476,7 +485,7 @@
                     break;
             }
         }
-      
+
         private void MakeBreakableBody(XElement element)
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
@@ -537,10 +546,10 @@
 
             this.vertexList = new List<Vertices>();
 
-            foreach (var vertexListlist in element.Element("VertexList").Elements())
+            foreach (var verticeslist in element.Element("VertexList").Elements())
             {
                 Vertices nextVerts = new Vertices();
-                foreach (var vert in vertexListlist.Elements())
+                foreach (var vert in verticeslist.Elements())
                 {
                     nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
                 }

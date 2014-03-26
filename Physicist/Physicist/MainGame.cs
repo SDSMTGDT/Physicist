@@ -20,9 +20,6 @@
     public class MainGame : Game
     {
         private static GraphicsDevice graphicsDev;
-        private static World world;
-        private static Map map;
-        private static List<Actor> actors;
         private static List<string> maps;
 
         private Physicist.Controls.Viewport viewport;
@@ -46,15 +43,14 @@
 
         public static World World
         {
-            get
-            {
-                return MainGame.world;
-            }
+            get;
+            private set;
         }
 
-        public static void RegisterActor(Actor actor)
+        public static Map Map
         {
-            MainGame.actors.Add(actor);
+            get;
+            private set;
         }
 
         /// <summary>
@@ -69,8 +65,8 @@
             ContentController.Instance.Initialize(this.Content, "Content");
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             MainGame.graphicsDev = this.GraphicsDevice;
-            MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\MaterialTest.xml" };
+
+            MainGame.maps = new List<string>() { "Content\\Levels\\TriggerTest.xml" };
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -84,11 +80,11 @@
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+            MainGame.World = new World(new Vector2(0f, 9.81f));
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(1f);
 
-            MainGame.map = MapLoader.LoadMap(MainGame.maps[0]);
-            if (MapLoader.HasFailed || map == null)
+            MainGame.Map = MapLoader.InitializeLoader(MainGame.maps[0]);
+            if (Map == null || !MapLoader.LoadCurrentMap())
             {
                 throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
             }
@@ -124,23 +120,15 @@
 
                 MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
-                foreach (var actor in MainGame.actors)
+                foreach (var player in MainGame.Map.Players)
                 {
-                    Player player = actor as Player;
-                    if (player != null)
-                    {
-                        this.camera.Following = player;
-                        player.Update(gameTime, Keyboard.GetState());
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
+                    this.camera.Following = player;
+                    player.Update(gameTime, Keyboard.GetState());
                 }
 
                 // TODO: Add your update logic here
                 this.camera.CenterOnFollowing();
-                MainGame.map.Update(gameTime);
+                MainGame.Map.Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -155,8 +143,7 @@
             GraphicsDevice.Clear(Color.CornflowerBlue);
             this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
 
-            MainGame.actors.ForEach(actor => actor.Draw(this.spriteBatch));
-            MainGame.map.Draw(this.spriteBatch);
+            MainGame.Map.Draw(this.spriteBatch);
 
             base.Draw(gameTime);
 

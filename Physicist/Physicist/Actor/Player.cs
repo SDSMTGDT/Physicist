@@ -16,6 +16,11 @@
 
     public class Player : Actor, IXmlSerializable
     {
+        public Player(string name) :
+            base(name)
+        {
+        }
+
         public Player(XElement element)
         {
             if (element == null)
@@ -24,11 +29,6 @@
             }
 
             this.XmlDeserialize(element);
-        }
-
-        public Player() :
-            base()
-        {
         }
 
         public new Body Body

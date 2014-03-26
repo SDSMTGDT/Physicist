@@ -323,15 +323,16 @@
             PresentationParameters pp = this.device.PresentationParameters;
             RenderTarget2D texture = null;
             RenderTarget2D tempTarget = null;
+
             try
             {
-                tempTarget = new RenderTarget2D(this.device, width + 2, height + 2, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+                tempTarget = new RenderTarget2D(this.device, width, height, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
                 this.device.RasterizerState = RasterizerState.CullNone;
                 this.device.SamplerStates[0] = SamplerState.LinearWrap;
 
                 this.device.SetRenderTarget(tempTarget);
                 this.device.Clear(Color.Transparent);
-                this.effect.Projection = Matrix.CreateOrthographic(width + 2f, -height - 2f, 0f, 1f);
+                this.effect.Projection = Matrix.CreateOrthographic(width, -height, 0f, 1f);
                 this.effect.View = halfPixelOffset;
 
                 // render shape;

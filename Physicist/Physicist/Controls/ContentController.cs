@@ -171,6 +171,7 @@
                     texture = new Texture2D(graphicsDevice, minBound, minBound);
                     texture.SetData(materialColors);
                     materialTexture = texture;
+                    texture = null;
                 }
                 finally
                 {

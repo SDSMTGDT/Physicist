@@ -15,22 +15,34 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Actor : IXmlSerializable, IPosition
+    public class Actor : IXmlSerializable, IPosition, IName, IUpdate, IDraw
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
         private BodyInfo bodyInfo;
+
+        public Actor() :
+            this("Actor")
+        {
+        }
 
         public Actor(XElement element)
         {
             this.XmlDeserialize(element);
         }
 
-        public Actor()
+        public Actor(string name)
         {
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
+            this.Name = name;
+        }
+
+        public string Name
+        {
+            get;
+            private set;
         }
 
         // Farseer Structures
@@ -144,14 +156,14 @@
             this.Sprites.Add(sprite.SpriteName, sprite);
         }
 
-        public virtual void Update(GameTime time)
+        public virtual void Update(GameTime gameTime)
         {
             // update every sprite in the sprite collection
             if (this.IsEnabled)
             {
                 foreach (var sprite in this.Sprites.Values)
                 {
-                    sprite.Update(time);
+                    sprite.Update(gameTime);
                 }
             }
         }
@@ -162,6 +174,7 @@
             // define the Actor element
             XElement actorElement = new XElement("Actor");
             actorElement.Add(new XAttribute("class", typeof(Actor).ToString()));
+            actorElement.Add(new XAttribute("name", this.Name));
             actorElement.Add(new XAttribute("health", this.Health));
             actorElement.Add(new XAttribute("rotation", this.Rotation));
             actorElement.Add(new XAttribute("isEnabled", this.IsEnabled));
@@ -194,6 +207,8 @@
             {
                 throw new ArgumentNullException("element");
             }
+
+            this.Name = element.Attribute("name").Value;
 
             this.MovementSpeed = ExtensionMethods.XmlDeserializeVector2(element.Element("MovementSpeed"));
 

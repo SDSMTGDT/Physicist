@@ -7,5 +7,9 @@
 
     public class Slug : Enemy
     {
+        public Slug(string name) :
+            base(name)
+        {
+        }
     }
 }

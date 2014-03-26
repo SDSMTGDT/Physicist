@@ -11,6 +11,7 @@
     using Microsoft.Xna.Framework.Media;
     using Physicist.Actors;
     using Physicist.Enums;
+    using Physicist.Events;
     using Physicist.Extensions;
 
     public static class MapLoader
@@ -19,13 +20,16 @@
         private static Dictionary<string, Type> assemblyTypes = new Dictionary<string, Type>();
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
-        private static Map currentMap = null;
+        private static XElement rootElement;
 
         static MapLoader()
         {
+            int typeCount = 0;
+            int assemblyCount = 0;            
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
+                typeCount = 0;
                 foreach (var type in assembly.GetTypes())
                 {
                     if (!MapLoader.assemblyTypes.ContainsKey(type.Name))
@@ -37,9 +41,16 @@
                     {
                         MapLoader.quantifiedAssemblyTypes.Add(type.FullName, type);
                     }
+
+                    typeCount++;
                 }
+
+                assemblyCount++;
             }
         }
+
+        // !!!!!!!!EXTREMELY DISLIKE OF THIS AT THE MOMENT!!!!!!!!!!!!!!! //
+        public static Map CurrentMap { get; set; }
 
         public static bool HasFailed
         {
@@ -61,38 +72,122 @@
             }
         }
 
-        public static Map LoadMap(string filePath)
+        public static Map InitializeLoader(string filePath)
         {
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
+            MapLoader.loadErrors.Clear();
 
             XDocument rootDocument = XDocument.Load(filePath);
+            MapLoader.rootElement = rootDocument.Root;
+            try
+            {
+                MapLoader.CurrentMap = new Map(
+                        int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                        int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+            }
+            catch (AggregateException)
+            {
+                MapLoader.HasFailed = true;
+            }
 
-            XElement rootElement = rootDocument.Root;
-            if (rootElement != null && (rootElement.Name == "Map"))
+            return MapLoader.CurrentMap;
+        }
+
+        public static bool LoadCurrentMap()
+        {
+            if (!MapLoader.HasFailed)
             {
                 try
                 {
-                    MapLoader.currentMap = new Map(
-                            int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
-                            int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
-
-                    Map.SetCurrentMap(MapLoader.currentMap);
-
                     MapLoader.LoadMedia(rootElement.Element("Media"));
                     MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                    MapLoader.LoadEvents(rootElement.Element("MapEvents"));
                 }
                 catch (AggregateException)
                 {
                     MapLoader.HasFailed = true;
                 }
             }
-            else
+
+            return !MapLoader.HasFailed;
+        }
+
+        public static IEnumerable<object> CreateInstances(IEnumerable<XElement> elements, string classAttribute)
+        {
+            List<object> instances = new List<object>();
+            if (elements != null)
             {
-                MapLoader.HasFailed = true;
+                foreach (var element in elements)
+                {
+                    instances.Add(MapLoader.CreateInstance(element, classAttribute));
+                }
             }
 
-            return MapLoader.currentMap;
+            return instances;
+        }
+
+        public static object CreateInstance(XElement element, string classAttribute)
+        {
+            object instance = null;
+            if (element != null)
+            {
+                string objecttype = element.Name.ToString();
+                string className = null;
+
+                try
+                {
+                    if (classAttribute == null)
+                    {
+                        className = objecttype;
+                    }
+                    else
+                    {
+                        className = element.Attribute(classAttribute).Value;
+                    }
+
+                    // Try to create type from fully quantified name in current assembly
+                    Type classType = Type.GetType(className);
+
+                    // If failure, try to find type in registered assemblies, first by short name, then by full name
+                    if (classType == null && !MapLoader.assemblyTypes.TryGetValue(className, out classType))
+                    {
+                        classType = MapLoader.quantifiedAssemblyTypes[className];
+                    }
+
+                    if (classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
+                    {
+                        instance = Activator.CreateInstance(classType, new object[] { element });
+                    }
+                    else
+                    {
+                        MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + className + ", Class does not contain a constructor accepting a single XElement");
+                    }
+                }
+                catch (KeyNotFoundException)
+                {
+                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + className + ", Class type not found!");
+                }
+                catch (NullReferenceException)
+                {
+                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
+                }
+                catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
+                {
+                    MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + className + ", " + e.Message);
+                }
+                catch (TargetInvocationException e)
+                {
+                    MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + className + ", " + e.Message);
+                }
+            }
+
+            return instance;
+        }
+
+        private static void LoadEvents(XElement eventRoot)
+        {
+            MapLoader.CreateInstances(eventRoot.Elements("Event"), "class").ForEach(eventObj => MapLoader.CurrentMap.AddObjectToMap(eventObj));
         }
 
         private static void ErrorOccured(string errorMsg)
@@ -145,109 +240,21 @@
                 XElement backgroundsEle = levelRoots.Element("Backgrounds");
                 if (backgroundsEle != null)
                 {                    
-                    var backgrounds = MapLoader.CreateInstances(backgroundsEle.Elements(), "class");
-                    foreach (var backgroundObject in backgrounds)
-                    {
-                        Backdrop backdrop = backgroundObject as Backdrop;
-                        if (backdrop != null)
-                        {
-                            MapLoader.currentMap.AddBackdrop(backdrop);
-                        }
-                        else
-                        {
-                            BackgroundMusic backgroundMusic = backgroundObject as BackgroundMusic;
-                            if (backgroundMusic != null)
-                            {
-                                MapLoader.currentMap.AddBackgroundMusic(backgroundMusic);
-                            }
-                        }
-                    }                       
+                    MapLoader.CreateInstances(backgroundsEle.Elements(), "class").ForEach(backgroundObj => MapLoader.CurrentMap.AddObjectToMap(backgroundObj));
                 }
 
                 XElement foregroundsEle = levelRoots.Element("Foregrounds");
                 if (foregroundsEle != null)
                 {
-                    var foregrounds = MapLoader.CreateInstances(foregroundsEle.Elements(), "class");
-                    foreach (var foregroundObject in foregrounds)
-                    {
-                        MapObject mapObject = foregroundObject as MapObject;
-                        if (mapObject != null)
-                        {
-                            MapLoader.currentMap.AddMapObject(mapObject);
-                        }
-                    }
+                    MapLoader.CreateInstances(foregroundsEle.Elements(), "class").ForEach(foregroundObj => MapLoader.CurrentMap.AddObjectToMap(foregroundObj));
                 }
 
                 XElement actorsEle = levelRoots.Element("Actors");
                 if (actorsEle != null)
                 {
-                    var actors = MapLoader.CreateInstances(actorsEle.Elements(), "class");
-                    foreach (var actorObject in actors)
-                    {
-                        Actor actor = actorObject as Actor;
-                        if (actor != null)
-                        {
-                            MainGame.RegisterActor(actor);
-                        }
-                    }
+                    MapLoader.CreateInstances(actorsEle.Elements(), "class").ForEach(actor => MapLoader.CurrentMap.AddObjectToMap(actor));
                 }
             }
-        }
-
-        private static IEnumerable<object> CreateInstances(IEnumerable<XElement> elements, string classAttribute)
-        {
-            List<object> instances = new List<object>();
-            foreach (var element in elements)
-            {
-                instances.Add(MapLoader.CreateInstance(element, classAttribute));
-            }
-
-            return instances;
-        }
-
-        private static object CreateInstance(XElement element, string classAttribute)
-        {
-            object instance = null;
-            string objecttype = element.Name.ToString();
-
-            try
-            {
-                // Try to create type from fully quantified name in current assembly
-                Type classType = Type.GetType(element.Attribute(classAttribute).Value);
-
-                // If failure, try to find type in registered assemblies, first by short name, then by full name
-                if (classType == null && !MapLoader.assemblyTypes.TryGetValue(element.Attribute(classAttribute).Value, out classType))
-                {
-                    classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
-                }
-
-                if (!classType.IsValueType && classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
-                {
-                    instance = Activator.CreateInstance(classType, new object[] { element });
-                }
-                else
-                {
-                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain a constructor accepting a single XElement");
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
-            }
-            catch (NullReferenceException)
-            {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
-            }
-            catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
-            {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
-            }
-            catch (TargetInvocationException e)
-            {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
-            }
-
-            return instance;
         }
     }
 }

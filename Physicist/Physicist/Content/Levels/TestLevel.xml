@@ -38,7 +38,7 @@
 	
 	  <Foregrounds>
       
-      <!--Rectangle-->
+	      <!--Rectangle-->
       <Rectangle class="MapObject" textureRef ="Platform" width="100" height="20" density="1" rotation ="1.57">
         <Position x="100" y="100"/>
       </Rectangle>
@@ -133,8 +133,8 @@
       </Circle>
 
     </Foregrounds>
-	
-	  <Actors>
+
+    <Actors>
 		  <NPC class="" textureRef="NOTSTOLEN"/>
 		  
 		  <Player class="Player">

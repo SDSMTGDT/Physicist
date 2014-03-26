@@ -10,7 +10,7 @@
     using Physicist.Actors;
     using Physicist.Extensions;
 
-    public class MapObject : IXmlSerializable
+    public class MapObject : IXmlSerializable, IDraw
     {
         private List<Tuple<Texture2D, Vector2>> textures = new List<Tuple<Texture2D, Vector2>>();
         private bool fill = false;
