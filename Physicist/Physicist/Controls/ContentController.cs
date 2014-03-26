@@ -104,7 +104,7 @@
                     }
                     catch (ArgumentException)
                     {
-                        // Don't thorw if the assets are the same
+                        // Don't throw if the assets are the same
                         if (this.media[assetFormat][assetName].Location != assetPath)
                         {
                             throw;

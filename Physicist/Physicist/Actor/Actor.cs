@@ -46,7 +46,7 @@
         public Vector2 Position
         {
             get
-            {                
+            {
                 return this.body.Position.ToDisplayUnits();
             }
 
