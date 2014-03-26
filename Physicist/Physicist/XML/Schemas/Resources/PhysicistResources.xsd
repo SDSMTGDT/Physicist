@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PhysicistResources"
+    targetNamespace="PhysicistTypes.xsd"
+    xmlns="PhysicistTypes.xsd"    
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"      
+    elementFormDefault="qualified"
+  >
+
+  <xs:include schemaLocation="CommonResources.xsd"/>
+
+  <xs:element name="MediaReference" type="Media" abstract="true"/>
+  
+  <xs:element name="Extensions" type="Extensions">
+    <xs:annotation>
+      <xs:documentation>Container for any unvalidated content</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="Media">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="location" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Vertices">
+    <xs:choice maxOccurs="unbounded" minOccurs="1">
+      <xs:element name="Vector2" type="Vector2"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Animation">
+    <xs:attribute name="struct" type="xs:string" default="SpriteAnimation">
+      <xs:annotation>
+        <xs:documentation>[Optional] Struct name of object instance, default is 'SpriteAnimation'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="rowIndex" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] SpriteSheet index of animation, default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="frameCount" type="xs:int" use="required"/>
+    <xs:attribute name="defaultFrameRate" type="xs:float" use="required"/>
+    <xs:attribute name="playInReverse" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'false'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="flipVertical" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'false'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="flipHorizontal" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'false'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="GameSprite">
+    <xs:all maxOccurs="1">
+      <xs:element name="Animations">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Animation" type="Animation"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FrameSize" type="Size"/>
+      <xs:element name="Offset" type="Vector2"/>
+    </xs:all>
+    <xs:attribute name="spriteName" type="xs:string" use="required"/>
+    <xs:attribute name="textureRef" type="xs:string" use="required"/>
+    <xs:attribute name="frameLength" type="xs:float" default="0.2">
+      <xs:annotation>
+        <xs:documentation>[Optional] Frame rate (sec/frame), default is 0.2</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="depth" type="UnitInterval" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] Draw depth, default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="MapObject" abstract="true">
+    <xs:sequence>
+      <xs:element name="Position" type="Vector2"/>
+    </xs:sequence>
+    <xs:attribute name="class" type="xs:string" default="MapObject">
+      <xs:annotation>        
+        <xs:documentation>[Optional] Class name of object instance, default value is 'MapObject'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="textureRef" type="xs:string"/>
+    <xs:attribute name="fill" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] Fill shape with textureRef, default is false</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rotation" type="xs:float" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] (in radians), default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="density" type="xs:float" default="1">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '1'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="friction" type="UnitInterval" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="bodyType" type="BodyType" default="Static">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'Static'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>    
+  </xs:complexType>
+
+  <xs:complexType name="FarseerRectangle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="width" type="xs:float" use="required"/>
+        <xs:attribute name="height" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCapsule">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="height" type="xs:int" use="required"/>
+        <xs:attribute name="topRadius" type="xs:float" use="required"/>
+        <xs:attribute name="topEdge" type="xs:int" use="required"/>
+        <xs:attribute name="bottomRadius" type="xs:float" use="required"/>
+        <xs:attribute name="bottomEdge" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerChainShape" block="extension">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCompoundPolygon">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice minOccurs="1">          
+          <xs:element name="VertexList">
+            <xs:complexType>
+              <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element name="Vertices" type="Vertices"/>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerEllipse">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="xRadius" type="xs:float" use="required"/>
+        <xs:attribute name="yRadius" type="xs:float" use="required"/>
+        <xs:attribute name="edges" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerGear">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="numberOfTeeth" type="xs:int" use="required"/>
+        <xs:attribute name="tipPercentage" type="Percentage" use="required"/>
+        <xs:attribute name="toothHeight" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerLineArc">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radians" type="xs:float" use="required"/>
+        <xs:attribute name="sides" type="xs:int" use="required"/>
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="angle" type="xs:float" use="required"/>
+        <xs:attribute name="closed" type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerLoopShape">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerPolygon">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="1" minOccurs="1">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerRoundedRectangle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="width" type="xs:float" use="required"/>
+        <xs:attribute name="height" type="xs:float" use="required"/>
+        <xs:attribute name="xRadius" type="xs:float" use="required"/>
+        <xs:attribute name="yRadius" type="xs:float" use="required"/>
+        <xs:attribute name="segments" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerSolidArc">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radians" type="xs:float" use="required"/>
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="sides" type="xs:int" use="required"/>
+        <xs:attribute name="angle" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCircle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerShapeList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="Capsule" type="FarseerCapsule"/>
+        <xs:element name="ChainShape" type="FarseerChainShape"/>
+        <xs:element name="CompoundPolygon" type="FarseerCompoundPolygon"/>
+        <xs:element name="Circle" type="FarseerCircle"/>
+        <xs:element name="Ellipse" type="FarseerEllipse"/>
+        <xs:element name="Gear" type="FarseerGear"/>
+        <xs:element name="LineArc" type="FarseerLineArc"/>
+        <xs:element name="LoopShape" type="FarseerLoopShape"/>
+        <xs:element name="Polygon" type="FarseerPolygon"/>
+        <xs:element name="Rectangle" type="FarseerRectangle"/>
+        <xs:element name="RoundedRectangle" type="FarseerRoundedRectangle"/>
+        <xs:element name="SolidArc" type="FarseerSolidArc"/>
+      </xs:choice>
+      <xs:element ref="Extensions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+

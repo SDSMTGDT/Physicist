@@ -101,6 +101,9 @@
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
+
+                this.Body.BodyType = BodyType.Dynamic;
+                this.Body.FixedRotation = true;
             }
         }
 

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PhysicistTypes"
+    targetNamespace="PhysicistTypes.xsd"
+    elementFormDefault="qualified"
+    xmlns="PhysicistTypes.xsd"
+    xmlns:mstns="PhysicistTypes.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include id="Common" schemaLocation="../Proxies/Common-PhysicistProxy.xsd"/>
+  <xs:include id="Actor" schemaLocation="ActorTypes.xsd"/>
+  
+  <xs:complexType name="MediaList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="MediaReference"/>
+      </xs:choice>
+      <xs:element ref="Extensions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Backdrop">
+    <xs:complexContent>
+      <xs:extension base="Rectangle">
+        <xs:attribute name="class" type="xs:string" default="Backdrop"/>   
+        <xs:attribute name="textureRef" type="xs:string" use="required"/>
+        <xs:attribute name="depth" type="xs:float" default="0"/>
+        <xs:attribute name="tile" type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="BackgroundMusic">
+    <xs:complexContent>
+      <xs:extension base="Rectangle">
+        <xs:attribute name="class" type="xs:string" default="BackgroundMusic"/>
+        <xs:attribute name="soundRef" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>    
+  </xs:complexType>
+
+  <xs:complexType name="BackgroundVideo">
+    <xs:complexContent>
+      <xs:extension base="Rectangle">
+        <xs:attribute name="class" type="xs:string" default="BackgroundVideo"/>
+        <xs:attribute name="videoRef" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="BackgroundList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="Backdrop" type="Backdrop"/>
+        <xs:element name="BackgroundMusic" type="BackgroundMusic"/>
+        <xs:element name="BackgroundVideo" type="BackgroundVideo"/>
+      </xs:choice>
+      <xs:element ref="Extensions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LevelObjects">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="Backgrounds" type="BackgroundList"/>
+      <xs:element name="Foregrounds" type="FarseerShapeList"/>
+      <xs:element name="Actors" type="ActorList"/>
+    </xs:choice>   
+  </xs:complexType>
+  
+  <xs:complexType name="PhysicistMap">
+    <xs:all>
+      <xs:element name="Media" type="MediaList"/>
+      <xs:element name="LevelObjects" type="LevelObjects"/>
+    </xs:all>
+    <xs:attribute name="width" type="xs:int" use="required"/>
+    <xs:attribute name="height" type="xs:int" use="required"/>
+  </xs:complexType>
+  
+  <xs:element name="Map" type="mstns:PhysicistMap"/>  
+</xs:schema>
