@@ -70,7 +70,11 @@
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\MaterialTest.xml" };
+            MainGame.maps = new List<string>() 
+                                                { 
+                                                    "Content\\Levels\\SchemaTest.xml", 
+                                                    "Content\\Levels\\TestLevel.xml"
+                                                };
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -85,12 +89,13 @@
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
             MainGame.world = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(1f);
 
             MainGame.map = MapLoader.LoadMap(MainGame.maps[0]);
             if (MapLoader.HasFailed || map == null)
             {
-                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
+                Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
+                this.Exit();
             }
 
             this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));

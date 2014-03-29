@@ -68,7 +68,7 @@
             XElement element = new XElement(
                 "backdrop",
                 this.Location.XmlSerialize("location"),
-                this.Dimensions.XmlSerialize("dimensions"),
+                this.Dimensions.XmlSerialize("dimension"),
                 new XElement("depth", this.Depth),
                 new XAttribute("textureRef", this.Texture.Name),
                 new XAttribute("class", this.GetType().ToString()));
@@ -89,7 +89,7 @@
             }
 
             this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
+            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimension"));
             this.Depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
             this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 

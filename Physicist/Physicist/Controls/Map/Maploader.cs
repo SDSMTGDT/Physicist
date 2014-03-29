@@ -3,9 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Xml;
     using System.Xml.Linq;
+    using System.Xml.Schema;
+    using System.Xml.Xsl;
     using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Media;
@@ -20,10 +24,17 @@
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
         private static Map currentMap = null;
+        private static XmlSchemaSet schemas = new XmlSchemaSet();
+        private static List<XslCompiledTransform> transforms = new List<XslCompiledTransform>();
 
         static MapLoader()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblyNames = new List<string>();
+            assemblyNames.Add("Physicist");
+            assemblyNames.Add("MonoGame.Framework");
+            assemblyNames.Add("FarseerPhysics MonoGame");
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(assembly => assemblyNames.Contains(assembly.GetName().Name));
             foreach (var assembly in assemblies)
             {
                 foreach (var type in assembly.GetTypes())
@@ -38,6 +49,21 @@
                         MapLoader.quantifiedAssemblyTypes.Add(type.FullName, type);
                     }
                 }
+            }
+
+            foreach (string dirName in Directory.EnumerateDirectories("XML\\Schemas"))
+            {
+                foreach (string filename in Directory.EnumerateFiles(dirName))
+                {
+                    MapLoader.schemas.Add(null, filename);
+                }
+            }
+
+            foreach (string filename in Directory.EnumerateFiles("XML\\Templates"))
+            {
+                var transform = new XslCompiledTransform();
+                transform.Load(filename);
+                MapLoader.transforms.Add(transform);
             }
         }
 
@@ -65,40 +91,100 @@
         {
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
-
-            XDocument rootDocument = XDocument.Load(filePath);
-
-            XElement rootElement = rootDocument.Root;
-            if (rootElement != null && (rootElement.Name == "Map"))
+                
+            List<string> validationErrors = new List<string>();
+            XDocument rootDocument = new XDocument();
+            XDocument transformDoc = new XDocument();
+            using (FileStream rstream = File.OpenRead(filePath))
             {
-                try
-                {
-                    MapLoader.currentMap = new Map(
-                            int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
-                            int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.Schemas = MapLoader.schemas;
+                settings.ValidationType = ValidationType.Schema;
+                settings.ValidationEventHandler += (sender, args) =>
+                                                    {
+                                                        validationErrors.Add("Line " + args.Exception.LineNumber + ": " + args.Message);
+                                                        MapLoader.HasFailed = true;
+                                                    };
 
-                    Map.SetCurrentMap(MapLoader.currentMap);
+                rootDocument = XDocument.Load(XmlReader.Create(rstream, settings));
+            }
 
-                    MapLoader.LoadMedia(rootElement.Element("Media"));
-                    MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
-                }
-                catch (AggregateException)
-                {
-                    MapLoader.HasFailed = true;
-                }
+            if (MapLoader.HasFailed)
+            {
+                MapLoader.ErrorOccured("Map " + filePath + " failed to validate against schema!\nValidation error list: ");
+                validationErrors.ForEach(error => MapLoader.ErrorOccured(error));
             }
             else
             {
-                MapLoader.HasFailed = true;
+                using (XmlWriter writer = transformDoc.CreateWriter())
+                {
+                    foreach (var transform in MapLoader.transforms)
+                    {
+                        transform.Transform(rootDocument.CreateReader(), writer);
+                    }
+                }
+
+                MapLoader.RemoveNamespaces(transformDoc);
+
+                XElement rootElement = transformDoc.Root;
+                if (rootElement != null && (rootElement.Name.LocalName == "Map"))
+                {
+                    try
+                    {
+                        MapLoader.currentMap = new Map(
+                                int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                                int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+
+                        Map.SetCurrentMap(MapLoader.currentMap);
+
+                        MapLoader.LoadMedia(rootElement.Element("Media"));
+                        MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                    }
+                    catch (AggregateException)
+                    {
+                        MapLoader.HasFailed = true;
+                    }
+                }
+                else
+                {
+                    MapLoader.HasFailed = true;
+                }
             }
 
             return MapLoader.currentMap;
         }
 
+        public static void RemoveNamespaces(XDocument document)
+        {
+            if (document != null)
+            {
+                foreach (var item in document.Root.DescendantNodesAndSelf())
+                {
+                    var element = item as XElement;
+                    if (element != null)
+                    {
+                        if (element.Name.Namespace != XNamespace.None)
+                        {
+                            element.Name = element.Name.LocalName;
+                        }
+
+                        if (element.Attributes().Where(attribute => attribute.IsNamespaceDeclaration || (attribute.Name.Namespace != XNamespace.None)).Any())
+                        {
+                            element.ReplaceAttributes(
+                                                    element.Attributes()
+                                                    .Select(attribute =>
+                                                        attribute.IsNamespaceDeclaration ? null :
+                                                            attribute.Name.Namespace != XNamespace.None ? new XAttribute(attribute.Name.LocalName, attribute.Value) : attribute));
+                        }
+                    }
+                }
+            }
+        }
+
         private static void ErrorOccured(string errorMsg)
         {
             MapLoader.loadErrors.Add(errorMsg);
-            System.Console.WriteLine(errorMsg);
+            Console.WriteLine(errorMsg);
             MapLoader.HasErrors = true;
         }
 
@@ -161,7 +247,7 @@
                                 MapLoader.currentMap.AddBackgroundMusic(backgroundMusic);
                             }
                         }
-                    }                       
+                    }
                 }
 
                 XElement foregroundsEle = levelRoots.Element("Foregrounds");

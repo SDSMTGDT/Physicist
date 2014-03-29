@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Media"
+    targetNamespace="PhysicistTypes.xsd"
+    elementFormDefault="qualified"
+    xmlns="PhysicistTypes.xsd"
+    xmlns:mstns="PhysicistTypes.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Resources/PhysicistResources.xsd"/>
+  
+  <xs:element name="Texture2D" type="Media" substitutionGroup="MediaReference"/>
+  <xs:element name="SoundEffect" type="Media" substitutionGroup="MediaReference"/>
+  <xs:element name="Video" type="Media" substitutionGroup="MediaReference"/>
+
+</xs:schema>
