@@ -167,21 +167,26 @@
         {
             if (ScreenManager.IsInitialized && screen != null && !ScreenManager.activeScreens.Contains(screen))
             {
-                ScreenManager.activeScreens.Add(screen);
                 screen.Initialize(ScreenManager.GraphicsDevice);
-                screen.LoadContent();
-
-                if (screen.IsPopup)
+                if (screen.LoadContent())
                 {
-                    ScreenManager.popupCount++;
-                }
+                    if (screen.IsPopup)
+                    {
+                        ScreenManager.popupCount++;
+                    }
 
-                if (screen.IsModal)
+                    if (screen.IsModal)
+                    {
+                        ScreenManager.modalCount++;
+                    }
+
+                    ScreenManager.activeScreens.Add(screen);
+                    ScreenManager.currentScreen = screen;
+                }
+                else
                 {
-                    ScreenManager.modalCount++;
+                    System.Console.WriteLine("Error while loading screen {0} of type: {1}", screen.Name, screen.GetType().Name);
                 }
-
-                ScreenManager.currentScreen = screen;
             }
         }
 

@@ -20,7 +20,7 @@
             this.BackgroundColor = Color.TransparentBlack;
         }
 
-        public override void LoadContent()
+        public override bool LoadContent()
         {
             Color[] menuColor = new Color[ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height];
             for (int i = 0; i < ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height; i++)
@@ -31,7 +31,7 @@
             this.menuBack = new Texture2D(ScreenManager.GraphicsDevice, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             this.menuBack.SetData(menuColor);
 
-            base.LoadContent();
+            return base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)

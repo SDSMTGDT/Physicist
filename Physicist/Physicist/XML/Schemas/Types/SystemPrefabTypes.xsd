@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SystemPrefabTypes"
+    targetNamespace="SystemPrefabs"
+    xmlns="SystemPrefabs"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mstns="SystemPrefabs"
+    elementFormDefault="qualified"
+>
+  <xs:include schemaLocation="../Proxies/Common-PrefabProxy.xsd"/>
+
+  <xs:element name="SystemPrefab" type="ActorPrefabType" abstract="true"/>
+
+  <xs:complexType name="ActorPrefabType">
+    <xs:sequence>
+      <xs:element name="Position" type="Vector2"/>
+      <xs:element name="MovementSpeed" type="Vector2" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="textureRef" type="xs:string"/>
+    <xs:attribute name="health" type="xs:int" default="10">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 10</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    
+  </xs:complexType>
+
+</xs:schema>

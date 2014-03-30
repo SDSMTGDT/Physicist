@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>           
+<xs:schema id="ActorTypes"
+    targetNamespace="PhysicistTypes.xsd"
+    elementFormDefault="qualified"
+    xmlns="ActorTypes.xsd"
+    xmlns:mstns="PhysicistTypes.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:system="SystemPrefabs"
+  >
+
+  <xs:include schemaLocation="../Proxies/Common-PhysicistProxy.xsd"/>
+  <xs:import namespace="SystemPrefabs" schemaLocation="SystemPrefabTypes.xsd"/>
+  <xs:import namespace="Actors" schemaLocation="../Nodes/Actors.xsd"/>
+  
+  <xs:complexType name="Actor">
+    <xs:sequence maxOccurs="unbounded" minOccurs="1">
+      <xs:element name="MovementSpeed" type="mstns:Vector2"/>
+      <xs:element name="Sprites">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="GameSprite" type="mstns:GameSprite"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="BodyInfo" type="mstns:FarseerShapeList">        
+      </xs:element>
+    </xs:sequence>    
+    <xs:attribute name="class" type="xs:string" default="Actor"/>
+    <xs:attribute name="health" type="xs:int" default="1"/>
+    <xs:attribute name="rotation" type="xs:float" default="0"/>
+    <xs:attribute name="isEnabled" type="xs:boolean" default="true"/>
+    <xs:attribute name="visibleState" type="mstns:Visibility" default="Visible"/>
+  </xs:complexType>
+
+  <xs:complexType name="Player">
+    <xs:all>
+      <xs:element name="Actor" type="mstns:Actor"/>
+    </xs:all>
+    <xs:attribute name="class" type="xs:string" default="Player"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ActorList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:any namespace="Actors" processContents="lax"/>
+        <xs:element ref="system:SystemPrefab"/>
+      </xs:choice>
+      <xs:element ref="mstns:Extensions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>  
+</xs:schema>

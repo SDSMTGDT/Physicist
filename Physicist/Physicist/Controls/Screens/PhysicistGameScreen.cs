@@ -53,17 +53,22 @@
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
         }
 
-        public override void LoadContent()
+        public override bool LoadContent()
         {
-            base.LoadContent();
-            this.world = new World(new Vector2(0f, 9.81f));
-            
-            this.map = MapLoader.Initialize(this.maps[0], this);
-            if (this.map == null || !MapLoader.LoadCurrentMap())
+            bool success = base.LoadContent();
+            if (success)
             {
-                System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
-                this.PopScreen();
+                this.world = new World(new Vector2(0f, 9.81f));
+
+                this.map = MapLoader.Initialize(this.maps[0], this);
+                if (this.map == null || !MapLoader.LoadCurrentMap())
+                {
+                    System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
+                    success = false;
+                }
             }
+
+            return success;
         }
 
         public override void Update(GameTime gameTime)

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SystemPrefabs"
+    targetNamespace="SystemPrefabs"
+    elementFormDefault="qualified"
+    xmlns="SystemPrefabs"
+    xmlns:types="SystemPrefab"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Types/SystemPrefabTypes.xsd"/>
+
+  <xs:element name="Mario" type="ActorPrefabType" substitutionGroup="SystemPrefab"/>
+  
+</xs:schema>

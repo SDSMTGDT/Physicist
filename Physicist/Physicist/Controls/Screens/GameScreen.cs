@@ -43,8 +43,9 @@
             this.Camera.Bounds = new Vector2(GraphicsDevice.Viewport.Width * 2, GraphicsDevice.Viewport.Height * 2);
         }
         
-        public virtual void LoadContent() 
-        { 
+        public virtual bool LoadContent() 
+        {
+            return true;
         }
 
         public virtual void NavigatingTo()
