@@ -9,19 +9,13 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Actors;
+    using Physicist.Controls;
     using Physicist.Extensions;
 
     public class Backdrop : IXmlSerializable
     {
-        public Backdrop(XElement element)
+        public Backdrop()
         {
-            this.XmlDeserialize(element);
-
-            if (this.TileToBounds)
-            {
-                this.Texture = this.Texture.TileTexture(this.Dimensions);
-                this.Scale = new Vector2(1f, 1f);
-            }
         }
 
         public Backdrop(Vector2 location, Size dimensions, float depth, Texture2D texture)
@@ -46,7 +40,7 @@
 
         public bool TileToBounds { get; private set; }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
@@ -99,6 +93,12 @@
             if (tileEle != null)
             {
                 this.TileToBounds = bool.Parse(tileEle.Value);
+            }
+
+            if (this.TileToBounds)
+            {
+                this.Texture = this.Texture.TileTexture(this.Dimensions);
+                this.Scale = new Vector2(1f, 1f);
             }
         }
     }

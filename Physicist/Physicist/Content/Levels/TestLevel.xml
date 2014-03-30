@@ -23,7 +23,7 @@
   
   <LevelObjects>
 	  <Backgrounds>
-		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="false">
+		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="true">
 			  <Location x="0" y="0"/>
 			  <Dimension width="600" height="400"/>
 		  </Backdrop>

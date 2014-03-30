@@ -15,16 +15,11 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Actor : IXmlSerializable, IPosition
+    public class Actor : PhysicistGameScreenItem, IPosition
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
         private BodyInfo bodyInfo;
-
-        public Actor(XElement element)
-        {
-            this.XmlDeserialize(element);
-        }
 
         public Actor()
         {
@@ -100,7 +95,7 @@
 
         public Visibility VisibleState { get; set; }
 
-        public virtual void Draw(SpriteBatch sb)
+        public virtual void Draw(ISpritebatch sb)
         {
             if (this.IsEnabled)
             {
@@ -144,20 +139,20 @@
             this.Sprites.Add(sprite.SpriteName, sprite);
         }
 
-        public virtual void Update(GameTime time)
+        public virtual void Update(GameTime gameTime)
         {
             // update every sprite in the sprite collection
             if (this.IsEnabled)
             {
                 foreach (var sprite in this.Sprites.Values)
                 {
-                    sprite.Update(time);
+                    sprite.Update(gameTime);
                 }
             }
         }
 
         // Implementing Interface   
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             // define the Actor element
             XElement actorElement = new XElement("Actor");
@@ -188,7 +183,7 @@
             return actorElement;
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element == null)
             {
@@ -200,7 +195,8 @@
             // Create GameSprites out of the Deserialze functions in GameSprite
             foreach (XElement gameSpriteEle in element.Element("Sprites").Elements("GameSprite"))
             {
-                GameSprite gameSprite = new GameSprite(gameSpriteEle);
+                GameSprite gameSprite = new GameSprite();
+                gameSprite.XmlDeserialize(gameSpriteEle);
                 this.sprites.Add(gameSprite.SpriteName, gameSprite);
             }
 
@@ -209,7 +205,7 @@
             XElement bodyElement = element.Element("BodyInfo");
             if (bodyElement != null)
             {
-                var bodyData = XmlBodyFactory.DeserializeBody(bodyElement.Elements().ElementAt(0));
+                var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, bodyElement.Elements().ElementAt(0));
                 this.body = bodyData.Item1;
                 this.bodyInfo = bodyData.Item2;
             }

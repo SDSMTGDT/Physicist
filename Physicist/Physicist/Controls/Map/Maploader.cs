@@ -23,7 +23,9 @@
         private static Dictionary<string, Type> assemblyTypes = new Dictionary<string, Type>();
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
-        private static Map currentMap = null;
+        private static IPhysicistRegistration registration = null;
+
+        private static XElement rootElement = null;
         private static XmlSchemaSet schemas = new XmlSchemaSet();
         private static List<XslCompiledTransform> transforms = new List<XslCompiledTransform>();
 
@@ -87,56 +89,85 @@
             }
         }
 
-        public static Map LoadMap(string filePath)
+        public static Map CurrentMap
         {
+            get;
+            private set;
+        }
+
+        public static Map Initialize(string filePath, IPhysicistRegistration registrationObject)
+        {
+            MapLoader.CurrentMap = null;
             MapLoader.HasFailed = false;
             MapLoader.HasErrors = false;
-                
-            List<string> validationErrors = new List<string>();
-            XDocument rootDocument = new XDocument();
-            XDocument transformDoc = new XDocument();
-            using (FileStream rstream = File.OpenRead(filePath))
+            MapLoader.loadErrors.Clear();
+            MapLoader.registration = null;
+            
+            if (registrationObject != null)
             {
-                XmlReaderSettings settings = new XmlReaderSettings();
-                settings.Schemas = MapLoader.schemas;
-                settings.ValidationType = ValidationType.Schema;
-                settings.ValidationEventHandler += (sender, args) =>
-                                                    {
-                                                        validationErrors.Add("Line " + args.Exception.LineNumber + ": " + args.Message);
-                                                        MapLoader.HasFailed = true;
-                                                    };
+                MapLoader.registration = registrationObject;
 
-                rootDocument = XDocument.Load(XmlReader.Create(rstream, settings));
-            }
-
-            if (MapLoader.HasFailed)
-            {
-                MapLoader.ErrorOccured("Map " + filePath + " failed to validate against schema!\nValidation error list: ");
-                validationErrors.ForEach(error => MapLoader.ErrorOccured(error));
-            }
-            else
-            {
-                using (XmlWriter writer = transformDoc.CreateWriter())
+                List<string> validationErrors = new List<string>();
+                XDocument rootDocument = new XDocument();
+                using (FileStream rstream = File.OpenRead(filePath))
                 {
-                    foreach (var transform in MapLoader.transforms)
+                    XmlReaderSettings settings = new XmlReaderSettings();
+                    settings.Schemas = MapLoader.schemas;
+                    settings.ValidationType = ValidationType.Schema;
+                    settings.ValidationEventHandler += (sender, args) =>
                     {
-                        transform.Transform(rootDocument.CreateReader(), writer);
-                    }
+                        validationErrors.Add("Line " + args.Exception.LineNumber + ": " + args.Message);
+                        MapLoader.HasFailed = true;
+                    };
+
+                    rootDocument = XDocument.Load(XmlReader.Create(rstream, settings));
                 }
 
-                MapLoader.RemoveNamespaces(transformDoc);
+                if (MapLoader.HasFailed)
+                {
+                    MapLoader.ErrorOccured("Map " + filePath + " failed to validate against schema!\nValidation error list: ");
+                    validationErrors.ForEach(error => MapLoader.ErrorOccured(error));
+                }
+                else
+                {
+                    XDocument transformDoc = new XDocument();
+                    using (XmlWriter writer = transformDoc.CreateWriter())
+                    {
+                        foreach (var transform in MapLoader.transforms)
+                        {
+                            transform.Transform(rootDocument.CreateReader(), writer);
+                        }
+                    }
 
-                XElement rootElement = transformDoc.Root;
+                    MapLoader.RemoveNamespaces(transformDoc);
+
+                    MapLoader.rootElement = transformDoc.Root;
+
+                    try
+                    {
+                        MapLoader.CurrentMap = new Map(
+                                registrationObject.World,
+                                int.Parse(MapLoader.rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
+                                int.Parse(MapLoader.rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
+                    }
+                    catch (AggregateException)
+                    {
+                        MapLoader.HasFailed = true;
+                    }
+                }
+            }
+
+            return MapLoader.CurrentMap;
+        }
+
+        public static bool LoadCurrentMap()
+        {
+            if (!MapLoader.HasFailed)
+            {
                 if (rootElement != null && (rootElement.Name.LocalName == "Map"))
                 {
                     try
                     {
-                        MapLoader.currentMap = new Map(
-                                int.Parse(rootElement.Attribute("width").Value, CultureInfo.CurrentCulture),
-                                int.Parse(rootElement.Attribute("height").Value, CultureInfo.CurrentCulture));
-
-                        Map.SetCurrentMap(MapLoader.currentMap);
-
                         MapLoader.LoadMedia(rootElement.Element("Media"));
                         MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
                     }
@@ -145,13 +176,9 @@
                         MapLoader.HasFailed = true;
                     }
                 }
-                else
-                {
-                    MapLoader.HasFailed = true;
-                }
             }
 
-            return MapLoader.currentMap;
+            return !MapLoader.HasFailed;
         }
 
         public static void RemoveNamespaces(XDocument document)
@@ -237,14 +264,14 @@
                         Backdrop backdrop = backgroundObject as Backdrop;
                         if (backdrop != null)
                         {
-                            MapLoader.currentMap.AddBackdrop(backdrop);
+                            MapLoader.CurrentMap.AddBackdrop(backdrop);
                         }
                         else
                         {
                             BackgroundMusic backgroundMusic = backgroundObject as BackgroundMusic;
                             if (backgroundMusic != null)
                             {
-                                MapLoader.currentMap.AddBackgroundMusic(backgroundMusic);
+                                MapLoader.CurrentMap.AddBackgroundMusic(backgroundMusic);
                             }
                         }
                     }
@@ -259,7 +286,7 @@
                         MapObject mapObject = foregroundObject as MapObject;
                         if (mapObject != null)
                         {
-                            MapLoader.currentMap.AddMapObject(mapObject);
+                            MapLoader.CurrentMap.AddMapObject(mapObject);
                         }
                     }
                 }
@@ -273,7 +300,7 @@
                         Actor actor = actorObject as Actor;
                         if (actor != null)
                         {
-                            MainGame.RegisterActor(actor);
+                            MapLoader.registration.RegisterActor(actor);
                         }
                     }
                 }
@@ -295,6 +322,7 @@
         {
             object instance = null;
             string objecttype = element.Name.ToString();
+            string errorMessage = string.Format(CultureInfo.CurrentCulture, "while loading {0} of class: {1}, ", objecttype, element.Attribute(classAttribute).Value);
 
             try
             {
@@ -307,30 +335,45 @@
                     classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
                 }
 
-                if (!classType.IsValueType && classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
+                if (!classType.IsValueType && classType.GetConstructor(new Type[] { }) != null)
                 {
-                    instance = Activator.CreateInstance(classType, new object[] { element });
+                    instance = Activator.CreateInstance(classType);
+                    var gameScreenItem = instance as IGameScreenItem;
+                    if (gameScreenItem != null)
+                    {
+                        gameScreenItem.Screen = MapLoader.registration as GameScreen;
+                    }
+
+                    var deserialize = instance as IXmlSerializable;
+                    if (deserialize != null)
+                    {
+                        deserialize.XmlDeserialize(element);
+                    }
+                    else
+                    {
+                        MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Warning {0}{1}", errorMessage, "Class does not implement Physicist.IXmlSerializable"));
+                    }
                 }
                 else
                 {
-                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain a constructor accepting a single XElement");
+                    MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, "Class is value type or does not contain a default constructor"));
                 }
             }
             catch (KeyNotFoundException)
             {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, "Class type not found!"));
             }
             catch (NullReferenceException)
             {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}, 'class' attribute not found!", objecttype));
             }
             catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, e.Message));
             }
             catch (TargetInvocationException e)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, e.Message));
             }
 
             return instance;

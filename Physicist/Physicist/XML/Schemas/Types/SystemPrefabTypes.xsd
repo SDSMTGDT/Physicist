@@ -11,12 +11,16 @@
   <xs:element name="SystemPrefab" type="ActorPrefabType" abstract="true"/>
 
   <xs:complexType name="ActorPrefabType">
-    <xs:sequence maxOccurs="1">
+    <xs:sequence>
       <xs:element name="Position" type="Vector2"/>
       <xs:element name="MovementSpeed" type="Vector2" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="textureRef" type="xs:string"/>
-    <xs:attribute name="health" type="xs:int"/>
+    <xs:attribute name="health" type="xs:int" default="10">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 10</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     
   </xs:complexType>
 

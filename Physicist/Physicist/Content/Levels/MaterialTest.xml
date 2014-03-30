@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <!--Must have a width and height-->
-<Map width="800" height="480">
+<Map 
+  xmlns="PhysicistTypes.xsd"
+  xmlns:actor="Actors"
+  xmlns:system="SystemPrefabs"
+  width="800" height="480">
   <Media>
     <Texture2D name="Hemp" location="Materials/hemp"/>
     <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
@@ -10,33 +14,22 @@
 
   <LevelObjects>
     <Backgrounds>
-      <Backdrop class="" textureRef="" depth="">
-        <Location x="" y=""/>
-        <Dimensions width="" height=""/>
-      </Backdrop>
-
-      <BackgroundMusic class="backgroundmusic" soundref="">
-        <Location x="" y=""/>
-        <Dimension width="" height=""/>
-      </BackgroundMusic>
-
-      <BackgroudVideo class="backgroundvideo"/>
     </Backgrounds>
 
     <Foregrounds>
 
       <!--Rectangle-->
-      <Rectangle class="MapObject" textureRef="Hemp" width="100" height="20" density="1" fill="true" rotation="1.57">
+      <Rectangle textureRef="Hemp" width="100" height="20" fill="true" rotation="1.57">
         <Position x="100" y="100"/>
       </Rectangle>
 
       <!--Capsule-->
-      <Capsule class="MapObject" textureRef="Hemp" density="1" height="80" topRadius="23" topEdge="10" bottomRadius="23" bottomEdge="10" fill="true">
+      <Capsule textureRef="Hemp" height="80" topRadius="23" topEdge="10" bottomRadius="23" bottomEdge="10" fill="true">
         <Position x="350" y="100"/>
       </Capsule>
 
       <!--ChainShape-->
-      <ChainShape class="MapObject" textureRef="Hemp" fill="true">
+      <ChainShape textureRef="Hemp" fill="true">
         <Position x="600" y="100"/>
         <Vertices>
           <Vector2 x="10" y="10"/>
@@ -46,7 +39,7 @@
       </ChainShape>
 
       <!--CompoundPolygon-->
-      <CompoundPolygon class="MapObject" textureRef="Hemp" density="1" fill="true">
+      <CompoundPolygon textureRef="Hemp" fill="true">
         <Position x="100" y="200"/>
         <VertexList>
           <Vertices>
@@ -64,22 +57,22 @@
       </CompoundPolygon>
 
       <!--Ellipse-->
-      <Ellipse class="MapObject" textureRef="Hemp" density="1" xRadius="39" yRadius="20" edges="16" fill="true">
+      <Ellipse textureRef="Hemp" xRadius="39" yRadius="20" edges="16" fill="true">
         <Position x="350" y="210"/>
       </Ellipse>
 
       <!--Gear-->
-      <Gear class="MapObject" textureRef="Hemp" density="1" radius="13" numberOfTeeth="8" tipPercentage="20" toothHeight="7" fill="true">
+      <Gear textureRef="Hemp" radius="13" numberOfTeeth="8" tipPercentage="20" toothHeight="7" fill="true">
         <Position x="600" y="200"/>
       </Gear>
 
       <!--LineArc-->
-      <LineArc class="MapObject" textureRef="Hemp" radians="4" sides="10" radius="20" angle="3.14" closed="false" fill="true">
+      <LineArc textureRef="Hemp" radians="4" sides="10" radius="20" angle="3.14" closed="false" fill="true">
         <Position x="100" y="300"/>
       </LineArc>
 
       <!--LoopShape-->
-      <LoopShape class="MapObject" textureRef="LoopShape" >
+      <LoopShape textureRef="LoopShape" >
         <Position x="350" y="300"/>
         <Vertices>
           <Vector2 x="0" y="40"/>
@@ -90,7 +83,7 @@
       </LoopShape>
 
       <!--Polygon-->
-      <Polygon class="MapObject" textureRef="Hemp" density="1" fill="true">
+      <Polygon textureRef="Hemp" fill="true">
         <Position x="600" y="300"/>
         <Vertices>
           <Vector2 x="40" y="0"/>
@@ -105,49 +98,25 @@
       </Polygon>
 
       <!--RoundedRectangle-->
-      <RoundedRectangle class="MapObject" textureRef="Hemp" density="1" width="80" height="20" xRadius="7" yRadius="3" segments="10" fill="true">
+      <RoundedRectangle textureRef="Hemp" width="80" height="20" xRadius="7" yRadius="3" segments="10" fill="true">
         <Position x="100" y="400"/>
       </RoundedRectangle>
 
       <!--SolidArc-->
-      <SolidArc class="MapObject" textureRef="Hemp" density="1" radians="4" radius="20" sides="10" angle="3.14" fill="true">
+      <SolidArc textureRef="Hemp" radians="4" radius="20" sides="10" angle="3.14" fill="true">
         <Position x="350" y="400"/>
       </SolidArc>
 
       <!--Circle-->
-      <Circle class="MapObject" textureRef ="Hemp" radius="23" density="1" fill="true">
+      <Circle textureRef ="Hemp" radius="23" fill="true">
         <Position x="600" y="400"/>
       </Circle>
-
     </Foregrounds>
 
     <Actors>
-      <NPC class="" textureRef="NOTSTOLEN"/>
-
-      <Player class="Player">
-        <Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
-          <MovementSpeed x="3" y="3"/>
-          <Sprites>
-            <GameSprite spriteName="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
-              <Offset x="0" y="0"/>
-              <FrameSize width="19" height="40"/>
-              <Animations>
-                <Idle struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-                <Down struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-                <Up struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
-                <Right struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-                <Left struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
-              </Animations>
-            </GameSprite>
-          </Sprites>
-          <BodyInfo>
-            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
-              <Position x="19" y="40"/>
-            </Rectangle>
-          </BodyInfo>
-        </Actor>
-      </Player>
-
+      <system:Mario textureRef="NOTSTOLEN">
+        <system:Position x="19" y="40"/>
+      </system:Mario>
     </Actors>
-  </LevelObjects>
+  </LevelObjects>  
 </Map>

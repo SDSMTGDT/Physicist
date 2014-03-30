@@ -23,7 +23,7 @@
     <Texture2D name="BrickBackground" location="Textures/Background"/>
   </Media>
 
-  <LevelObjects>
+  <LevelObjects>    
     <Backgrounds>
       <Backdrop textureRef="BrickBackground">
         <Location x="0" y="0"/>

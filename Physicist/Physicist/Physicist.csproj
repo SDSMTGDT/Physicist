@@ -21,7 +21,10 @@
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Tools\CodeAnalysis\PhysicistRuleSet.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>
+    </NoWarn>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -51,23 +54,35 @@
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
+    <Compile Include="Controls\Camera\IPosition.cs" />
+    <Compile Include="Controls\GameScreenItem.cs" />
+    <Compile Include="Controls\KeyDebouncer.cs" />
+    <Compile Include="Controls\Map\IPhysicistRegistration.cs" />
     <Compile Include="Controls\AssetCreator.cs" />
-    <Compile Include="Controls\IPosition.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
+    <Compile Include="Controls\Screens\FCCSpriteBatch.cs" />
+    <Compile Include="Controls\Screens\GameScreen.cs" />
+    <Compile Include="Controls\Screens\ISpriteBatch.cs" />
+    <Compile Include="Controls\Screens\MenuScreen.cs" />
+    <Compile Include="Controls\Screens\PauseScreen.cs" />
+    <Compile Include="Controls\Screens\PhysicistGameScreen.cs" />
+    <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
+    <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
     <Compile Include="Controls\Map\Backdrop.cs" />
     <Compile Include="Controls\Map\BackgroundMusic.cs" />
-    <Compile Include="Controls\IXmlSerializable.cs" />
+    <Compile Include="Controls\Map\IXmlSerializable.cs" />
     <Compile Include="Controls\Map\MapSaver.cs" />
+    <Compile Include="Enums\SystemScreens.cs" />
+    <Compile Include="Extensions\GameScreenKeyedDictionary.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
-    <Compile Include="Controls\CameraController.cs" />
+    <Compile Include="Controls\Camera\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
-    <Compile Include="Controls\GameController.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\Map\Map.cs" />
     <Compile Include="Controls\Map\MapLoader.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
-    <Compile Include="Controls\Viewport.cs" />
+    <Compile Include="Controls\Camera\Viewport.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
     <Compile Include="Enums\StandardAnimations.cs" />
     <Compile Include="Enums\StandardKeyActions.cs" />
@@ -118,6 +133,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
@@ -137,6 +153,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Content\Pericles6.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="XML\Schemas\Nodes\Media.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

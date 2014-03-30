@@ -41,7 +41,7 @@
   </xsl:template>
 
   <xsl:template match="physicist:Actors/system:Mario">
-    <Player class="Player">      
+    <Player class="Player">
       <xsl:call-template name="Actor_Template">     
         <xsl:with-param name="BodyInfo">
           <BodyInfo>
@@ -69,7 +69,7 @@
           <xsl:call-template name="DefaultParameter">
             <xsl:with-param name="Input" select="@health"/>
             <xsl:with-param name="DefaultValue" select="10"/>
-            <xsl:with-param name="Type" select="Attribute"/>
+            <xsl:with-param name="Type" select='"Attribute"'/>
           </xsl:call-template>
         </xsl:with-param>
 
