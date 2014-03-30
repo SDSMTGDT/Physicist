@@ -21,7 +21,7 @@
         {
             if (upperBound > 1f || lowerBound > 1f || upperBound < 0f || lowerBound < 0f)
             {
-                throw new ArgumentException("Bounds must be between 0 - 1");
+                throw new ArgumentException("Bounds must be between 0 and 1");
             }
 
             if (lowerBound > upperBound)

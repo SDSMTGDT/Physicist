@@ -322,6 +322,7 @@
         {
             object instance = null;
             string objecttype = element.Name.ToString();
+            string errorMessage = string.Format(CultureInfo.CurrentCulture, "while loading {0} of class: {1}, ", objecttype, element.Attribute(classAttribute).Value);
 
             try
             {
@@ -350,29 +351,29 @@
                     }
                     else
                     {
-                        MapLoader.ErrorOccured("Warning while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not implement Physicist.IXmlSerializable");
+                        MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Warning {0}{1}", errorMessage, "Class does not implement Physicist.IXmlSerializable"));
                     }
                 }
                 else
                 {
-                    MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class is value type or does not contain a default constructor");
+                    MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, "Class is value type or does not contain a default constructor"));
                 }
             }
             catch (KeyNotFoundException)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, "Class type not found!"));
             }
             catch (NullReferenceException)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + ", 'class' attribute not found!");
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}, 'class' attribute not found!", objecttype));
             }
             catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, e.Message));
             }
             catch (TargetInvocationException e)
             {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+                MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, e.Message));
             }
 
             return instance;

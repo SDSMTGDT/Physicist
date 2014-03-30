@@ -114,9 +114,9 @@
     </Foregrounds>
 
     <Actors>
-      <system:Mario textureRef="NOTSTOLEN" health="10">
+      <system:Mario textureRef="NOTSTOLEN">
         <system:Position x="19" y="40"/>
       </system:Mario>
     </Actors>
-  </LevelObjects>
+  </LevelObjects>  
 </Map>
