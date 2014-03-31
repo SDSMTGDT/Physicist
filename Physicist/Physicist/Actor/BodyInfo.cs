@@ -14,6 +14,10 @@
 
     public class BodyInfo
     {
+        // Construction information
+        private int mapHeight;
+
+        // Body information
         private BodyCategory? bodyCategory = null;
         private List<Vertices> vertexList = null;
         private Vector2? position = null;
@@ -51,9 +55,9 @@
         {
         }
 
-        public BodyInfo(XElement element)
+        public BodyInfo(int mapHeight)
         {
-            this.XmlDeserialize(element);
+            this.mapHeight = mapHeight;
         }
 
         // Global to all Body
@@ -216,8 +220,7 @@
         public XElement XmlSerialize()
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
-
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, MainGame.Map.Height - this.Position.Y), "position"));
+            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
             {
@@ -387,15 +390,16 @@
             }
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
-            Vector2 designPosition = new Vector2(0, 0);
-            var positionEle = element.Element("Position");
-            if (positionEle != null)
+
+            XElement posEle = element.Element("Position");
+            Vector2 designPosition = Vector2.Zero;
+            if (posEle != null)
             {
-                designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
             }
 
-            this.position = new Vector2(designPosition.X, MainGame.Map.Height - designPosition.Y);
-
+            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y); 
+            
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null)
             {

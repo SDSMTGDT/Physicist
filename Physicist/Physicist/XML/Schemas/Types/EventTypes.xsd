@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="EventTypes"
+    targetNamespace="PhysicistTypes"
+    elementFormDefault="qualified"
+    xmlns="EventTypes"
+    xmlns:mstns="PhysicistTypes"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Proxies/PhysicistCommon.xsd"/>
+  <xs:include schemaLocation="../Nodes/PhysicistShapes.xsd"/>
+  <xs:import namespace="PhysicistEvents" schemaLocation="../Nodes/PhysicistEvents.xsd"/>
+
+  <xs:element name="Trigger" abstract="true" type="mstns:TriggerType"/>  
+  <xs:element name="Modifier" abstract="true" type="mstns:ModifierType"/>
+  
+  <xs:simpleType name="TriggerStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Button">
+        <xs:annotation>
+          <xs:documentation>Active when detecting, Inactive when not detecting</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ToggleOnActivated">
+        <xs:annotation>
+          <xs:documentation>Toggle active at the start of detection</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ToggleOnDeactivated">
+        <xs:annotation>
+          <xs:documentation>Toggle active when detection ends</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DropLatch">
+        <xs:annotation>
+          <xs:documentation>Toggle active once, then must be reset externally</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="TriggerType">
+    <xs:sequence>
+      <xs:element name="Trigger">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="OnActivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniqueModifiersOnActivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="OnDeactivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniqueModifiersOnDeactivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="WhileActivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniqueModifiersWhileActivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="WhileDeactivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniqueModifiersWhileDeactivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+          </xs:all>
+          <xs:attribute name="isEnabled" type="xs:boolean" default="true">
+            <xs:annotation>
+              <xs:documentation>[Optional] default is true</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="isReuseable" type="xs:boolean" default="true">
+            <xs:annotation>
+              <xs:documentation>[Optional] If false, disables trigger upon activation toggle (reguardless of style), default is true</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="style" type="mstns:TriggerStyle" default="Button">
+            <xs:annotation>
+              <xs:documentation>[Optional] default is 'Button'</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModifierNameList">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="Modifier">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ModifierType">    
+    <xs:sequence>
+      <xs:element name="Modifier">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="Target">
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EventType">
+    <xs:all>
+      <xs:element name="Triggers">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="mstns:Trigger"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Modifiers">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="mstns:Modifier"/>
+          </xs:choice>
+        </xs:complexType>
+        <xs:unique name="UniqueModifiersPerEvent">
+          <xs:selector xpath="./*/mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+    </xs:all>   
+    <xs:attribute name="class" type="xs:string" default="PhysicistEvent">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is PhysicistEvent</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="name" type="xs:ID" use="optional">
+      <xs:annotation>
+        <xs:documentation>[Optional] Unique name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="ProximityTrigger">
+    <xs:complexContent>
+      <xs:extension base="mstns:TriggerType">
+        <xs:choice>
+          <xs:element name="FixtureTemplate">
+            <xs:annotation>
+              <xs:documentation>If supplied, do not use the 'radius' attribute, Position is ignored</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:element ref="mstns:MapObject"/>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Position" type="mstns:Vector2">
+            <xs:annotation>
+              <xs:documentation>If not using a Fixture Template, use this to supply the position and use the 'radius' attribute to supply the proximity boundaries</xs:documentation>
+            </xs:annotation>
+          </xs:element>          
+        </xs:choice>                
+        <xs:attribute name="attachedTarget" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>[Optional] If supplied, trigger will attach itself to the named object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="radius" type="xs:float" use="optional">
+          <xs:annotation>
+            <xs:documentation>[Optional] If no FixtureTemplate is supplied, use this to supply a proximity radius of detection</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="isContinuous" type="xs:boolean" default="true">
+          <xs:annotation>
+            <xs:documentation>[Optional] Determines continuous collision or not, default is true</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>        
+      </xs:extension>     
+    </xs:complexContent>    
+  </xs:complexType>
+
+  <xs:complexType name="AnimateModifier">
+    <xs:complexContent>
+      <xs:extension base="mstns:ModifierType">
+        <xs:attribute name="targetSprite" use="required"/>
+        <xs:attribute name="targetAnimation" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="VelocityModifier">
+    <xs:complexContent>
+      <xs:extension base="mstns:ModifierType">
+        <xs:sequence>
+          <xs:element name="StepChange" type="mstns:Vector2"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

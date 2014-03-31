@@ -12,6 +12,12 @@
         private string targetSprite;
         private Dictionary<Actor, string> previousAnimations = new Dictionary<Actor, string>();
 
+        public AnimateModifier()
+        {
+            this.IsOneShot = false;
+            this.HasMemory = true;
+        }
+
         public AnimateModifier(Actor target, string targetSprite, string targetAnimation, bool isOneShot, bool hasMemory)
         {
             this.AddTarget(target);
@@ -19,13 +25,6 @@
             this.targetSprite = targetSprite;
             this.IsOneShot = isOneShot;
             this.HasMemory = hasMemory;
-        }
-
-        public AnimateModifier(XElement element)
-        {
-            this.IsOneShot = false;
-            this.HasMemory = true;
-            this.XmlDeserialize(element);
         }
 
         public bool HasMemory { get; set; }

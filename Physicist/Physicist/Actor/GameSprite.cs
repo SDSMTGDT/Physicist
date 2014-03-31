@@ -23,10 +23,8 @@
         private float markedTime = 0;
         private float depth = 0f;
 
-        // Note: Empty constructor for use in deserialization only!
-        public GameSprite(XElement element)
+        public GameSprite()
         {
-            this.XmlDeserialize(element);
         }
 
         public GameSprite(Texture2D spriteSheet, Size frameSize, string spriteName)
@@ -260,7 +258,14 @@
             // Create SpriteAnimations out of the Deserialze functions in SpriteAnimation
             foreach (XElement animationElement in element.Element("Animations").Elements())
             {
-                this.AddAnimation(animationElement.Name.LocalName, ExtensionMethods.XmlDeserializeSpriteAnimation(animationElement));
+                string name = animationElement.Name.LocalName;
+                var nameAtt = animationElement.Attribute("name");
+                if (nameAtt != null)
+                {
+                    name = nameAtt.Value;
+                }
+
+                this.AddAnimation(name, ExtensionMethods.XmlDeserializeSpriteAnimation(animationElement));
             }
 
             return;

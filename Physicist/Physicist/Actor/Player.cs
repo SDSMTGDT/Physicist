@@ -14,21 +14,16 @@
     using Physicist.Enums;
     using Physicist.Extensions;
 
-    public class Player : Actor, IXmlSerializable
+    public class Player : Actor
     {
-        public Player(string name) :
-            base(name)
+        public Player() :
+            base()
         {
         }
 
-        public Player(XElement element)
+        public Player(string name) :
+            base(name)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            this.XmlDeserialize(element);
         }
 
         public new Body Body
@@ -45,31 +40,31 @@
             }
         }
 
-        public void Update(GameTime time, KeyboardState ks)
+        public override void Update(GameTime gameTime)
         {
             bool keypress = false;
             string spriteStateString = string.Empty;
             Vector2 dp = Vector2.Zero;
 
-            if (ks.IsKeyDown(Keys.Up))
+            if (this.Screen.IsKeyDown(Keys.Up, false))
             {
                 dp.Y -= this.MovementSpeed.Y;
                 spriteStateString = "Up";
                 keypress = true;
             }
-            else if (ks.IsKeyDown(Keys.Down))
+            else if (this.Screen.IsKeyDown(Keys.Down))
             {
                 dp.Y += this.MovementSpeed.Y;
                 spriteStateString = "Down";
                 keypress = true;
             }
-            else if (ks.IsKeyDown(Keys.Left))
+            else if (this.Screen.IsKeyDown(Keys.Left))
             {
                 dp.X -= this.MovementSpeed.X;
                 spriteStateString = "Left";
                 keypress = true;
             }
-            else if (ks.IsKeyDown(Keys.Right))
+            else if (this.Screen.IsKeyDown(Keys.Right))
             {
                 dp.X += this.MovementSpeed.X;
                 spriteStateString = "Right";
@@ -88,19 +83,22 @@
                 sprite.CurrentAnimationString = spriteStateString;
             }
 
-            base.Update(time);
+            base.Update(gameTime);
         }
 
-        public new XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             return new XElement("Player", new XAttribute("class", typeof(Player).ToString()), base.XmlSerialize());
         }
 
-        public new void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {            
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
+
+                this.Body.BodyType = BodyType.Dynamic;
+                this.Body.FixedRotation = true;
             }
         }
 

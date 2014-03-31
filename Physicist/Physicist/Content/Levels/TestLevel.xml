@@ -23,17 +23,17 @@
   
   <LevelObjects>
 	  <Backgrounds>
-		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="false">
+		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="true">
 			  <Location x="0" y="0"/>
-			  <Dimensions width="600" height="400"/>
+			  <Dimension width="600" height="400"/>
 		  </Backdrop>
 		 
-		  <BackgroundMusic class="backgroundmusic" soundref="">
+		  <BackgroundMusic class="Backgroundmusic" soundref="">
 			  <Location x="" y=""/>
 			  <Dimension width="" height=""/>
 		  </BackgroundMusic>
 		 
-		  <BackgroudVideo class="backgroundvideo"/>		  
+		  <BackgroudVideo class="Backgroundvideo"/>		  
 	  </Backgrounds>
 	
 	  <Foregrounds>
@@ -154,7 +154,7 @@
             </GameSprite>
           </Sprites>
           <BodyInfo>
-            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
+            <Rectangle width="19" height="40" density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
               <Position x="19" y="40"/>
             </Rectangle>
           </BodyInfo>

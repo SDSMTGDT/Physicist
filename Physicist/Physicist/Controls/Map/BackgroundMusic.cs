@@ -11,7 +11,7 @@
     using Physicist.Actors;
     using Physicist.Extensions;
 
-    public class BackgroundMusic : IXmlSerializable, IUpdate
+    public class BackgroundMusic : IBackgroundObject, IUpdate
     {
         public BackgroundMusic(XElement element)
         {

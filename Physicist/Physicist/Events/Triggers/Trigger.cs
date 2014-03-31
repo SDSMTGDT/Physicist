@@ -12,10 +12,11 @@
     using Physicist.Enums;
     using Physicist.Extensions;
 
-    public abstract class Trigger : ITrigger, IXmlSerializable
+    public abstract class Trigger : PhysicistGameScreenItem, ITrigger
     {
         private bool isActive;
         private bool isEnabled;
+        private bool canSwitch = true;
         private Dictionary<TriggerMode, Dictionary<string, IModifier>> modifiers = new Dictionary<TriggerMode, Dictionary<string, IModifier>>();
 
         protected Trigger()
@@ -29,6 +30,8 @@
                 this.modifiers.Add(mode, new Dictionary<string, IModifier>());
             }
         }
+
+        public TriggerStyle Style { get; private set; }
 
         public bool IsInitialized { get; private set; }
 
@@ -56,25 +59,24 @@
 
             set
             {
-                if (this.IsEnabled)
+                if (this.isEnabled && this.isActive != value)
                 {
-                    if (this.isActive != value)
+                    this.modifiers.Values.ForEach(modifierlist => modifierlist.Values.ForEach(modifier => 
                     {
-                        this.modifiers.Values.ForEach(modifierlist => modifierlist.Values.ForEach(modifier => 
-                        { 
-                            if (modifier != null) 
-                            { 
-                                modifier.IsActive = !modifier.IsActive; 
-                            } 
-                        }));
-                    }
+                        if (modifier != null) 
+                        {
+                            modifier.IsActive = !modifier.IsActive;
+                        }
+                    }));
 
-                    this.isActive = value;
+                    this.canSwitch = true;
+                }
 
-                    if (!this.IsReusable)
-                    {
-                        this.IsEnabled = false;
-                    }
+                this.isActive = value;
+
+                if (!this.IsReusable)
+                {
+                    this.IsEnabled = false;
                 }
             }
         }
@@ -126,12 +128,12 @@
             }
         }
 
-        public virtual XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
@@ -147,6 +149,12 @@
                     this.IsReusable = bool.Parse(reuseableAtt.Value);
                 }
 
+                var styleAtt = element.Attribute("style");
+                if (styleAtt != null)
+                {
+                    this.Style = (TriggerStyle)Enum.Parse(typeof(TriggerStyle), styleAtt.Value);
+                }
+
                 foreach (TriggerMode mode in Enum.GetValues(typeof(TriggerMode)))
                 {
                     var modeEle = element.Element(mode.ToString());
@@ -158,6 +166,40 @@
                         }
                     }
                 }
+            }
+        }
+
+        protected void ActivateWithStyle()
+        {
+            if (this.Style == TriggerStyle.Button)
+            {
+                this.IsActive = true;
+            }
+            else if (this.Style == TriggerStyle.ToggleOnActivated)
+            {
+                this.IsActive = !this.IsActive;
+            }
+            else if (this.Style == TriggerStyle.DropLatch && this.canSwitch)
+            {
+                this.IsActive = true;
+                this.canSwitch = false;
+            }
+        }
+
+        protected void DeactivateWithStyle()
+        {
+            if (this.Style == TriggerStyle.Button)
+            {
+                this.IsActive = false;
+            }
+            else if (this.Style == TriggerStyle.ToggleOnDeactivated)
+            {
+                this.IsActive = !this.IsActive;
+            }
+            else if (this.Style == TriggerStyle.DropLatch && this.canSwitch)
+            {
+                this.IsActive = false;
+                this.canSwitch = false;
             }
         }
     }

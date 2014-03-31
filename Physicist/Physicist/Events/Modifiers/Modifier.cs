@@ -7,7 +7,7 @@
     using Physicist.Actors;
     using Physicist.Controls;
 
-    public abstract class Modifier<T> : IModifier, IXmlSerializable
+    public abstract class Modifier<T> : PhysicistGameScreenItem, IModifier, IXmlSerializable
     {
         private bool isActive;
         private bool isActiveHasChanged = false;
@@ -42,7 +42,7 @@
 
             set
             {
-                if (this.IsEnabled && this.isActive != value && !(this.IsSingleUse && this.isActiveHasChanged))
+                if (this.isActive != value && !(this.IsSingleUse && this.isActiveHasChanged))
                 {
                     this.isActive = value;
                     this.isActiveHasChanged = true;
@@ -68,7 +68,7 @@
             }
         }
 
-        public virtual XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             XElement modifierElement = new XElement(
                                             "Modifier",
@@ -80,7 +80,7 @@
             return modifierElement;
         }
 
-        public virtual void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
@@ -111,7 +111,7 @@
                 List<IName> targetObjects = new List<IName>();
                 foreach (var targetEle in element.Elements("Target"))
                 {
-                    targetObjects.Add(MainGame.Map.NamedObjects[targetEle.Attribute("name").Value]);
+                    targetObjects.Add(this.Map.NamedObjects[targetEle.Attribute("name").Value]);
                 }
 
                 this.SetTargets(targetObjects);

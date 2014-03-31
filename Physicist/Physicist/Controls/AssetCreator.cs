@@ -182,7 +182,7 @@
                 */
 
                 Vector2 vertsSize = new Vector2(vertsBounds.UpperBound.X - vertsBounds.LowerBound.X, vertsBounds.UpperBound.Y - vertsBounds.LowerBound.Y);
-                texture = this.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, material, verticesFill);
+                texture = this.RenderTexture((int)Math.Ceiling(vertsSize.X), (int)Math.Ceiling(vertsSize.Y), material, verticesFill);
             }
 
             return texture;
@@ -354,6 +354,10 @@
 
                 texture = tempTarget;
                 tempTarget = null;
+            }
+            catch (InvalidOperationException)
+            {
+                texture = null;
             }
             finally
             {

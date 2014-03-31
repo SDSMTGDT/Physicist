@@ -2,23 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Runtime.Serialization;
     using Physicist.Extensions.Primitives;
 
-    [Serializable]
-    public class MediaDictionary<T> : Dictionary<string, T> where T : MediaElement
+    public class MediaElementKeyedCollection<T> : KeyedCollection<string, T> where T : MediaElement
     {
-        public MediaDictionary()
-            : base()
-        {
-        }
-
-        protected MediaDictionary(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
         public string Location(string key)
         {
             return base[key].Location;
@@ -29,9 +19,14 @@
             return base[key].Asset;
         }
 
-        public void Add(T item)
+        protected override string GetKeyForItem(T item)
         {
-            base.Add(item.Name, item);
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            return item.Name;
         }
     }
 }

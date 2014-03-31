@@ -2,7 +2,7 @@
 {
     using Physicist.Controls;
 
-    public interface IPhysicistEvent : IUpdate, IName, IXmlSerializable
+    public interface IPhysicistEvent : IUpdate, IName
     {
     }
 }

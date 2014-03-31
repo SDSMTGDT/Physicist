@@ -15,15 +15,14 @@
     {
         private Vector2 stepChange = new Vector2();
 
+        public VelocityModifier()
+        {
+        }
+
         public VelocityModifier(Body target, Vector2 change)
         {
             this.AddTarget(target);
             this.stepChange = change;
-        }
-
-        public VelocityModifier(XElement element)
-        {
-            this.XmlDeserialize(element);
         }
 
         public override void Update(GameTime gameTime)

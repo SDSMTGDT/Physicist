@@ -19,13 +19,8 @@
     /// </summary>
     public class MainGame : Game
     {
-        private static GraphicsDevice graphicsDev;
-        private static List<string> maps;
-
-        private Physicist.Controls.Viewport viewport;
-        private CameraController camera;
         private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        private FCCSpritebatch spriteBatch;
 
         public MainGame()
             : base()
@@ -33,24 +28,10 @@
             this.graphics = new GraphicsDeviceManager(this);
         }
 
-        public static GraphicsDevice GraphicsDev
-        {
-            get
-            {
-                return MainGame.graphicsDev;
-            }
-        }
-
-        public static World World
-        {
-            get;
-            private set;
-        }
-
-        public static Map Map
-        {
-            get;
-            private set;
+        public static GraphicsDevice GraphicsDev 
+        { 
+            get; 
+            private set; 
         }
 
         /// <summary>
@@ -61,13 +42,13 @@
         /// </summary>
         protected override void Initialize()
         {
-            FarseerPhysics.Settings.MaxPolygonVertices = 32;
             ContentController.Instance.Initialize(this.Content, "Content");
+            MainGame.GraphicsDev = this.GraphicsDevice;
+            this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
-            MainGame.graphicsDev = this.GraphicsDevice;
-
-            MainGame.maps = new List<string>() { "Content\\Levels\\TriggerTest.xml" };
-            //// TODO: Add your initialization logic here
+            ScreenManager.Initialize(this.GraphicsDevice);
+            ScreenManager.Quit += this.RequestQuit;
+           
             base.Initialize();
         }
 
@@ -77,22 +58,7 @@
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            MainGame.World = new World(new Vector2(0f, 9.81f));
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(1f);
-
-            MainGame.Map = MapLoader.InitializeLoader(MainGame.maps[0]);
-            if (Map == null || !MapLoader.LoadCurrentMap())
-            {
-                throw new AggregateException(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", MainGame.maps[0]));
-            }
-
-            this.viewport = new Physicist.Controls.Viewport(new Extensions.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
-            this.camera = new CameraController();
-            this.camera.CameraViewport = this.viewport;
-            this.camera.Bounds = new Vector2(this.GraphicsDevice.Viewport.Width * 2, this.GraphicsDevice.Viewport.Height * 2);
+            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "Pericles6");
         }
 
         /// <summary>
@@ -102,6 +68,7 @@
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            ScreenManager.UnloadContent();
         }
 
         /// <summary>
@@ -111,26 +78,7 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (gameTime != null)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                {
-                    this.Exit();
-                }
-
-                MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
-
-                foreach (var player in MainGame.Map.Players)
-                {
-                    this.camera.Following = player;
-                    player.Update(gameTime, Keyboard.GetState());
-                }
-
-                // TODO: Add your update logic here
-                this.camera.CenterOnFollowing();
-                MainGame.Map.Update(gameTime);
-            }
-
+            ScreenManager.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -141,13 +89,13 @@
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            this.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, this.camera.Transform);
-
-            MainGame.Map.Draw(this.spriteBatch);
-
+            ScreenManager.Draw(this.spriteBatch);
             base.Draw(gameTime);
+        }
 
-            this.spriteBatch.End();
+        protected virtual void RequestQuit(object sender, EventArgs e)
+        {
+            this.Exit();
         }
     }
 }

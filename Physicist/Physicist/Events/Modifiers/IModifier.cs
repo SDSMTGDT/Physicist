@@ -4,7 +4,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public interface IModifier : IName, IUpdate
+    public interface IModifier : IGameScreenItem, IName, IUpdate, IXmlSerializable
     {
         bool IsActive { get; set; }
 

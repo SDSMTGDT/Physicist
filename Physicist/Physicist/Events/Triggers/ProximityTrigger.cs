@@ -20,14 +20,13 @@
         private Fixture collisionFixture = null;
         private Fixture separationFixture = null;
 
-        public ProximityTrigger(XElement element)
+        public ProximityTrigger()
         {
-            this.XmlDeserialize(element);
         }
 
         public ProximityTrigger(float sensorRadius, Vector2 position)
         {
-            this.sensorBody = BodyFactory.CreateCircle(MainGame.World, sensorRadius, 1f, position);
+            this.sensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
             this.CreateSensors(this.sensorBody.FixtureList[0]);
         }
 
@@ -48,7 +47,7 @@
 
             set
             {
-                if (value)
+                if (!value)
                 {
                     this.collisionFixture.IgnoreCCDWith = Category.All;
                 }
@@ -59,12 +58,17 @@
             }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
         public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public new void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             Fixture sensorTemplate = null;
 
@@ -75,7 +79,7 @@
                 var attachedEle = element.Attribute("attachedTarget");
                 if (attachedEle != null)
                 {
-                    Actor target = MainGame.Map.NamedObjects[attachedEle.Value] as Actor;
+                    Actor target = this.Map.NamedObjects[attachedEle.Value] as Actor;
                     if (target != null)
                     {
                         this.sensorBody = target.Body;
@@ -87,10 +91,10 @@
                 {
                     Vector2 position = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
                     var tempBody = BodyFactory.CreateCircle(
-                                            MainGame.World,
+                                            this.World,
                                             float.Parse(element.Attribute("radius").Value, CultureInfo.CurrentCulture),
                                             1f,
-                                            new Vector2(position.X, MainGame.Map.Height - position.Y));
+                                            new Vector2(position.X, this.Map.Height - position.Y).ToSimUnits());
 
                     tempBody.IsSensor = true;
                     
@@ -104,8 +108,8 @@
                 }
                 else
                 {
-                    var bodyData = XmlBodyFactory.DeserializeBody(bodyInfoEle.Elements().ElementAt(0));
-                    MainGame.World.RemoveBody(bodyData.Item1);
+                    var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, bodyInfoEle.Elements().ElementAt(0));
+                    this.World.RemoveBody(bodyData.Item1);
                     sensorTemplate = bodyData.Item1.FixtureList[0];                   
                 }
 
@@ -122,13 +126,13 @@
 
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            this.IsActive = true;
+            this.ActivateWithStyle();
             return this.IsEnabled;
         }
 
         protected virtual void OnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            this.IsActive = false;
+            this.DeactivateWithStyle();
         }
 
         // Slight Hack, if both OnSeparation and OnCollision event are subscribed to

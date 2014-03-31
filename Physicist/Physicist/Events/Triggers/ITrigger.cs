@@ -4,7 +4,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public interface ITrigger : IUpdate
+    public interface ITrigger : IUpdate, IXmlSerializable
     {
         bool IsReusable { get; }
 

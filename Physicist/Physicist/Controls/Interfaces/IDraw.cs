@@ -4,6 +4,6 @@
 
     public interface IDraw
     {
-        void Draw(SpriteBatch sb);
+        void Draw(ISpritebatch sb);
     }
 }

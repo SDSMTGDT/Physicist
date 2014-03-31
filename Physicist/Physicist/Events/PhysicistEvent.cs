@@ -7,14 +7,13 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public class PhysicistEvent : IXmlSerializable, IPhysicistEvent
+    public class PhysicistEvent : PhysicistGameScreenItem, IPhysicistEvent
     {
         private List<IModifier> modifiers = new List<IModifier>();
         private List<ITrigger> triggers = new List<ITrigger>();
 
-        public PhysicistEvent(XElement element)
+        public PhysicistEvent()
         {
-            this.XmlDeserialize(element);
         }
 
         public bool IsEnabled
@@ -66,16 +65,15 @@
             if (this.IsEnabled)
             {
                 this.triggers.ForEach(trigger => trigger.Update(gameTime));
-                this.modifiers.ForEach(modifier => modifier.Update(gameTime));
             }
         }
 
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {            
             if (element != null)
             {
@@ -93,6 +91,8 @@
                     IModifier modifier = (IModifier)MapLoader.CreateInstance(modifierEle, null);
                     if (modifier != null)
                     {
+                        modifier.Screen = this.Screen;
+                        modifier.XmlDeserialize(modifierEle);
                         this.modifiers.Add(modifier);
                     }
                 }
@@ -102,8 +102,10 @@
                     Trigger trigger = (Trigger)MapLoader.CreateInstance(triggerEle, null);
                     if (trigger != null)
                     {
-                        this.triggers.Add(trigger);
+                        trigger.Screen = this.Screen;
+                        trigger.XmlDeserialize(triggerEle);
                         trigger.Initialize(this.modifiers);
+                        this.triggers.Add(trigger);
                     }
                 }
             }

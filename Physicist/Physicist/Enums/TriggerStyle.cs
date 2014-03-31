@@ -5,6 +5,8 @@
     public enum TriggerStyle
     {
         Button,
-        Switch,
+        ToggleOnActivated,
+        ToggleOnDeactivated,
+        DropLatch,
     }
 }
