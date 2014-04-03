@@ -48,6 +48,17 @@
                 if (this.isActive != value)
                 {
                     this.isActive = value;
+                    if (this.isActive)
+                    {
+                        foreach (var mode in this.modifiers.Keys)
+                        {
+                            foreach (var modifier in this.modifiers[mode].Values)
+                            {
+                                modifier.IsActive = !modifier.IsActive;
+                            }
+                        }
+                    }
+
                     if (!this.isActive && this.Deactivated != null)
                     {
                         this.Deactivated(this, null);
