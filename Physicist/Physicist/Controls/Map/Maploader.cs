@@ -95,6 +95,51 @@
             return MapLoader.currentMap;
         }
 
+        public static object CreateInstance(XElement element, string classAttribute)
+        {
+            object instance = null;
+            string objecttype = element.Name.ToString();
+
+            try
+            {
+                // Try to create type from fully quantified name in current assembly
+                Type classType = Type.GetType(element.Attribute(classAttribute).Value);
+
+                // If failure, try to find type in registered assemblies, first by short name, then by full name
+                if (classType == null && !MapLoader.assemblyTypes.TryGetValue(element.Attribute(classAttribute).Value, out classType))
+                {
+                    classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
+                }
+
+                if (!classType.IsValueType && classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
+                {
+                    instance = Activator.CreateInstance(classType, new object[] { element });
+                }
+                else
+                {
+                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain a constructor accepting a single XElement");
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
+            }
+            catch (NullReferenceException)
+            {
+                MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
+            }
+            catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
+            {
+                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+            }
+            catch (TargetInvocationException e)
+            {
+                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
+            }
+
+            return instance;
+        }
+
         private static void ErrorOccured(string errorMsg)
         {
             MapLoader.loadErrors.Add(errorMsg);
@@ -203,51 +248,6 @@
             }
 
             return instances;
-        }
-
-        private static object CreateInstance(XElement element, string classAttribute)
-        {
-            object instance = null;
-            string objecttype = element.Name.ToString();
-
-            try
-            {
-                // Try to create type from fully quantified name in current assembly
-                Type classType = Type.GetType(element.Attribute(classAttribute).Value);
-
-                // If failure, try to find type in registered assemblies, first by short name, then by full name
-                if (classType == null && !MapLoader.assemblyTypes.TryGetValue(element.Attribute(classAttribute).Value, out classType))
-                {
-                    classType = MapLoader.quantifiedAssemblyTypes[element.Attribute(classAttribute).Value];
-                }
-
-                if (!classType.IsValueType && classType.GetConstructor(new Type[] { typeof(XElement) }) != null)
-                {
-                    instance = Activator.CreateInstance(classType, new object[] { element });
-                }
-                else
-                {
-                    MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class does not contain a constructor accepting a single XElement");
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", Class type not found!");
-            }
-            catch (NullReferenceException)
-            {
-                MapLoader.ErrorOccured("Error Error while loading " + objecttype + ", 'class' attribute not found!");
-            }
-            catch (Microsoft.Xna.Framework.Content.ContentLoadException e)
-            {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
-            }
-            catch (TargetInvocationException e)
-            {
-                MapLoader.ErrorOccured("Error while loading " + objecttype + " of class: " + element.Attribute(classAttribute).Value + ", " + e.Message);
-            }
-
-            return instance;
         }
     }
 }

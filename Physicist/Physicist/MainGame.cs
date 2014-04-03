@@ -70,7 +70,8 @@
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             MainGame.graphicsDev = this.GraphicsDevice;
             MainGame.actors = new List<Actor>();
-            MainGame.maps = new List<string>() { "Content\\Levels\\MaterialTest.xml" };
+            MainGame.maps = new List<string>() { "Content\\Levels\\PathTest.xml" };
+
             //// TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -126,16 +127,7 @@
 
                 foreach (var actor in MainGame.actors)
                 {
-                    Player player = actor as Player;
-                    if (player != null)
-                    {
-                        this.camera.Following = player;
-                        player.Update(gameTime, Keyboard.GetState());
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
+                    actor.Update(gameTime);
                 }
 
                 // TODO: Add your update logic here

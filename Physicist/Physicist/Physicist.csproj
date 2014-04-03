@@ -46,12 +46,16 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
+    <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
+    <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
+    <Compile Include="Actor\PathManagement\PathManager.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
     <Compile Include="Controls\AssetCreator.cs" />
+    <Compile Include="Controls\IModifier.cs" />
     <Compile Include="Controls\IPosition.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
@@ -59,6 +63,7 @@
     <Compile Include="Controls\Map\BackgroundMusic.cs" />
     <Compile Include="Controls\IXmlSerializable.cs" />
     <Compile Include="Controls\Map\MapSaver.cs" />
+    <Compile Include="Enums\TriggerMode.cs" />
     <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
     <Compile Include="Controls\CameraController.cs" />
     <Compile Include="Controls\ContentController.cs" />
@@ -79,16 +84,18 @@
     <Compile Include="Extensions\XmlBodyFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Actor\PathManagement\PathNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Levels\MaterialTest.xml">
-      <SubType>Designer</SubType>
+    <Content Include="Content\Levels\PathTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Levels\TestLevel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Materials\hemp.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

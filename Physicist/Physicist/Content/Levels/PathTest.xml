@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--Must have a width and height-->
+<Map width="800" height="480">
+  <Media>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="Platform" location="Textures/Platform"/>
+    <Texture2D name="MoreTesting" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="Circle" location="Textures/Circle"/>
+    <Texture2D name="Chain" location="Textures/Chain"/>
+    <Texture2D name="CompoundPolygon" location="Textures/CompoundPolygon"/>
+    <Texture2D name="Edge" location="Textures/Edge"/>
+    <Texture2D name="Ellipse" location="Textures/Ellipse"/>
+    <Texture2D name="Gear" location="Textures/Gear"/>
+    <Texture2D name="LineArc" location="Textures/LineArc"/>
+    <Texture2D name="LoopShape" location="Textures/LoopShape"/>
+    <Texture2D name="Polygon" location="Textures/Polygon"/>
+    <Texture2D name="RoundedRectangle" location="Textures/RoundedRectangle"/>
+    <Texture2D name="Capsule" location="Textures/Capsule"/>
+    <Texture2D name="SolidArc" location="Textures/SolidArc"/>
+    <Texture2D name="BrickBackground" location="Textures/Background"/>
+  </Media>
+  
+  <LevelObjects>
+	  <Backgrounds/>	
+	  <Foregrounds/>
+	
+	  <Actors>		  
+      <Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+        <MovementSpeed x="1.5" y="1.5"/>
+        <Sprites>
+          <GameSprite spriteName="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
+            <Offset x="0" y="0"/>
+            <FrameSize width="19" height="40"/>
+            <Animations>
+              <Idle struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Down struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Up struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
+              <Right struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Left struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
+            <Position x="19" y="40"/>
+          </Rectangle>
+        </BodyInfo>
+        <PathManager>
+          <PhysicistPath name="SquarePath" class="PhysicistPath">
+            <ApproachPositionPathNode class="ApproachPositionPathNode" speed="60">
+              <Position x="40" y="40"/>
+            </ApproachPositionPathNode>
+            <ApproachPositionPathNode class="ApproachPositionPathNode" speed="60">
+              <Position x="760" y="40"/>
+            </ApproachPositionPathNode>
+            <ApproachPositionPathNode class="ApproachPositionPathNode" speed="60">
+              <Position x="760" y="440"/>
+            </ApproachPositionPathNode>
+            <ApproachPositionPathNode class="ApproachPositionPathNode" speed="60">
+              <Position x="40" y="440"/>
+            </ApproachPositionPathNode>
+          </PhysicistPath>
+        </PathManager>
+      </Actor>
+	  </Actors>
+  </LevelObjects>
+</Map>
