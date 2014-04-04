@@ -15,16 +15,18 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Actor : PhysicistGameScreenItem, IPosition
+    public class Actor : PhysicistGameScreenItem, IPosition, IDamage
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
         private BodyInfo bodyInfo;
+        private int health;
 
         public Actor()
         {
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
+            this.CanBeDamaged = true;
             this.Health = 1;
         }
 
@@ -39,7 +41,20 @@
             set
             {
                 this.body = value;
+                if (value != null)
+                {
+                    this.body.UserData = this;
+                    this.body.OnCollision += this.OnCollision;
+                }
             }
+        }
+
+        public bool CanBeDamaged { get; set; }
+
+        public int AttackDamage
+        {
+            get;
+            set;
         }
 
         // 2space variables
@@ -72,7 +87,24 @@
         public Vector2 MovementSpeed { get; set; }
 
         // gameplay state variables
-        public int Health { get; set; }
+        public int Health 
+        {
+            get
+            {
+                return this.health;
+            }
+
+            set
+            {
+                this.health = value;
+                if (this.health <= 0)
+                {
+                    this.VisibleState = Visibility.Hidden;
+                    this.IsEnabled = false;
+                    this.body.CollidesWith = Category.None;
+                }
+            }
+        }
 
         public bool IsEnabled { get; set; }
 
@@ -206,7 +238,7 @@
             if (bodyElement != null)
             {
                 var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, bodyElement.Elements().ElementAt(0));
-                this.body = bodyData.Item1;
+                this.Body = bodyData.Item1;
                 this.bodyInfo = bodyData.Item2;
             }
             
@@ -217,6 +249,24 @@
             this.IsEnabled = bool.Parse(element.Attribute("isEnabled").Value);
 
             this.VisibleState = (Visibility)Enum.Parse(typeof(Visibility), element.Attribute("visibleState").Value);
+        }
+
+        protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            if (this.IsEnabled && this.CanBeDamaged && fixtureB != null)
+            {
+                var collisionBody = fixtureB.Body;
+                if (collisionBody != null)
+                {
+                    IDamage damagingBody = collisionBody.UserData as IDamage;
+                    if (damagingBody != null)
+                    {
+                        this.Health -= damagingBody.AttackDamage;
+                    }
+                }
+            }
+
+            return this.IsEnabled;
         }
     }
 }

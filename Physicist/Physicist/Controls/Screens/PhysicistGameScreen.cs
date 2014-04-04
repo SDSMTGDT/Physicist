@@ -66,6 +66,9 @@
                     System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
                     success = false;
                 }
+
+                this.actors[0].AttackDamage = 5;
+                this.actors[0].CanBeDamaged = false;
             }
 
             return success;

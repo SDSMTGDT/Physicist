@@ -252,7 +252,7 @@
                     XElement vertices = new XElement("vertices");
                     foreach (var vector in vert)
                     {
-                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
+                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", this.mapHeight - vector.Y)));
                     }
 
                     if (this.vertexList.Count > 1)
@@ -493,9 +493,9 @@
                 Vector2 nextVect = ExtensionMethods.XmlDeserializeVector2(vert);
                 verts.Add(nextVect);
                 xmax = MathHelper.Max(nextVect.X, xmax);
-                ymax = MathHelper.Max(nextVect.Y, ymax);
+                ymax = MathHelper.Max(nextVect.Y, this.mapHeight - ymax);
                 xmin = MathHelper.Min(nextVect.X, xmin);
-                ymin = MathHelper.Min(nextVect.Y, ymin);
+                ymin = MathHelper.Min(nextVect.Y, this.mapHeight - ymin);
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -518,9 +518,11 @@
         {
             Vertices verts = new Vertices();
 
+            Vector2 designVertex;
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
+                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -544,9 +546,11 @@
             foreach (var vertexListlist in element.Element("VertexList").Elements())
             {
                 Vertices nextVerts = new Vertices();
+                Vector2 designVertex;
                 foreach (var vert in vertexListlist.Elements())
                 {
-                    nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                    designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
+                    nextVerts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
                 }
 
                 this.vertexList.Add(nextVerts);
@@ -598,10 +602,11 @@
         private void MakeLoopShape(XElement element)
         {
             Vertices verts = new Vertices();
-
+            Vector2 designVertex;
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
+                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -613,10 +618,11 @@
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
             Vertices verts = new Vertices();
-
+            Vector2 designVertex;
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
+                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
             }
 
             this.vertexList = new List<Vertices>() { verts };
