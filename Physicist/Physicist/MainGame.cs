@@ -127,9 +127,11 @@
                 foreach (var actor in MainGame.actors)
                 {
                     Player player = actor as Player;
+                    player.PlayerCamera = this.camera;
                     if (player != null)
                     {
                         this.camera.Following = player;
+                        player.RotateWorld(.001f);
                         player.Update(gameTime, Keyboard.GetState());
                     }
                     else
