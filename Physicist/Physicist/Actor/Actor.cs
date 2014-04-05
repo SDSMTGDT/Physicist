@@ -15,7 +15,7 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Actor : PhysicistGameScreenItem, IPosition
+    public class Actor : PhysicistGameScreenItem, IActor
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
         private Body body;
@@ -23,9 +23,20 @@
 
         public Actor()
         {
+        }
+
+        public Actor(string name)
+        {
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
+            this.Name = name;
+        }
+
+        public string Name
+        {
+            get;
+            private set;
         }
 
         // Farseer Structures
@@ -157,6 +168,7 @@
             // define the Actor element
             XElement actorElement = new XElement("Actor");
             actorElement.Add(new XAttribute("class", typeof(Actor).ToString()));
+            actorElement.Add(new XAttribute("name", this.Name));
             actorElement.Add(new XAttribute("health", this.Health));
             actorElement.Add(new XAttribute("rotation", this.Rotation));
             actorElement.Add(new XAttribute("isEnabled", this.IsEnabled));
@@ -188,6 +200,12 @@
             if (element == null)
             {
                 throw new ArgumentNullException("element");
+            }
+
+            XAttribute nameAtt = element.Attribute("name");
+            if (nameAtt != null)
+            {
+                this.Name = nameAtt.Value;
             }
 
             this.MovementSpeed = ExtensionMethods.XmlDeserializeVector2(element.Element("MovementSpeed"));

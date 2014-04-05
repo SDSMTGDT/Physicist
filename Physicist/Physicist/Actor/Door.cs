@@ -10,8 +10,8 @@
     public class Door : Actor
     {
         // METHODS
-        public Door()
-            : base()
+        public Door(string name)
+            : base(name)
         {
         }
 

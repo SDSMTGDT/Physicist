@@ -3,11 +3,11 @@
     targetNamespace="SystemPrefabs"
     elementFormDefault="qualified"
     xmlns="SystemPrefabs"
-    xmlns:types="SystemPrefab"
+    xmlns:types="SystemPrefabs"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
   <xs:include schemaLocation="../Types/SystemPrefabTypes.xsd"/>
 
-  <xs:element name="Mario" type="ActorPrefabType" substitutionGroup="SystemPrefab"/>
+  <xs:element name="Mario" type="ActorPrefabType"/>
   
 </xs:schema>

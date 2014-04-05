@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Map xmlns="PhysicistTypes.xsd"
+<Map xmlns="PhysicistTypes"
      xmlns:actor="Actors"
      xmlns:system="SystemPrefabs"
      width="800"

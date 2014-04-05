@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="PhysicistActors"
-    targetNamespace="Actors"
+    targetNamespace="PhysicistActors"
     elementFormDefault="qualified"
-    xmlns="Actors"
-    xmlns:types="PhysicistTypes.xsd"
+    xmlns="PhysicistActors"
+    xmlns:types="PhysicistTypes"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-  <xs:import namespace="PhysicistTypes.xsd" 
+  <xs:import namespace="PhysicistTypes" 
              schemaLocation="../Types/ActorTypes.xsd"/>
 
   <xs:element name="Actor" type="types:Actor"/>

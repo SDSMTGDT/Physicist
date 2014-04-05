@@ -59,14 +59,9 @@
             // Save background objects
             XElement backgrounds = new XElement("backgrounds");
 
-            foreach (IXmlSerializable backdrop in map.Backdrops)
+            foreach (IXmlSerializable item in map.BackgroundObjects)
             {
-                backgrounds.Add(backdrop.XmlSerialize());
-            }
-
-            foreach (IXmlSerializable music in map.BackgroundMusic)
-            {
-                backgrounds.Add(music.XmlSerialize());
+                backgrounds.Add(item.XmlSerialize());
             }
 
             levelObjects.Add(backgrounds);

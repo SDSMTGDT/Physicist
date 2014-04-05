@@ -51,6 +51,10 @@
         private float friction = 0f;
         private float rotation = 0f;
 
+        public BodyInfo()
+        {
+        }
+
         public BodyInfo(int mapHeight)
         {
             this.mapHeight = mapHeight;
@@ -216,7 +220,6 @@
         public XElement XmlSerialize()
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
-
             bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
@@ -388,11 +391,17 @@
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
-            Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+            XElement posEle = element.Element("Position");
+            Vector2 designPosition = Vector2.Zero;
+            if (posEle != null)
+            {
+                designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
+            }
+
             this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y); 
             
             XAttribute collidesWithEle = element.Attribute("collidesWith");
-            if (collidesWithEle != null) 
+            if (collidesWithEle != null)
             {
                 this.collidesWith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
             }
@@ -480,7 +489,7 @@
                     break;
             }
         }
-      
+
         private void MakeBreakableBody(XElement element)
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
@@ -541,10 +550,10 @@
 
             this.vertexList = new List<Vertices>();
 
-            foreach (var vertexListlist in element.Element("VertexList").Elements())
+            foreach (var verticeslist in element.Element("VertexList").Elements())
             {
                 Vertices nextVerts = new Vertices();
-                foreach (var vert in vertexListlist.Elements())
+                foreach (var vert in verticeslist.Elements())
                 {
                     nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
                 }

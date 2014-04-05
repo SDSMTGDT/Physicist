@@ -58,6 +58,7 @@
             bool success = base.LoadContent();
             if (success)
             {
+                ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "ContentLoadError");
                 this.world = new World(new Vector2(0f, 9.81f));
 
                 this.map = MapLoader.Initialize(this.maps[0], this);

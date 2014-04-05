@@ -7,5 +7,9 @@
 
     public class NPC : Actor
     {
+        public NPC(string name) :
+            base(name)
+        {
+        }
     }
 }

@@ -1,30 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="PhysicistTypes"
-    targetNamespace="PhysicistTypes.xsd"
+    targetNamespace="PhysicistTypes"
     elementFormDefault="qualified"
-    xmlns="PhysicistTypes.xsd"
-    xmlns:mstns="PhysicistTypes.xsd"
+    xmlns="PhysicistTypes"
+    xmlns:mstns="PhysicistTypes"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:actor="Actors"
 >
-  <xs:include id="Common" schemaLocation="../Proxies/Common-PhysicistProxy.xsd"/>
+  <xs:include id="Common" schemaLocation="../Proxies/PhysicistCommon.xsd"/>
   <xs:include id="Actor" schemaLocation="ActorTypes.xsd"/>
-  
+  <xs:include id="Events" schemaLocation="EventTypes.xsd"/>
+  <xs:import namespace="PhysicistActors" schemaLocation="../Nodes/PhysicistActors.xsd"/>
+
   <xs:complexType name="MediaList">
     <xs:sequence minOccurs="0">
       <xs:choice maxOccurs="unbounded">
         <xs:element ref="MediaReference"/>
+        <xs:any namespace="MediaExtensions" processContents="lax"/>
       </xs:choice>
-      <xs:element ref="Extensions" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="Backdrop">
     <xs:complexContent>
       <xs:extension base="Rectangle">
-        <xs:attribute name="class" type="xs:string" default="Backdrop"/>   
+        <xs:attribute name="class" type="xs:string" default="Backdrop">
+          <xs:annotation>
+            <xs:documentation>[Optional] Object class, default is 'Backdrop'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="textureRef" type="xs:string" use="required"/>
-        <xs:attribute name="depth" type="xs:float" default="0"/>
-        <xs:attribute name="tile" type="xs:boolean" default="false"/>
+        <xs:attribute name="depth" type="xs:float" default="0">
+          <xs:annotation>
+            <xs:documentation>[Optional] Draw depth, default is '0'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="tile" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>[Optiona] Tile to fill boundaries, default is false</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" type="xs:ID" use="optional">
+          <xs:annotation>
+            <xs:documentation>[Optional] Unique name</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -32,21 +52,39 @@
   <xs:complexType name="BackgroundMusic">
     <xs:complexContent>
       <xs:extension base="Rectangle">
-        <xs:attribute name="class" type="xs:string" default="BackgroundMusic"/>
+        <xs:attribute name="class" type="xs:string" default="BackgroundMusic">
+          <xs:annotation>
+            <xs:documentation>[Optional] Object class, default is 'BackgroundMusic'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="soundRef" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:ID" use="optional">
+          <xs:annotation>
+            <xs:documentation>[Optional] Unique name</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
-    </xs:complexContent>    
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="BackgroundVideo">
     <xs:complexContent>
       <xs:extension base="Rectangle">
-        <xs:attribute name="class" type="xs:string" default="BackgroundVideo"/>
+        <xs:attribute name="class" type="xs:string" default="BackgroundVideo">
+          <xs:annotation>
+            <xs:documentation>[Optional] Object class, default is 'BackgroundMusic'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="videoRef" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:ID" use="optional">
+          <xs:annotation>
+            <xs:documentation>[Optional] Unique name</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BackgroundList">
     <xs:sequence minOccurs="0">
       <xs:choice maxOccurs="unbounded">
@@ -54,26 +92,40 @@
         <xs:element name="BackgroundMusic" type="BackgroundMusic"/>
         <xs:element name="BackgroundVideo" type="BackgroundVideo"/>
       </xs:choice>
-      <xs:element ref="Extensions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerShapeList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="MapObject"/>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="LevelObjects">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
-      <xs:element name="Backgrounds" type="BackgroundList"/>
-      <xs:element name="Foregrounds" type="FarseerShapeList"/>
-      <xs:element name="Actors" type="ActorList"/>
-    </xs:choice>   
+      <xs:element name="Backgrounds" type="BackgroundList" minOccurs="0"/>
+      <xs:element name="Foregrounds" type="FarseerShapeList" minOccurs="0"/>
+      <xs:element name="Actors" type="ActorList" minOccurs="0"/>
+    </xs:choice>
   </xs:complexType>
-  
+
+  <xs:complexType name="MapEvents">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="Event" type="EventType"/>
+    </xs:choice>
+  </xs:complexType>
+
   <xs:complexType name="PhysicistMap">
     <xs:all>
       <xs:element name="Media" type="MediaList"/>
       <xs:element name="LevelObjects" type="LevelObjects"/>
+      <xs:element name="MapEvents" type="MapEvents" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="width" type="xs:int" use="required"/>
     <xs:attribute name="height" type="xs:int" use="required"/>
   </xs:complexType>
-  
-  <xs:element name="Map" type="mstns:PhysicistMap"/>  
+
+  <xs:element name="Map" type="mstns:PhysicistMap"/>
 </xs:schema>

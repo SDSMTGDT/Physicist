@@ -28,7 +28,11 @@
             this.graphics = new GraphicsDeviceManager(this);
         }
 
-        public static GraphicsDevice GraphicsDev { get; private set; }
+        public static GraphicsDevice GraphicsDev 
+        { 
+            get; 
+            private set; 
+        }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -86,7 +90,6 @@
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             ScreenManager.Draw(this.spriteBatch);
-
             base.Draw(gameTime);
         }
 

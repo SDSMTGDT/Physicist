@@ -12,7 +12,7 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Backdrop : IXmlSerializable
+    public class Backdrop : IBackgroundObject, IDraw
     {
         public Backdrop()
         {

@@ -2,9 +2,10 @@
 
 <!--Must have a width and height-->
 <Map 
-  xmlns="PhysicistTypes.xsd"
-  xmlns:actor="Actors"
+  xmlns="PhysicistTypes"
+  xmlns:actor="PhysicistActors"
   xmlns:system="SystemPrefabs"
+  xmlns:event="Events"
   width="800" height="480">
   <Media>
     <Texture2D name="Hemp" location="Materials/hemp"/>
@@ -13,11 +14,7 @@
   </Media>
 
   <LevelObjects>
-    <Backgrounds>
-    </Backgrounds>
-
     <Foregrounds>
-
       <!--Rectangle-->
       <Rectangle textureRef="Hemp" width="100" height="20" fill="true" rotation="1.57">
         <Position x="100" y="100"/>
@@ -113,10 +110,10 @@
       </Circle>
     </Foregrounds>
 
-    <Actors>
+    <Actors>      
       <system:Mario textureRef="NOTSTOLEN">
         <system:Position x="19" y="40"/>
       </system:Mario>
     </Actors>
-  </LevelObjects>  
+  </LevelObjects>
 </Map>

@@ -10,48 +10,59 @@
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Actors;
+    using Physicist.Events;
     using Physicist.Extensions;
     using Physicist.Extensions.Primitives;
 
     public class Map
     {
-        private List<Backdrop> backdrops = new List<Backdrop>();
-        private List<BackgroundMusic> backgroundMusic = new List<BackgroundMusic>();
-        private List<MapObject> mapObjects = new List<MapObject>();
+        private List<IUpdate> updateObjects = new List<IUpdate>();
+        private List<List<IDraw>> drawObjects = new List<List<IDraw>>();
+        private Dictionary<string, IName> namedObjects = new Dictionary<string, IName>();
+
+        private List<IBackgroundObject> backgroundObjects = new List<IBackgroundObject>();
+        private List<IMapObject> mapObjects = new List<IMapObject>();
+        private List<IActor> actors = new List<IActor>();
         private List<IMediaInfo> mediaReferences = new List<IMediaInfo>();
+
+        private List<object> unknownObjects = new List<object>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
         public Map(World world, int width, int height)
         {
             this.Width = width;
             this.Height = height;
-            
-            BodyFactory.CreateLoopShape(
-                            world, 
-                            new Vertices() { Vector2.Zero, new Vector2(0, this.Height), new Vector2(this.Width, this.Height), new Vector2(this.Width, 0) }.ToSimUnits()).Friction = 10f;
+
+            for (int i = 0; i < 4; i++)
+            {
+                this.drawObjects.Add(new List<IDraw>());
+            }
+
+            Vertices mapBounds = new Vertices() 
+                            { 
+                                Vector2.Zero, 
+                                new Vector2(0, this.Height), 
+                                new Vector2(this.Width, this.Height), 
+                                new Vector2(this.Width, 0) 
+                            };
+
+            BodyFactory.CreateLoopShape(world, mapBounds.ToSimUnits()).Friction = 1f;
         }
 
         public int Width { get; private set; }
 
         public int Height { get; private set; }
 
-        public IEnumerable<IXmlSerializable> Backdrops
+        public IDictionary<string, IName> NamedObjects
         {
             get
             {
-                return this.backdrops;
+                return this.namedObjects;
             }
         }
 
-        public IEnumerable<IXmlSerializable> BackgroundMusic
-        {
-            get
-            {
-                return this.backgroundMusic;
-            }
-        }
-
-        public IEnumerable<IXmlSerializable> MapObjects
+        public IEnumerable<IMapObject> MapObjects
         {
             get
             {
@@ -59,27 +70,108 @@
             }
         }
 
-        public IEnumerable<IMediaInfo> MediaReferences
+        public IEnumerable<IBackgroundObject> BackgroundObjects
         {
             get
             {
-                return this.mediaReferences;
+                return this.backgroundObjects;
             }
         }
 
-        public void AddMapObject(MapObject mapObject)
+        public IEnumerable<IActor> Actors
         {
-            this.mapObjects.Add(mapObject);
+            get
+            {
+                return this.actors;
+            }
         }
 
-        public void AddBackgroundMusic(BackgroundMusic music)
+        public void AddObjectToMap(object instance)
         {
-            this.backgroundMusic.Add(music);
+            bool known = false;
+            if (instance != null)
+            {
+                var updateObj = instance as IUpdate;
+                if (updateObj != null)
+                {                    
+                    this.updateObjects.Add(updateObj);
+                    known = true;
+                }
+
+                var actor = instance as IActor;
+                if (actor != null)
+                {
+                    this.actors.Add(actor);
+                    this.drawObjects[0].Add(actor);
+                    known = true;
+                }
+
+                var background = instance as IBackgroundObject;
+                if (background != null)
+                {
+                    this.backgroundObjects.Add(background);
+
+                    var drawObj = instance as IDraw;
+                    if (drawObj != null)
+                    {
+                        this.drawObjects[1].Add(drawObj);
+                    }
+
+                    known = true;
+                }
+
+                var mapobject = instance as IMapObject;
+                if (mapobject != null)
+                {
+                    this.mapObjects.Add(mapobject);
+                    this.drawObjects[2].Add(mapobject);
+                    known = true;
+                }
+
+                var nameObj = instance as IName;
+                if (nameObj != null && nameObj.Name != null)
+                {
+                    this.namedObjects.Add(nameObj.Name, nameObj);
+                    known = true;
+                }
+
+                if (!known)
+                {
+                    this.unknownObjects.Add(instance);
+                }
+            }
         }
 
-        public void AddBackdrop(Backdrop backdrop)
+        public void AddNamedObject(IName namedObject)
         {
-            this.backdrops.Add(backdrop);
+            if (namedObject != null)
+            {
+                this.namedObjects.Add(namedObject.Name, namedObject);
+            }
+        }
+
+        public void AddDrawObject(IDraw drawObject)
+        {
+            int depth = 3;
+            if (drawObject is IBackgroundObject)
+            {
+                depth = 0;
+            }
+            else if (drawObject is IMapObject)
+            {
+                depth = 1;
+            }
+            else if (drawObject is IActor)
+            {
+                depth = 2;
+            }
+
+            this.drawObjects[depth].Add(drawObject);
+        }
+        
+        public void AddUpdateObject(IUpdate updateObject)
+        {
+            this.updateObjects.Add(updateObject);
         }
 
         public void AddMediaReference(IMediaInfo reference)
@@ -92,13 +184,12 @@
 
         public void Draw(ISpritebatch sb)
         {
-            this.mapObjects.ForEach(mapObject => mapObject.Draw(sb));
-            this.backdrops.ForEach(backdrop => backdrop.Draw(sb));
+            this.drawObjects.ForEach(list => list.ForEach(item => item.Draw(sb)));
         }
 
         public void Update(GameTime gameTime)
         {
-            this.backgroundMusic.ForEach(music => music.Update(gameTime));
+            this.updateObjects.ForEach(item => item.Update(gameTime));
         }
 
         public void UnloadMedia()

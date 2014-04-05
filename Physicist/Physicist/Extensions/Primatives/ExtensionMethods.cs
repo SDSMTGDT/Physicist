@@ -17,6 +17,24 @@
 
     public static class ExtensionMethods
     {
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action) where T : class
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException("collection");
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException("action");
+            }
+
+            foreach (var item in collection)
+            {
+                action.Invoke(item);
+            }            
+        }
+
         public static XElement XmlSerialize(this Size size, string tag)
         {
             XElement element = new XElement(
