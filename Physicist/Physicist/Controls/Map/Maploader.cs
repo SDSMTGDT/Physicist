@@ -24,7 +24,7 @@
         private static Dictionary<string, Type> assemblyTypes = new Dictionary<string, Type>();
         private static Dictionary<string, Type> quantifiedAssemblyTypes = new Dictionary<string, Type>();
 
-        private static IPhysicistRegistration registration = null;
+        private static IPhysicistGameScreen registration = null;
 
         private static XElement rootElement = null;
         private static XmlSchemaSet schemas = new XmlSchemaSet();
@@ -96,7 +96,7 @@
             private set;
         }
 
-        public static Map Initialize(string filePath, IPhysicistRegistration registrationObject)
+        public static Map Initialize(string filePath, IPhysicistGameScreen registrationObject)
         {
             MapLoader.CurrentMap = null;
             MapLoader.HasFailed = false;

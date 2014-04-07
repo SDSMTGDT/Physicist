@@ -69,7 +69,7 @@
     <Compile Include="Controls\Interfaces\IPosition.cs" />
     <Compile Include="Controls\Interfaces\IUpdate.cs" />
     <Compile Include="Controls\Interfaces\IXmlSerializable.cs" />
-    <Compile Include="Controls\Interfaces\IPhysicistRegistration.cs" />
+    <Compile Include="Controls\Interfaces\IPhysicistGameScreen.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
     <Compile Include="Controls\Map\BackgroundMusic.cs" />
     <Compile Include="Controls\Map\Backdrop.cs" />
