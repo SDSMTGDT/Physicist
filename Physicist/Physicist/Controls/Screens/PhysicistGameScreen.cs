@@ -12,12 +12,11 @@
     using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
 
-    public class PhysicistGameScreen : GameScreen, IPhysicistRegistration
+    public class PhysicistGameScreen : GameScreen, IPhysicistGameScreen
     {
         private World world;
         private Map map;
 
-        private List<Actor> actors;
         private List<string> maps;
         private string mapPath;
 
@@ -46,7 +45,6 @@
         public override void Initialize(GraphicsDevice graphicsDevice)
         {
             base.Initialize(graphicsDevice);
-            this.actors = new List<Actor>();
             this.maps = new List<string>() { this.mapPath };
 
             ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
@@ -88,11 +86,6 @@
 
                 this.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
-                foreach (var actor in this.actors)
-                {
-                    actor.Update(gameTime);
-                }
-
                 // TODO: Add your update logic here
                 this.map.Update(gameTime);
             }
@@ -102,7 +95,6 @@
 
         public override void Draw(ISpritebatch sb)
         {
-            this.actors.ForEach(actor => actor.Draw(sb));
             this.map.Draw(sb);
 
             base.Draw(sb);
@@ -112,11 +104,6 @@
         {
             this.map.UnloadMedia();
             base.UnloadContent();
-        }
-
-        public void RegisterActor(Actor actor)
-        {
-            this.actors.Add(actor);
         }
     }
 }
