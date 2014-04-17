@@ -22,12 +22,12 @@
         public ApproachPositionPathNode(Actor target, Vector2 position, float speed)
             : base(target)
         {
-            this.TargetPosition = position;
+            this.TargetLocation = position;
             this.Speed = speed;
             this.DeactivateAfterPathing = false;
         }
 
-        public Vector2 TargetPosition
+        public Vector2 TargetLocation
         {
             get;
             private set;
@@ -43,28 +43,28 @@
         {
             base.Update(gameTime);
 
-            if (this.IsActive && this.Target.IsEnabled)
+            if (this.IsActive && this.TargetActor.IsEnabled)
             {
-                if (!(this.TargetPosition == null))
+                if (!(this.TargetLocation == null))
                 {
-                    Vector2 delta = this.TargetPosition - this.Target.Position;
+                    Vector2 delta = this.TargetLocation - this.TargetActor.Position;
 
                     if (delta.Length() > 2f)
                     {
                         delta.Normalize();
                         delta *= this.Speed;
-                        this.Target.Body.LinearVelocity = delta;
+                        this.TargetActor.Body.LinearVelocity = delta;
                     }
                     else
                     {
                         if (this.DeactivateAfterPathing)
                         {
-                            this.Target.IsEnabled = false;
+                            this.TargetActor.IsEnabled = false;
                         }
 
                         if (this.HideAtEndOfPath)
                         {
-                            this.Target.VisibleState = Visibility.Hidden;
+                            this.TargetActor.VisibleState = Visibility.Hidden;
                         }
 
                         this.IsActive = false;
@@ -85,7 +85,7 @@
                     this.Speed = int.Parse(speedAtt.Value, CultureInfo.CurrentCulture);
                 }
 
-                this.TargetPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                this.TargetLocation = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
             }
         }
     }

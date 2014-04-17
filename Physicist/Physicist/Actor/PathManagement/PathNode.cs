@@ -29,7 +29,7 @@
 
         public PathNode(Actor target)
         {
-            this.Target = target;
+            this.TargetActor = target;
         }
 
         public event EventHandler<EventArgs> Deactivated;
@@ -67,7 +67,7 @@
             }
         }
 
-        public Actor Target { get; set; }
+        public Actor TargetActor { get; set; }
 
         protected Dictionary<TriggerMode, Dictionary<string, IModifier>> Modifiers 
         {

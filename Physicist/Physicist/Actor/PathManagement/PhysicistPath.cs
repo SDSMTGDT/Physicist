@@ -42,7 +42,7 @@
                 this.target = value;
                 foreach (var node in this.nodeQueue)
                 {
-                    node.Target = this.target;
+                    node.TargetActor = this.target;
                 }
             }
         }
@@ -158,7 +158,7 @@
 
                     if (node != null)
                     {
-                        node.Target = this.target;
+                        node.TargetActor = this.target;
                         this.AddPathNode(node);
                     }
                 }
