@@ -26,6 +26,7 @@
             : base()
         {
             this.graphics = new GraphicsDeviceManager(this);
+            System.Console.WriteLine("THE GAME HAS BEGUN");
         }
 
         public static GraphicsDevice GraphicsDev 
