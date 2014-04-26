@@ -9,7 +9,7 @@
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Controls;
 
-    public class PathManager : IXmlSerializable
+    public class PathManager : PhysicistGameScreenItem
     {
         private Dictionary<string, PhysicistPath> paths = new Dictionary<string, PhysicistPath>();
         private string currentPath;
@@ -48,11 +48,14 @@
 
         public void AddPath(PhysicistPath path)
         {
-            this.paths.Add(path.Name, path);
-
-            if (this.paths.Count == 1)
+            if (path != null)
             {
-                this.CurrentPath = path.Name;
+                this.paths.Add(path.Name, path);
+
+                if (this.paths.Count == 1)
+                {
+                    this.CurrentPath = path.Name;
+                }
             }
         }
 
@@ -73,18 +76,20 @@
             }
         }
 
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
                 foreach (var pathEle in element.Elements())
                 {
                     PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");
+                    path.Screen = this.Screen;
+                    path.XmlDeserialize(pathEle);
                     if (path != null)
                     {                            
                         path.Target = this.target;

@@ -12,18 +12,19 @@
     public static class XmlBodyFactory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Physics Engine Tracks objects")]
-        public static Tuple<Body, BodyInfo> DeserializeBody(XElement element)
+        public static Tuple<Body, BodyInfo> DeserializeBody(World world, int mapHeight, XElement element)
         {
             BodyInfo bodyInfo = null;
             Body body = null;
 
-            bodyInfo = new BodyInfo(element);
+            bodyInfo = new BodyInfo(mapHeight);
+            bodyInfo.XmlDeserialize(element);
 
             switch (bodyInfo.BodyCategory)
             {
                 case BodyCategory.Capsule:
                     body = BodyFactory.CreateCapsule(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Height.ToSimUnits(),
                                                         bodyInfo.TopRadius.ToSimUnits(),
                                                         bodyInfo.TopEdge,
@@ -35,14 +36,14 @@
 
                 case BodyCategory.ChainShape:
                     body = BodyFactory.CreateChainShape(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Vertices.ElementAt(0).ToSimUnits(),
                                                         bodyInfo.Position.ToSimUnits());
                     break;
 
                 case BodyCategory.Circle:
                     body = BodyFactory.CreateCircle(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Radius.ToSimUnits(),
                                                         bodyInfo.Density,
                                                         bodyInfo.Position.ToSimUnits());
@@ -56,7 +57,7 @@
                     }
 
                     body = BodyFactory.CreateCompoundPolygon(
-                                                        MainGame.World,
+                                                        world,
                                                         convertedVerts,
                                                         bodyInfo.Density.ToSimUnits(),
                                                         bodyInfo.Position.ToSimUnits());
@@ -64,7 +65,7 @@
 
                 case BodyCategory.Edge:
                     body = BodyFactory.CreateEdge(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Start.ToSimUnits(),
                                                         bodyInfo.End.ToSimUnits());
                     body.Position = bodyInfo.Position;
@@ -72,7 +73,7 @@
 
                 case BodyCategory.Ellipse:
                     body = BodyFactory.CreateEllipse(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.XRadius.ToSimUnits(),
                                                         bodyInfo.YRadius.ToSimUnits(),
                                                         bodyInfo.Edges,
@@ -82,7 +83,7 @@
 
                 case BodyCategory.Gear:
                     body = BodyFactory.CreateGear(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Radius.ToSimUnits(),
                                                         bodyInfo.NumberOfTeeth,
                                                         bodyInfo.TipPercentage.ToSimUnits(),
@@ -94,7 +95,7 @@
 
                 case BodyCategory.LineArc:
                     body = BodyFactory.CreateLineArc(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Radians,
                                                         bodyInfo.Sides,
                                                         bodyInfo.Radius.ToSimUnits(),
@@ -105,14 +106,14 @@
 
                 case BodyCategory.LoopShape:
                     body = BodyFactory.CreateLoopShape(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Vertices.ElementAt(0).ToSimUnits(),
                                                         bodyInfo.Position.ToSimUnits());
                     break;
 
                 case BodyCategory.Polygon:
                     body = BodyFactory.CreatePolygon(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Vertices.ElementAt(0).ToSimUnits(),
                                                         bodyInfo.Density,
                                                         bodyInfo.Position.ToSimUnits());
@@ -120,7 +121,7 @@
 
                 case BodyCategory.Rectangle:
                     body = BodyFactory.CreateRectangle(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Width.ToSimUnits(),
                                                         bodyInfo.Height.ToSimUnits(),
                                                         bodyInfo.Density,
@@ -129,7 +130,7 @@
 
                 case BodyCategory.RoundedRectangle:
                     body = BodyFactory.CreateRoundedRectangle(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Width.ToSimUnits(),
                                                         bodyInfo.Height.ToSimUnits(),
                                                         bodyInfo.XRadius.ToSimUnits(),
@@ -141,7 +142,7 @@
 
                 case BodyCategory.SolidArc:
                     body = BodyFactory.CreateSolidArc(
-                                                        MainGame.World,
+                                                        world,
                                                         bodyInfo.Density,
                                                         bodyInfo.Radians,
                                                         bodyInfo.Sides,

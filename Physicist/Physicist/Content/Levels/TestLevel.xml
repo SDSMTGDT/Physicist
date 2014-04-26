@@ -23,22 +23,22 @@
   
   <LevelObjects>
 	  <Backgrounds>
-		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="false">
+		  <Backdrop class="Backdrop" textureRef="BrickBackground" depth="0" tile="true">
 			  <Location x="0" y="0"/>
-			  <Dimensions width="600" height="400"/>
+			  <Dimension width="600" height="400"/>
 		  </Backdrop>
 		 
-		  <BackgroundMusic class="backgroundmusic" soundref="">
+		  <BackgroundMusic class="Backgroundmusic" soundref="">
 			  <Location x="" y=""/>
 			  <Dimension width="" height=""/>
 		  </BackgroundMusic>
 		 
-		  <BackgroudVideo class="backgroundvideo"/>		  
+		  <BackgroudVideo class="Backgroundvideo"/>		  
 	  </Backgrounds>
 	
 	  <Foregrounds>
       
-      <!--Rectangle-->
+	      <!--Rectangle-->
       <Rectangle class="MapObject" textureRef ="Platform" width="100" height="20" density="1" rotation ="1.57">
         <Position x="100" y="100"/>
       </Rectangle>
@@ -133,8 +133,8 @@
       </Circle>
 
     </Foregrounds>
-	
-	  <Actors>
+
+    <Actors>
 		  <NPC class="" textureRef="NOTSTOLEN"/>
 		  
 		  <Player class="Player">
@@ -154,7 +154,7 @@
             </GameSprite>
           </Sprites>
           <BodyInfo>
-            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
+            <Rectangle width="19" height="40" density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
               <Position x="19" y="40"/>
             </Rectangle>
           </BodyInfo>

@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FarseerTypes"
+    targetNamespace="PhysicistTypes"
+    elementFormDefault="qualified"
+    xmlns="PhysicistTypes"
+    xmlns:mstns="PhysicistTypes"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Proxies/PhysicistCommon.xsd"/>
+
+  <xs:complexType name="FarseerRectangle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="width" type="xs:float" use="required"/>
+        <xs:attribute name="height" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCapsule">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="height" type="xs:int" use="required"/>
+        <xs:attribute name="topRadius" type="xs:float" use="required"/>
+        <xs:attribute name="topEdge" type="xs:int" use="required"/>
+        <xs:attribute name="bottomRadius" type="xs:float" use="required"/>
+        <xs:attribute name="bottomEdge" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerChainShape" block="extension">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCompoundPolygon">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice minOccurs="1">
+          <xs:element name="VertexList">
+            <xs:complexType>
+              <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element name="Vertices" type="Vertices"/>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerEllipse">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="xRadius" type="xs:float" use="required"/>
+        <xs:attribute name="yRadius" type="xs:float" use="required"/>
+        <xs:attribute name="edges" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerGear">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="numberOfTeeth" type="xs:int" use="required"/>
+        <xs:attribute name="tipPercentage" type="Percentage" use="required"/>
+        <xs:attribute name="toothHeight" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerLineArc">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radians" type="xs:float" use="required"/>
+        <xs:attribute name="sides" type="xs:int" use="required"/>
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="angle" type="xs:float" use="required"/>
+        <xs:attribute name="closed" type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerLoopShape">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerPolygon">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:choice maxOccurs="1" minOccurs="1">
+          <xs:element name="Vertices" type="Vertices"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerRoundedRectangle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="width" type="xs:float" use="required"/>
+        <xs:attribute name="height" type="xs:float" use="required"/>
+        <xs:attribute name="xRadius" type="xs:float" use="required"/>
+        <xs:attribute name="yRadius" type="xs:float" use="required"/>
+        <xs:attribute name="segments" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerSolidArc">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radians" type="xs:float" use="required"/>
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+        <xs:attribute name="sides" type="xs:int" use="required"/>
+        <xs:attribute name="angle" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FarseerCircle">
+    <xs:complexContent>
+      <xs:extension base="MapObject">
+        <xs:attribute name="radius" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

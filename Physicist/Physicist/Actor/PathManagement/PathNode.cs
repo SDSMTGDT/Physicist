@@ -7,8 +7,9 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
     using Physicist.Enums;
+    using Physicist.Events;
 
-    public class PathNode : IXmlSerializable
+    public class PathNode : PhysicistGameScreenItem
     {
         private bool isActive;
 
@@ -20,11 +21,6 @@
             this.modifiers.Add(TriggerMode.OnActivated, new Dictionary<string, IModifier>());
             this.modifiers.Add(TriggerMode.WhileActivated, new Dictionary<string, IModifier>());
             this.modifiers.Add(TriggerMode.OnDeactivated, new Dictionary<string, IModifier>());
-        }
-
-        public PathNode(XElement element)
-        {
-            this.XmlDeserialize(element);
         }
 
         public PathNode(Actor target)
@@ -68,19 +64,6 @@
         }
 
         public Actor TargetActor { get; set; }
-
-        protected Dictionary<TriggerMode, Dictionary<string, IModifier>> Modifiers 
-        {
-            get
-            {
-                return this.modifiers;
-            }
-
-            set
-            {
-                this.modifiers = value;
-            }
-        }
 
         public virtual void Update(GameTime gameTime)
         {
@@ -127,11 +110,11 @@
         public bool RemoveModifier(IModifier modifier)
         {
             bool removed = false;
-            foreach (var mode in this.modifiers.Keys)
+            if (modifier != null)
             {
-                foreach (var mod in this.modifiers[mode].Values)
+                foreach (var mode in this.modifiers.Keys)
                 {
-                    if (mod.Name == modifier.Name)
+                    if (this.modifiers[mode].ContainsValue(modifier))
                     {
                         this.modifiers[mode].Remove(modifier.Name);
                         removed = true;
@@ -142,28 +125,23 @@
             return removed;
         }
 
-        public virtual XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
-                var modifiersEle = element.Element("Modifiers");
-
-                if (modifiersEle != null)
+                foreach (var mode in this.modifiers.Keys)
                 {
-                    foreach (var mode in this.modifiers.Keys)
+                    var modeEle = element.Element(mode.ToString());
+                    if (modeEle != null)
                     {
-                        var modeEle = element.Element(mode.ToString());
-                        if (modeEle != null)
+                        foreach (var modifierEle in modeEle.Elements("Modifier"))
                         {
-                            foreach (var modifierEle in modeEle.Elements("Modifier"))
-                            {
-                                this.modifiers[mode].Add(modifierEle.Attribute("name").Value, null);
-                            }
+                            this.modifiers[mode].Add(modifierEle.Attribute("name").Value, null);
                         }
                     }
                 }

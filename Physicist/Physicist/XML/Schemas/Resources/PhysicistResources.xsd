@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+  <xs:schema id="PhysicistResources"
+      targetNamespace="PhysicistTypes"
+      xmlns="PhysicistTypes"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:mstns="PhysicistTypes"
+      elementFormDefault="qualified"
+  >
+    <xs:include schemaLocation="CommonResources.xsd"/>
+
+    <xs:element name="MediaReference" type="Media" abstract="true"/>
+    <xs:element name="MapObject" type="MapObject" abstract="true"/>    
+    
+    <xs:complexType name="Vertices">
+      <xs:choice maxOccurs="unbounded" minOccurs="1">
+        <xs:element name="Vector2" type="Vector2"/>
+      </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="Animation">
+      <xs:attribute name="struct" type="xs:string" default="SpriteAnimation">
+        <xs:annotation>
+          <xs:documentation>[Optional] Struct name of object instance, default is 'SpriteAnimation'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="rowIndex" type="xs:int" default="0">
+        <xs:annotation>
+          <xs:documentation>[Optional] SpriteSheet index of animation, default is '0'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="frameCount" type="xs:int" use="required"/>
+      <xs:attribute name="defaultFrameRate" type="xs:float" use="required"/>
+      <xs:attribute name="playInReverse" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is 'false'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="flipVertical" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is 'false'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="flipHorizontal" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is 'false'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="GameSprite">
+      <xs:all maxOccurs="1">
+        <xs:element name="Animations">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element name="Animation" type="Animation"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="UniqueAnimationsPerGameSprite">
+            <xs:selector xpath="mstns:Animation"/>
+            <xs:field xpath="@name"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="FrameSize" type="Size"/>
+        <xs:element name="Offset" type="Vector2"/>
+      </xs:all>
+      <xs:attribute name="spriteName" type="xs:string" use="required"/>
+      <xs:attribute name="textureRef" type="xs:string" use="required"/>
+      <xs:attribute name="frameLength" type="xs:float" default="0.2">
+        <xs:annotation>
+          <xs:documentation>[Optional] Frame rate (sec/frame), default is 0.2</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="depth" type="UnitInterval" default="0">
+        <xs:annotation>
+          <xs:documentation>[Optional] Draw depth, default is '0'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="MapObject" abstract="true">
+      <xs:sequence minOccurs="0">
+        <xs:element name="Position" type="Vector2"/>
+      </xs:sequence>
+      <xs:attribute name="class" type="xs:string" default="MapObject">
+        <xs:annotation>
+          <xs:documentation>[Optional] Class name of object instance, default value is 'MapObject'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="textureRef" type="xs:string"/>
+      <xs:attribute name="fill" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation>[Optional] Fill shape with textureRef, default is false</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="rotation" type="xs:float" default="0">
+        <xs:annotation>
+          <xs:documentation>[Optional] (in radians), default is '0'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="density" type="xs:float" default="1">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is '1'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="friction" type="UnitInterval" default="0">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is '0'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="bodyType" type="BodyType" default="Static">
+        <xs:annotation>
+          <xs:documentation>[Optional] default is 'Static'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="fixedRotation" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation>[Optional] Allow object to rotate, default is false</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" type="xs:ID" use="optional">
+        <xs:annotation>
+          <xs:documentation>[Optional] Unique name</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="Media">
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="location" type="xs:string" use="required"/>
+    </xs:complexType>
+
+  </xs:schema>
+

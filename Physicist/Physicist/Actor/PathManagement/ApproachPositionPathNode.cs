@@ -14,11 +14,6 @@
         {
         }
 
-        public ApproachPositionPathNode(XElement element)
-        {
-            this.XmlDeserialize(element);
-        }
-
         public ApproachPositionPathNode(Actor target, Vector2 position, float speed)
             : base(target)
         {
@@ -26,6 +21,8 @@
             this.Speed = speed;
             this.DeactivateAfterPathing = false;
         }
+
+        public int MapHeight { get; set; }
 
         public Vector2 TargetLocation
         {
@@ -85,7 +82,8 @@
                     this.Speed = int.Parse(speedAtt.Value, CultureInfo.CurrentCulture);
                 }
 
-                this.TargetLocation = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                var designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                this.TargetLocation = new Vector2(designPosition.X, this.Map.Height - designPosition.Y);
             }
         }
     }

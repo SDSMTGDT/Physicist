@@ -7,8 +7,9 @@
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
+    using Physicist.Events;
 
-    public class PhysicistPath : IXmlSerializable
+    public class PhysicistPath : PhysicistGameScreenItem
     {
         private Queue<PathNode> nodeQueue = new Queue<PathNode>();
 
@@ -16,11 +17,6 @@
 
         public PhysicistPath()
         {
-        }
-
-        public PhysicistPath(XElement element)
-        {
-            this.XmlDeserialize(element);
         }
 
         public PhysicistPath(string name)
@@ -121,12 +117,12 @@
             return this.nodeQueue.GetEnumerator();
         }
 
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             throw new NotImplementedException();
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
@@ -152,16 +148,30 @@
                     this.TargetPathUponCompletion = targetPathUponComplteionEle.Value;
                 }
 
-                foreach (var pathNodeEle in element.Elements())
+                var modifiers = new List<IModifier>();
+                var modifierEleList = element.Element("Modifiers");
+                if (modifierEleList != null)
                 {
-                    PathNode node = (PathNode)MapLoader.CreateInstance(pathNodeEle, "class");
+                    foreach (var modifierEle in modifierEleList.Elements())
+                    {
+                        IModifier modifier = (IModifier)MapLoader.CreateInstance(modifierEle, "class");
+                        modifier.XmlDeserialize(modifierEle);
+                        modifiers.Add(modifier);
+                    }
+                }
 
+                foreach (var pathNodeEle in element.Elements().Where(elem => elem.Name != "Modifiers"))
+                {
+                    PathNode node = (PathNode)MapLoader.CreateInstance(pathNodeEle, null);
+                    node.Screen = this.Screen;
+                    node.XmlDeserialize(pathNodeEle);
                     if (node != null)
                     {
                         node.TargetActor = this.target;
+                        node.Initialize(modifiers);
                         this.AddPathNode(node);
                     }
-                }
+                }                
             }
         }
 

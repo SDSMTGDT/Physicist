@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FarseerShapes"
+    targetNamespace="PhysicistTypes"
+    elementFormDefault="qualified"
+    xmlns="PhysicistTypes"
+    xmlns:mstns="PhysicistTypes"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Types/FarseerTypes.xsd"/>
+  
+  <xs:element name="Capsule" type="FarseerCapsule" substitutionGroup="MapObject"/>
+  <xs:element name="ChainShape" type="FarseerChainShape" substitutionGroup="MapObject"/>
+  <xs:element name="CompoundPolygon" type="FarseerCompoundPolygon" substitutionGroup="MapObject"/>
+  <xs:element name="Circle" type="FarseerCircle" substitutionGroup="MapObject"/>
+  <xs:element name="Ellipse" type="FarseerEllipse" substitutionGroup="MapObject"/>
+  <xs:element name="Gear" type="FarseerGear" substitutionGroup="MapObject"/>
+  <xs:element name="LineArc" type="FarseerLineArc" substitutionGroup="MapObject"/>
+  <xs:element name="LoopShape" type="FarseerLoopShape" substitutionGroup="MapObject"/>
+  <xs:element name="Polygon" type="FarseerPolygon" substitutionGroup="MapObject"/>
+  <xs:element name="Rectangle" type="FarseerRectangle" substitutionGroup="MapObject"/>
+  <xs:element name="RoundedRectangle" type="FarseerRoundedRectangle" substitutionGroup="MapObject"/>
+  <xs:element name="SolidArc" type="FarseerSolidArc" substitutionGroup="MapObject"/>
+
+</xs:schema>

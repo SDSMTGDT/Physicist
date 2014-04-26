@@ -7,5 +7,9 @@
 
     public class Enemy : NPC
     {
+        public Enemy(string name)
+            : base(name)
+        {
+        }
     }
 }
