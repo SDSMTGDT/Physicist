@@ -7,5 +7,6 @@
         Texture2D,
         SoundEffect,
         Video,
+        SpriteFont,
     }
 }

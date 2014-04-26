@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CommonResources"
+    elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:simpleType name="UnitInterval">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Hidden"/>
+      <xs:enumeration value="Visible"/>
+      <xs:enumeration value="Collapsed"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BodyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Dynamic"/>
+      <xs:enumeration value="Static"/>
+      <xs:enumeration value="Kinmatic"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Percentage">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Extensions">
+    <xs:choice maxOccurs="unbounded">
+      <xs:any processContents="skip" minOccurs="0"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Size">
+    <xs:attribute name="width" type="xs:int" use="required"/>
+    <xs:attribute name="height" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Vector2">
+    <xs:attribute name="x" type="xs:float" use="required"/>
+    <xs:attribute name="y" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Rectangle">
+    <xs:all>
+      <xs:element name="Location" type="Vector2"/>
+      <xs:element name="Dimension" type="Size"/>
+    </xs:all>
+  </xs:complexType>
+
+</xs:schema>

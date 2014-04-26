@@ -8,6 +8,11 @@
 
     public class FieldContainer : Actor
     {
+        public FieldContainer(string name) :
+            base(name)
+        {
+        }
+
         public Field ContainedField { get; set; }
     }
 }

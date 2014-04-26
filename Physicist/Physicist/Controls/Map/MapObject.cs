@@ -10,19 +10,14 @@
     using Physicist.Actors;
     using Physicist.Extensions;
 
-    public class MapObject : IXmlSerializable
+    public class MapObject : PhysicistGameScreenItem, IMapObject
     {
         private List<Tuple<Texture2D, Vector2>> textures = new List<Tuple<Texture2D, Vector2>>();
         private bool fill = false;
 
-        public MapObject(XElement element)
+        public MapObject()
+            : base()
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            this.XmlDeserialize(element);
         }
 
         public MapObject(Body body, BodyInfo bodyInfo, string textureRef)
@@ -51,7 +46,7 @@
             private set;
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
@@ -74,7 +69,7 @@
             }
         }
        
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             var bodyXml = this.MapBodyInfo.XmlSerialize();
             bodyXml.Add(new XAttribute("textureRef", this.TextureReference));
@@ -82,14 +77,14 @@
             return bodyXml;
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element == null)
             {
                 throw new ArgumentNullException("element");
             }
 
-            var bodyData = XmlBodyFactory.DeserializeBody(element);
+            var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, element);
             this.MapBody = bodyData.Item1;
             this.MapBodyInfo = bodyData.Item2;
             this.TextureReference = element.Attribute("textureRef").Value;

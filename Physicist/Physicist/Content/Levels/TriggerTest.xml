@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--Must have a width and height-->
+<Map xmlns="PhysicistTypes"
+     xmlns:actor="PhysicistActors"
+     xmlns:system="SystemPrefabs"
+     xmlns:event="PhysicistEvents"
+     width="800" height="300">
+  <Media>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="ModTest" location="Textures/FillShape"/>
+    <Texture2D name="MegamanSprite" location="Textures/MegamanSprite"/>    
+  </Media>
+  
+  <LevelObjects>
+	  <Backgrounds>
+      <Backdrop textureRef="flflfl" name="blah">
+        <Location x="9" y="0"/>
+        <Dimension height="9" width="9"/>
+      </Backdrop>
+    </Backgrounds>
+	
+	  <Foregrounds>
+         
+    </Foregrounds>
+	
+	  <Actors>      
+		  <actor:Player>
+        <Actor class="Actor" name="Mario" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+          <MovementSpeed x="3" y="3"/>
+          <Sprites>
+            <GameSprite spriteName="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
+              <Offset x="0" y="0"/>
+              <FrameSize width="19" height="40"/>
+              <Animations>
+                <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Animation name="Down" struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Animation name="Up" struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
+                <Animation name="Right" struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Animation name="Left" struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+              </Animations>
+            </GameSprite>
+          </Sprites>
+          <BodyInfo>
+            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
+              <Position x="19" y="40"/>
+            </Rectangle>
+          </BodyInfo>
+        </Actor>
+      </actor:Player>
+
+      <actor:Actor name="EventTest" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+        <MovementSpeed x="100" y="100"/>
+        <Sprites>
+          <GameSprite spriteName="ModifyTest" textureRef="ModTest" frameLength="100" depth="1">
+            <Offset x="0" y="0"/>
+            <FrameSize width="30" height="30"/>
+            <Animations>
+              <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="30" height="30"  density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
+            <Position x="100" y="240"/>
+          </Rectangle>
+        </BodyInfo>
+      </actor:Actor>
+
+      <actor:Actor class="Actor" name="MegaMan" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+        <MovementSpeed x="100" y="100"/>
+        <Sprites>
+          <GameSprite spriteName="MegaMan" textureRef="MegamanSprite" frameLength="0.2" depth="1">
+            <Offset x="0" y="0"/>
+            <FrameSize width="64" height="64"/>
+            <Animations>
+              <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Animation name="Left" struct="SpriteAnimation" rowIndex="1" frameCount="3" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Animation name="Right" struct="SpriteAnimation" rowIndex="1" frameCount="3" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="64" height="64"  density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
+            <Position x="400" y="70"/>
+          </Rectangle>
+        </BodyInfo>
+      </actor:Actor>
+
+      <actor:Actor class="Actor" name="TriggerTest" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+        <MovementSpeed x="100" y="100"/>
+        <Sprites>
+          <GameSprite spriteName="ModifyTest" textureRef="ModTest" frameLength="100" depth="1">
+            <Offset x="0" y="0"/>
+            <FrameSize width="10" height="10"/>
+            <Animations>
+              <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="10" height="10"  density="1" bodyType="Static" fixedRotation="true" friction="1">
+            <Position x="295" y="195"/>
+          </Rectangle>
+        </BodyInfo>
+      </actor:Actor>
+    </Actors>
+  </LevelObjects>
+  <MapEvents>
+    <Event name="TestEvent" class="PhysicistEvent">      
+      <Triggers>
+        <event:ProximityTrigger attachedTarget="TriggerTest">            
+          <Trigger>            
+            <WhileActivated>
+              <Modifier name="MoveEventTestUp"/>
+            </WhileActivated>
+          </Trigger>          
+          <FixtureTemplate>
+            <Circle radius="20" density="1" bodyType="Dynamic" fixedRotation="true"/>
+          </FixtureTemplate>
+        </event:ProximityTrigger>
+      </Triggers>
+      <Modifiers>
+        <event:VelocityModifier>
+          <Modifier name="MoveEventTestUp">
+            <Target name="EventTest"/>
+          </Modifier>          
+          <StepChange x="0" y="-10"/>          
+        </event:VelocityModifier>
+      </Modifiers>
+    </Event>
+    <Event name="MegaEvent" class="PhysicistEvent">
+      <Triggers>
+        <event:ProximityTrigger radius="10">
+          <Trigger style="ToggleOnActivated">
+            <OnDeactivated>
+              <Modifier name="ChangeMegaManRight"/>
+            </OnDeactivated>
+          </Trigger>
+          <Position x="200" y="20"/>
+        </event:ProximityTrigger>
+      </Triggers>
+      <Modifiers>
+        <event:AnimateModifier targetSprite="MegaMan" targetAnimation="Left" >
+          <Modifier name="ChangeMegaManRight">
+            <Target name="MegaMan"/>
+          </Modifier>
+        </event:AnimateModifier>
+      </Modifiers>
+    </Event>
+  </MapEvents>
+</Map>

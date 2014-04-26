@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Common-PrefabProxy"
+    targetNamespace="SystemPrefabs"
+    elementFormDefault="qualified"
+    xmlns="SystemPrefabs"
+    xmlns:mstns="SystemPrefabs"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>  
+  <xs:include schemaLocation="../Resources/CommonResources.xsd"/>
+</xs:schema>
