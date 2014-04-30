@@ -3,11 +3,11 @@
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
 
-    public abstract class PhysicistGameScreenItem : IGameScreenItem, IXmlSerializable
+    public abstract class PhysicistGameScreenItem : IPhysicistGameScreenItem, IXmlSerializable
     {
         private PhysicistGameScreen screen;
 
-        public GameScreen Screen
+        public PhysicistGameScreen Screen
         {
             get
             {
@@ -16,7 +16,7 @@
 
             set
             {
-                this.screen = value as PhysicistGameScreen;
+                this.screen = value;
                 if (this.Screen != null)
                 {
                     this.World = this.screen.World;

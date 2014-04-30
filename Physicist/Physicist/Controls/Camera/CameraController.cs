@@ -39,14 +39,14 @@
             this.Origin = Vector2.Zero;
         }
 
-        public CameraController(Vector2 position, Vector2 origin, IPosition following, float zoom, float rotation, Vector2 bounds)
+        public CameraController(Vector2 position, IPosition following, float zoom, float rotation, Vector2 bounds)
         {
             this.Bounds = bounds;
             this.Following = following;
             this.Zoom = zoom;
             this.Position = position;
             this.Rotation = rotation;
-            this.Origin = new Vector2(bounds.X/2, bounds.Y/2);
+            this.Origin = new Vector2(bounds.X / 2, bounds.Y / 2);
         }
 
         public Viewport CameraViewport { get; set; }
@@ -115,13 +115,20 @@
         {
             get
             {
-                return this.translationMatrix * this.originScaleRotationMatrix * Matrix.CreateTranslation(this.CameraViewport.ViewportSize.Width / 2, this.CameraViewport.ViewportSize.Height / 2, 0);
+                if (this.Following != null)
+                {
+                    return this.translationMatrix * this.originScaleRotationMatrix * Matrix.CreateTranslation(this.CameraViewport.ViewportSize.Width / 2, this.CameraViewport.ViewportSize.Height / 2, 0);
+                }
+                else
+                {
+                    return this.translationMatrix * this.originScaleRotationMatrix;
+                }
             }
         }
 
         public void Move(Vector2 direction)
         {
-            this.Position = Position + direction;
+            this.Position = this.Position + direction;
         }
 
         public void Rotate(float angle)
@@ -154,22 +161,18 @@
 
         public void CenterOnFollowing()
         {   
-
             // Define the camera's position as centered on the player (or other object, if so desired)
             if (this.Following != null)
             {
-
-                //Vector2 RotatedFollowing = Vector2.Transform(this.Following.Position, Matrix.CreateRotationZ(-1 * this.Rotation));
-
+                // Vector2 RotatedFollowing = Vector2.Transform(this.Following.Position, Matrix.CreateRotationZ(-1 * this.Rotation));
                 this.Position = new Vector2(
-                    (-1) * (this.Following.Position.X ),
-                    (-1) * (this.Following.Position.Y ));
+                    -1 * this.Following.Position.X,
+                    -1 * this.Following.Position.Y);
             }
         }
 
         private void UpdateOriginRotateScale()
         {
-
             this.originScaleRotationMatrix = Matrix.CreateTranslation(new Vector3(-this.Origin.X, -this.Origin.Y, 0)) *
                                              Matrix.CreateScale(this.Zoom) *
                                              Matrix.CreateRotationZ(this.Rotation);

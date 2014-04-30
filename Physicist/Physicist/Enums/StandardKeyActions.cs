@@ -8,6 +8,8 @@
         Down,
         Left,
         Right,
-        Jump
+        Jump,
+        RotateRight,
+        RotateLeft
     }
 }

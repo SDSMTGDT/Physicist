@@ -8,7 +8,5 @@
         World World { get; }
 
         Map Map { get; }
-
-        void RegisterActor(Actor actor);
     }
 }

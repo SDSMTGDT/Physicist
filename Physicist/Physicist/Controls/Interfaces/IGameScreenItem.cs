@@ -1,7 +1,7 @@
 ﻿namespace Physicist.Controls
 {
-    public interface IGameScreenItem
+    public interface IPhysicistGameScreenItem
     {
-        GameScreen Screen { get; set; }
+        PhysicistGameScreen Screen { get; set; }
     }
 }

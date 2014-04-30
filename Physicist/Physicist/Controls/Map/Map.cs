@@ -26,6 +26,8 @@
         private List<IActor> actors = new List<IActor>();
         private List<IMediaInfo> mediaReferences = new List<IMediaInfo>();
 
+        private List<Player> players = new List<Player>();
+
         private List<object> unknownObjects = new List<object>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
@@ -70,6 +72,14 @@
             }
         }
 
+        public IEnumerable<Player> Players
+        {
+            get
+            {
+                return this.players;
+            }
+        }
+
         public IEnumerable<IBackgroundObject> BackgroundObjects
         {
             get
@@ -101,6 +111,12 @@
                 var actor = instance as IActor;
                 if (actor != null)
                 {
+                    var player = instance as Player;
+                    if (player != null)
+                    {
+                        this.players.Add(player);
+                    }
+
                     this.actors.Add(actor);
                     this.drawObjects[0].Add(actor);
                     known = true;

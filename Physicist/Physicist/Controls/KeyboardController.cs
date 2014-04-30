@@ -51,6 +51,22 @@
             }
         }
 
+        public static Keys RotateRightKey
+        {
+            get
+            {
+                return KeyboardController.MappedKeys[StandardKeyAction.RotateRight];
+            }
+        }
+
+        public static Keys RotateLeftKey
+        {
+            get
+            {
+                return KeyboardController.MappedKeys[StandardKeyAction.RotateLeft];
+            }
+        }
+
         private static Dictionary<StandardKeyAction, Keys> MappedKeys
         {
             get
@@ -58,11 +74,13 @@
                 if (KeyboardController.mappedKeys == null)
                 {
                     KeyboardController.mappedKeys = new Dictionary<StandardKeyAction, Keys>();
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Up, Keys.Up);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Down, Keys.Down);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Left, Keys.Left);
-                    KeyboardController.mappedKeys.Add(StandardKeyAction.Right, Keys.Right);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Up, Keys.W);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Down, Keys.S);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Left, Keys.A);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Right, Keys.D);
                     KeyboardController.mappedKeys.Add(StandardKeyAction.Jump, Keys.Space);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.RotateRight, Keys.Right);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.RotateLeft, Keys.Left);
                 }
 
                 return KeyboardController.mappedKeys;

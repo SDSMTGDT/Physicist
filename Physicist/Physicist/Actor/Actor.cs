@@ -23,10 +23,12 @@
 
         public Actor()
         {
+            this.RotatesWithWorld = false;
         }
 
         public Actor(string name)
         {
+            this.RotatesWithWorld = false;
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
@@ -106,6 +108,8 @@
 
         public Visibility VisibleState { get; set; }
 
+        protected bool RotatesWithWorld { get; set; }
+
         public virtual void Draw(ISpritebatch sb)
         {
             if (this.IsEnabled)
@@ -125,12 +129,19 @@
                             effect |= SpriteEffects.FlipVertically;
                         }
 
+                        // if the actor does not rotate with the world, keep it upright
+                        float drawRotation = -1 * this.Screen.ScreenRotation;
+                        if (this.RotatesWithWorld)
+                        {
+                            drawRotation = this.Rotation;      
+                        }
+
                         sb.Draw(
                             sprite.SpriteSheet,
                             this.Position + sprite.Offset - this.bodyInfo.ShapeOffset,
                             sprite.CurrentSprite,
                             Color.White,
-                            this.Rotation,
+                            drawRotation,
                             Vector2.Zero,
                             1f,
                             effect,
