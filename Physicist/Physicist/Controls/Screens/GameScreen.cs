@@ -7,6 +7,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Physicist.Extensions;
 
     public class GameScreen : IDisposable
     {
@@ -39,7 +40,7 @@
         {
             this.GraphicsDevice = graphicsDevice;
             this.Camera = new CameraController();
-            this.Camera.CameraViewport = new Controls.Viewport(new Extensions.Size(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Width));
+            this.Camera.CameraViewport = new Viewport(new Size(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Width));
             this.Camera.Bounds = new Vector2(GraphicsDevice.Viewport.Width * 2, GraphicsDevice.Viewport.Height * 2);
         }
         
