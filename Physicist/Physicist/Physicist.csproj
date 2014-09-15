@@ -86,6 +86,8 @@
     <Compile Include="Controls\ContentController.cs" />
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Tools\DebugView\DebugViewXNA.cs" />
+    <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
     <Compile Include="Enums\StandardAnimations.cs" />
     <Compile Include="Enums\StandardKeyActions.cs" />
@@ -185,6 +187,9 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="Content\Pericles6.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Fonts\DebugFont.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="XML\Schemas\Extensions\ActorExtensions.xsd">
