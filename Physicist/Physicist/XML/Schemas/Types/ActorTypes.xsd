@@ -13,24 +13,100 @@
   <xs:include schemaLocation="../Proxies/PhysicistCommon.xsd"/>
   <xs:import namespace="SystemPrefabs" schemaLocation="SystemPrefabTypes.xsd"/>
   <xs:import namespace="PhysicistActors" schemaLocation="../Nodes/PhysicistActors.xsd"/>
+
+  <xs:element name="PathNode" type="PathNodeType" abstract="true"/>
+
+  <xs:complexType name="ApproachPositionPathNode">
+    <xs:complexContent>
+      <xs:extension base="PathNodeType">
+        <xs:sequence>
+          <xs:element name="Position" type="Vector2"/>
+        </xs:sequence>
+        <xs:attribute name="speed" default="10">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is '10'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="PathNodeType">
+    <xs:sequence>
+      <xs:element name="PathNode" minOccurs="0">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="OnActivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniquePathNodeModifiersOnActivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="WhileActivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniquePathNodeModifiersWhileActivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="OnDeactivated" type="mstns:ModifierNameList" minOccurs="0">
+              <xs:unique name="UniquePathNodeModifiersOnDeactivated">
+                <xs:selector xpath="mstns:Modifier"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+          
+  <xs:complexType name="PhysicistPath">
+    <xs:choice>
+      <xs:element name="Modifiers" minOccurs="0">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="mstns:Modifier"/>
+          </xs:choice>
+        </xs:complexType>
+        <xs:unique name="UniqueModifiersPerPath">
+          <xs:selector xpath="./*/mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element ref="PathNode" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:choice>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="class" type="xs:string" default="PhysicstPath">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'PhysicistPath'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
   
   <xs:complexType name="Actor">
-    <xs:sequence maxOccurs="unbounded" minOccurs="1">
+    <xs:all>
       <xs:element name="MovementSpeed" type="mstns:Vector2"/>
       <xs:element name="Sprites">
         <xs:complexType>
           <xs:sequence maxOccurs="unbounded">
             <xs:element name="GameSprite" type="mstns:GameSprite"/>
-          </xs:sequence>          
+          </xs:sequence>
         </xs:complexType>
         <xs:unique name="UniqueGameSpritesPerActor">
           <xs:selector xpath="mstns:GameSprite"/>
           <xs:field xpath="@spriteName"/>
         </xs:unique>
       </xs:element>
-      <xs:element name="BodyInfo" type="FarseerShapeList">        
+      <xs:element name="BodyInfo" type="FarseerShapeList"/>
+      <xs:element name="PathManager" minOccurs="0">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="PhysicistPath" type="PhysicistPath"/>
+          </xs:choice>
+        </xs:complexType>        
       </xs:element>
-    </xs:sequence>
+    </xs:all>
+    
     <xs:attribute name="name" type="xs:ID" use="optional">
       <xs:annotation>
         <xs:documentation>[Optional] Unique name</xs:documentation>

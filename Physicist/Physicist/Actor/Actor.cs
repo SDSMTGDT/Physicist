@@ -27,6 +27,7 @@
 
         public Actor(string name)
         {
+            this.PathManager = new PathManager(this);
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.Health = 1;
@@ -78,6 +79,12 @@
             {
                 this.body.Rotation = value;
             }
+        }
+
+        public PathManager PathManager
+        {
+            get;
+            set;
         }
 
         public Vector2 MovementSpeed { get; set; }
@@ -159,6 +166,8 @@
                 {
                     sprite.Update(gameTime);
                 }
+
+                this.PathManager.Update(gameTime);
             }
         }
 
@@ -226,6 +235,15 @@
                 var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, bodyElement.Elements().ElementAt(0));
                 this.body = bodyData.Item1;
                 this.bodyInfo = bodyData.Item2;
+            }
+
+            this.PathManager = new PathManager(this);
+            this.PathManager.Screen = this.Screen;
+            XElement pathManagerEle = element.Element("PathManager");
+            if (pathManagerEle != null)
+            {
+                this.PathManager.XmlDeserialize(pathManagerEle);
+                this.PathManager.IsEnabled = true;
             }
             
             // ----------------------------------
