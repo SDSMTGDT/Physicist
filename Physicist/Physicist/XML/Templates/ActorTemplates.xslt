@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
   xmlns:system="SystemPrefabs"
-  xmlns:physicist="PhysicistTypes.xsd"
+  xmlns:physicist="PhysicistTypes"
 >
   <xsl:output method="xml" indent="yes"/>
 
@@ -99,31 +99,5 @@
         </Sprites>
         <xsl:copy-of select="$BodyInfo"/>
       </Actor>
-  </xsl:template>
-
-  <xsl:template match="MegaMan">
-    <Player class="Player">
-      <Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
-        <MovementSpeed x="3" y="3"/>
-        <Sprites>
-          <GameSprite spriteName="mario" textureRef="MegaMan" frameLength="0.2" depth="0">
-            <Offset x="0" y="0"/>
-            <FrameSize width="64" height="64"/>
-            <Animations>
-              <Idle struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-              <Down struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-              <Up struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
-              <Right struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
-              <Left struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
-            </Animations>
-          </GameSprite>
-        </Sprites>
-        <BodyInfo>
-          <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
-            <Position x="40" y="70"/>
-          </Rectangle>
-        </BodyInfo>
-      </Actor>
-    </Player>
   </xsl:template>
 </xsl:stylesheet>

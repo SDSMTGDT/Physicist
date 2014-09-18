@@ -6,9 +6,7 @@
     xmlns:mstns="SystemPrefabs"
     elementFormDefault="qualified"
 >
-  <xs:include schemaLocation="../Proxies/Common-PrefabProxy.xsd"/>
-
-  <xs:element name="SystemPrefab" type="ActorPrefabType" abstract="true"/>
+  <xs:include schemaLocation="../Proxies/PrefabCommon.xsd"/>
 
   <xs:complexType name="ActorPrefabType">
     <xs:sequence>

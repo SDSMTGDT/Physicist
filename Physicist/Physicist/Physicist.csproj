@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\Physicist_Menu_ShelfSet\Physicist\Physicist\Tools\CodeAnalysis\PhysicistRuleSet.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet>Tools\CodeAnalysis\PhysicistRuleSet.ruleset</CodeAnalysisRuleSet>
     <NoWarn>
     </NoWarn>
@@ -39,6 +40,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Actor\PathManagement\PathNode.cs" />
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\BodyInfo.cs" />
     <Compile Include="Actor\Door.cs" />
@@ -50,44 +52,66 @@
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
     <Compile Include="Actor\IDamage.cs" />
+    <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
+    <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
+    <Compile Include="Actor\PathManagement\PathManager.cs" />
+    <Compile Include="Actor\IActor.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\SpriteAnimation.cs" />
-    <Compile Include="Controls\Camera\IPosition.cs" />
-    <Compile Include="Controls\GameScreenItem.cs" />
+    <Compile Include="Controls\Interfaces\IBackgroundObject.cs" />
+    <Compile Include="Controls\Interfaces\IGameScreenItem.cs" />
+    <Compile Include="Controls\Interfaces\IMapObject.cs" />
     <Compile Include="Controls\KeyDebouncer.cs" />
-    <Compile Include="Controls\Map\IPhysicistRegistration.cs" />
     <Compile Include="Controls\AssetCreator.cs" />
+    <Compile Include="Controls\Camera\CameraController.cs" />
+    <Compile Include="Controls\Camera\Viewport.cs" />
+    <Compile Include="Controls\Interfaces\ISpriteBatch.cs" />
+    <Compile Include="Controls\Interfaces\IDraw.cs" />
+    <Compile Include="Controls\Interfaces\IName.cs" />
+    <Compile Include="Controls\Interfaces\IPosition.cs" />
+    <Compile Include="Controls\Interfaces\IUpdate.cs" />
+    <Compile Include="Controls\Interfaces\IXmlSerializable.cs" />
+    <Compile Include="Controls\Interfaces\IPhysicistGameScreen.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
+    <Compile Include="Controls\Map\BackgroundMusic.cs" />
+    <Compile Include="Controls\Map\Backdrop.cs" />
+    <Compile Include="Controls\Map\MapSaver.cs" />
+    <Compile Include="Controls\ContentController.cs" />
+    <Compile Include="Controls\KeyboardController.cs" />
+    <Compile Include="Controls\Map\Map.cs" />
+    <Compile Include="Controls\Map\MapLoader.cs" />
     <Compile Include="Controls\Screens\FCCSpriteBatch.cs" />
     <Compile Include="Controls\Screens\GameScreen.cs" />
-    <Compile Include="Controls\Screens\ISpriteBatch.cs" />
     <Compile Include="Controls\Screens\MenuScreen.cs" />
     <Compile Include="Controls\Screens\PauseScreen.cs" />
     <Compile Include="Controls\Screens\PhysicistGameScreen.cs" />
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
-    <Compile Include="Enums\BodyCategory.cs" />
-    <Compile Include="Controls\Map\Backdrop.cs" />
-    <Compile Include="Controls\Map\BackgroundMusic.cs" />
-    <Compile Include="Controls\Map\IXmlSerializable.cs" />
-    <Compile Include="Controls\Map\MapSaver.cs" />
-    <Compile Include="Enums\SystemScreens.cs" />
-    <Compile Include="Extensions\GameScreenKeyedDictionary.cs" />
-    <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
-    <Compile Include="Controls\Camera\CameraController.cs" />
-    <Compile Include="Controls\ContentController.cs" />
-    <Compile Include="Controls\KeyboardController.cs" />
-    <Compile Include="Controls\Map\Map.cs" />
-    <Compile Include="Controls\Map\MapLoader.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
-    <Compile Include="Controls\Camera\Viewport.cs" />
+    <Compile Include="Tools\DebugView\DebugViewXNA.cs" />
+    <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
     <Compile Include="Enums\StandardAnimations.cs" />
     <Compile Include="Enums\StandardKeyActions.cs" />
     <Compile Include="Enums\Visibility.cs" />
+    <Compile Include="Enums\TriggerMode.cs" />
+    <Compile Include="Enums\TriggerStyle.cs" />
+    <Compile Include="Enums\BodyCategory.cs" />
+    <Compile Include="Enums\SystemScreens.cs" />
+    <Compile Include="Events\IPhysicistEvent.cs" />
+    <Compile Include="Events\Modifiers\AnimateModifier.cs" />
+    <Compile Include="Events\Modifiers\IModifier.cs" />
+    <Compile Include="Events\PhysicistEvent.cs" />
+    <Compile Include="Events\Triggers\ITrigger.cs" />
+    <Compile Include="Events\Modifiers\Modifier.cs" />
+    <Compile Include="Events\Triggers\ProximityTrigger.cs" />
+    <Compile Include="Events\Triggers\Trigger.cs" />
+    <Compile Include="Events\Modifiers\VelocityModifier.cs" />
+    <Compile Include="Extensions\GameScreenKeyedDictionary.cs" />
+    <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
     <Compile Include="Extensions\MediaDictionary.cs" />
     <Compile Include="Extensions\Primatives\IMediaInfo.cs" />
     <Compile Include="Extensions\Primatives\MediaElement.cs" />
@@ -103,6 +127,13 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Levels\PathTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\TriggerTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\Levels\SchemaTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -110,12 +141,22 @@
     <Content Include="Content\Levels\MaterialTest.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Levels\TestLevel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Materials\hemp.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ContentLoadError.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\FillShape.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\MegamanSprite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Tools\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll">
@@ -161,7 +202,30 @@
     <None Include="Content\Pericles6.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Schemas\Nodes\Media.xsd">
+    <None Include="Content\Fonts\DebugFont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Extensions\ActorExtensions.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistEvents.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistPaths.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistShapes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Extensions\MediaExtensions.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistMedia.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -169,11 +233,11 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Schemas\Proxies\Common-PhysicistProxy.xsd">
+    <None Include="XML\Schemas\Proxies\PhysicistCommon.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Schemas\Proxies\Common-PrefabProxy.xsd">
+    <None Include="XML\Schemas\Proxies\PrefabCommon.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -230,11 +294,15 @@
     <None Include="Content\Textures\SolidArc.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="XML\Schemas\Types\EventTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="XML\Schemas\Types\FarseerTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Schemas\Nodes\Actors.xsd">
+    <None Include="XML\Schemas\Nodes\PhysicistActors.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -242,7 +310,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Schemas\Nodes\SystemPrefabs.xsd">
+    <None Include="XML\Schemas\Extensions\SystemPrefabs.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -110,6 +110,10 @@
                             throw;
                         }
                     }
+                    catch (ContentLoadException)
+                    {
+                        this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.media[MediaFormat.Texture2D]["ContentLoadError"].Asset));
+                    }
                 }
                 else
                 {
@@ -219,6 +223,7 @@
                     texture = new Texture2D(graphicsDevice, minBound, minBound);
                     texture.SetData(materialColors);
                     materialTexture = texture;
+                    texture = null;
                 }
                 finally
                 {

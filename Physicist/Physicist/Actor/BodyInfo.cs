@@ -51,6 +51,10 @@
         private float friction = 0f;
         private float rotation = 0f;
 
+        public BodyInfo()
+        {
+        }
+
         public BodyInfo(int mapHeight)
         {
             this.mapHeight = mapHeight;
@@ -87,7 +91,7 @@
             get { return this.bodyCategory.Value; }
         }
 
-        public Vector2 Position 
+        public Vector2 Position
         {
             get { return this.position.Value; }
             set { this.position = value; }
@@ -99,124 +103,123 @@
         }
 
         // Common
-        public IEnumerable<Vertices> Vertices 
+        public IEnumerable<Vertices> Vertices
         {
             get { return this.vertexList; }
         }
 
-        public float Density 
-        { 
-            get { return this.density.Value; } 
-        }
-
-        public float Height 
+        public float Density
         {
-            get { return this.height.Value; } 
+            get { return this.density.Value; }
         }
 
-        public float Width 
+        public float Height
         {
-            get { return this.width.Value; } 
+            get { return this.height.Value; }
         }
 
-        public float Radius 
-        { 
+        public float Width
+        {
+            get { return this.width.Value; }
+        }
+
+        public float Radius
+        {
             get { return this.radius.Value; }
         }
 
         // Spherical shapes
-        public float XRadius 
+        public float XRadius
         {
-            get { return this.xradius.Value; } 
+            get { return this.xradius.Value; }
         }
 
-        public float YRadius 
+        public float YRadius
         {
-            get { return this.yradius.Value; } 
+            get { return this.yradius.Value; }
         }
 
-        public float Radians 
+        public float Radians
         {
-            get { return this.radians.Value; } 
+            get { return this.radians.Value; }
         }
 
-        public float Angle 
+        public float Angle
         {
-            get { return this.angle.Value; } 
+            get { return this.angle.Value; }
         }
 
-        public int Sides 
+        public int Sides
         {
-            get { return this.sides.Value; } 
+            get { return this.sides.Value; }
         }
 
-        public int Segments 
+        public int Segments
         {
-            get { return this.segments.Value; } 
+            get { return this.segments.Value; }
         }
 
-        public int Edges 
+        public int Edges
         {
-            get { return this.edges.Value; } 
+            get { return this.edges.Value; }
         }
 
-        public bool Closed 
+        public bool Closed
         {
-            get { return this.closed.Value; } 
+            get { return this.closed.Value; }
         }
-        
+
         // Capsule
-        public float TopRadius 
+        public float TopRadius
         {
-            get { return this.topRadius.Value; } 
+            get { return this.topRadius.Value; }
         }
 
-        public float BottomRadius 
+        public float BottomRadius
         {
-            get { return this.bottomRadius.Value; } 
+            get { return this.bottomRadius.Value; }
         }
 
-        public int TopEdge 
+        public int TopEdge
         {
-            get { return this.topedge.Value; } 
+            get { return this.topedge.Value; }
         }
 
-        public int BottomEdge 
+        public int BottomEdge
         {
-            get { return this.bottomEdge.Value; } 
+            get { return this.bottomEdge.Value; }
         }
 
         // Edge
-        public Vector2 Start 
+        public Vector2 Start
         {
-            get { return this.start.Value; } 
+            get { return this.start.Value; }
         }
 
-        public Vector2 End 
+        public Vector2 End
         {
-            get { return this.end.Value; } 
+            get { return this.end.Value; }
         }
 
         // Gear
-        public float TipPercentage 
+        public float TipPercentage
         {
-            get { return this.tipPercentage.Value; } 
+            get { return this.tipPercentage.Value; }
         }
 
-        public float ToothHeight 
+        public float ToothHeight
         {
-            get { return this.toothHeight.Value; } 
+            get { return this.toothHeight.Value; }
         }
 
-        public int NumberOfTeeth 
+        public int NumberOfTeeth
         {
-            get { return this.numberOfTeeth.Value; } 
+            get { return this.numberOfTeeth.Value; }
         }
 
         public XElement XmlSerialize()
         {
             XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
-
             bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "position"));
 
             if (this.rotation != 0)
@@ -226,7 +229,7 @@
 
             if (this.collidesWith != FarseerPhysics.Dynamics.Category.All)
             {
-                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString())); 
+                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString()));
             }
 
             if (this.fixedRotation)
@@ -252,7 +255,7 @@
                     XElement vertices = new XElement("vertices");
                     foreach (var vector in vert)
                     {
-                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", this.mapHeight - vector.Y)));
+                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
                     }
 
                     if (this.vertexList.Count > 1)
@@ -388,11 +391,17 @@
 
             this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
-            Vector2 designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
-            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y); 
-            
+            XElement posEle = element.Element("Position");
+            Vector2 designPosition = Vector2.Zero;
+            if (posEle != null)
+            {
+                designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
+            }
+
+            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
+
             XAttribute collidesWithEle = element.Attribute("collidesWith");
-            if (collidesWithEle != null) 
+            if (collidesWithEle != null)
             {
                 this.collidesWith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
             }
@@ -480,7 +489,7 @@
                     break;
             }
         }
-      
+
         private void MakeBreakableBody(XElement element)
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
@@ -493,9 +502,9 @@
                 Vector2 nextVect = ExtensionMethods.XmlDeserializeVector2(vert);
                 verts.Add(nextVect);
                 xmax = MathHelper.Max(nextVect.X, xmax);
-                ymax = MathHelper.Max(nextVect.Y, this.mapHeight - ymax);
+                ymax = MathHelper.Max(nextVect.Y, ymax);
                 xmin = MathHelper.Min(nextVect.X, xmin);
-                ymin = MathHelper.Min(nextVect.Y, this.mapHeight - ymin);
+                ymin = MathHelper.Min(nextVect.Y, ymin);
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -518,11 +527,9 @@
         {
             Vertices verts = new Vertices();
 
-            Vector2 designVertex;
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
-                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
+                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -543,14 +550,12 @@
 
             this.vertexList = new List<Vertices>();
 
-            foreach (var vertexListlist in element.Element("VertexList").Elements())
+            foreach (var verticeslist in element.Element("VertexList").Elements())
             {
                 Vertices nextVerts = new Vertices();
-                Vector2 designVertex;
-                foreach (var vert in vertexListlist.Elements())
+                foreach (var vert in verticeslist.Elements())
                 {
-                    designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
-                    nextVerts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
+                    nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
                 }
 
                 this.vertexList.Add(nextVerts);
@@ -602,11 +607,10 @@
         private void MakeLoopShape(XElement element)
         {
             Vertices verts = new Vertices();
-            Vector2 designVertex;
+
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
-                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
+                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -618,11 +622,10 @@
         {
             this.density = float.Parse(element.Attribute("density").Value, CultureInfo.CurrentCulture);
             Vertices verts = new Vertices();
-            Vector2 designVertex;
+
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                designVertex = ExtensionMethods.XmlDeserializeVector2(vert);
-                verts.Add(new Vector2(designVertex.X, this.mapHeight - designVertex.Y));
+                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };

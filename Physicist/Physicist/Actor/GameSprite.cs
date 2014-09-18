@@ -45,7 +45,7 @@
 
         public string SpriteName { get; set; }
 
-        public List<string> AnimationKeys
+        public IEnumerable<string> AnimationKeys
         {
             get
             {

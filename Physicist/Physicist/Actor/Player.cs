@@ -14,10 +14,15 @@
     using Physicist.Enums;
     using Physicist.Extensions;
 
-    public class Player : Actor, IXmlSerializable
+    public class Player : Actor
     {
         public Player() :
             base()
+        {
+        }
+
+        public Player(string name) :
+            base(name)
         {
         }
 
@@ -81,12 +86,12 @@
             base.Update(gameTime);
         }
 
-        public new XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             return new XElement("Player", new XAttribute("class", typeof(Player).ToString()), base.XmlSerialize());
         }
 
-        public new void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {            
             if (element != null)
             {
