@@ -91,7 +91,7 @@
             get { return this.bodyCategory.Value; }
         }
 
-        public Vector2 Position 
+        public Vector2 Position
         {
             get { return this.position.Value; }
             set { this.position = value; }
@@ -103,118 +103,118 @@
         }
 
         // Common
-        public IEnumerable<Vertices> Vertices 
+        public IEnumerable<Vertices> Vertices
         {
             get { return this.vertexList; }
         }
 
-        public float Density 
-        { 
-            get { return this.density.Value; } 
-        }
-
-        public float Height 
+        public float Density
         {
-            get { return this.height.Value; } 
+            get { return this.density.Value; }
         }
 
-        public float Width 
+        public float Height
         {
-            get { return this.width.Value; } 
+            get { return this.height.Value; }
         }
 
-        public float Radius 
-        { 
+        public float Width
+        {
+            get { return this.width.Value; }
+        }
+
+        public float Radius
+        {
             get { return this.radius.Value; }
         }
 
         // Spherical shapes
-        public float XRadius 
+        public float XRadius
         {
-            get { return this.xradius.Value; } 
+            get { return this.xradius.Value; }
         }
 
-        public float YRadius 
+        public float YRadius
         {
-            get { return this.yradius.Value; } 
+            get { return this.yradius.Value; }
         }
 
-        public float Radians 
+        public float Radians
         {
-            get { return this.radians.Value; } 
+            get { return this.radians.Value; }
         }
 
-        public float Angle 
+        public float Angle
         {
-            get { return this.angle.Value; } 
+            get { return this.angle.Value; }
         }
 
-        public int Sides 
+        public int Sides
         {
-            get { return this.sides.Value; } 
+            get { return this.sides.Value; }
         }
 
-        public int Segments 
+        public int Segments
         {
-            get { return this.segments.Value; } 
+            get { return this.segments.Value; }
         }
 
-        public int Edges 
+        public int Edges
         {
-            get { return this.edges.Value; } 
+            get { return this.edges.Value; }
         }
 
-        public bool Closed 
+        public bool Closed
         {
-            get { return this.closed.Value; } 
+            get { return this.closed.Value; }
         }
-        
+
         // Capsule
-        public float TopRadius 
+        public float TopRadius
         {
-            get { return this.topRadius.Value; } 
+            get { return this.topRadius.Value; }
         }
 
-        public float BottomRadius 
+        public float BottomRadius
         {
-            get { return this.bottomRadius.Value; } 
+            get { return this.bottomRadius.Value; }
         }
 
-        public int TopEdge 
+        public int TopEdge
         {
-            get { return this.topedge.Value; } 
+            get { return this.topedge.Value; }
         }
 
-        public int BottomEdge 
+        public int BottomEdge
         {
-            get { return this.bottomEdge.Value; } 
+            get { return this.bottomEdge.Value; }
         }
 
         // Edge
-        public Vector2 Start 
+        public Vector2 Start
         {
-            get { return this.start.Value; } 
+            get { return this.start.Value; }
         }
 
-        public Vector2 End 
+        public Vector2 End
         {
-            get { return this.end.Value; } 
+            get { return this.end.Value; }
         }
 
         // Gear
-        public float TipPercentage 
+        public float TipPercentage
         {
-            get { return this.tipPercentage.Value; } 
+            get { return this.tipPercentage.Value; }
         }
 
-        public float ToothHeight 
+        public float ToothHeight
         {
-            get { return this.toothHeight.Value; } 
+            get { return this.toothHeight.Value; }
         }
 
-        public int NumberOfTeeth 
+        public int NumberOfTeeth
         {
-            get { return this.numberOfTeeth.Value; } 
+            get { return this.numberOfTeeth.Value; }
         }
 
         public XElement XmlSerialize()
@@ -229,7 +229,7 @@
 
             if (this.collidesWith != FarseerPhysics.Dynamics.Category.All)
             {
-                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString())); 
+                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString()));
             }
 
             if (this.fixedRotation)
@@ -398,8 +398,8 @@
                 designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
             }
 
-            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y); 
-            
+            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
+
             XAttribute collidesWithEle = element.Attribute("collidesWith");
             if (collidesWithEle != null)
             {

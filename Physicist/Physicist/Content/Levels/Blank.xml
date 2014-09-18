@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--Must have a width and height-->
+<Map xmlns="PhysicistTypes.xsd"
+     xmlns:actor="Actors"
+     xmlns:system="SystemPrefabs"
+     width="800"
+     height="480" >
+  <Media>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+  </Media>
+  
+  <LevelObjects>
+    <Backgrounds/>
+    <Foregrounds/>
+    <Actors>
+      <actor:Actor>
+        <MovementSpeed x="0" y="0"/>
+        <Sprites>
+          <GameSprite spriteName="test" textureRef="NOTSTOLEN" >
+            <FrameSize height="40" width="19"/>
+            <Offset x="0" y="0"/>
+            <Animations>
+              <Animation name="Idle" defaultFrameRate="0.2" frameCount="1"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="19" height="40">
+            <Position x="100" y="100"/>
+          </Rectangle>
+        </BodyInfo>
+      </actor:Actor>
+      <system:Mario textureRef="NOTSTOLEN" health="10">
+        <system:Position x="19" y="40"/>
+      </system:Mario>
+    </Actors>
+  </LevelObjects>
+</Map>

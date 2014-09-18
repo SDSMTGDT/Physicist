@@ -51,6 +51,7 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
+    <Compile Include="Actor\IDamage.cs" />
     <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
     <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
     <Compile Include="Actor\PathManagement\PathManager.cs" />
@@ -122,6 +123,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Levels\Blank.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Levels\PathTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
