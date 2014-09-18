@@ -18,10 +18,7 @@
         public PathManager(Actor target)
         {
             this.target = target;
-            this.IsEnabled = true;
         }
-
-        public bool IsEnabled { get; set; }
 
         public string CurrentPath 
         {
@@ -70,7 +67,7 @@
 
         public void Update(GameTime gameTime)
         {
-            if (this.IsEnabled)
+            if (this.paths.Count > 0)
             {
                 this.paths[this.CurrentPath].Update(gameTime);
             }
@@ -87,7 +84,7 @@
             {
                 foreach (var pathEle in element.Elements())
                 {
-                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");
+                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");                    
                     path.Screen = this.Screen;
                     path.XmlDeserialize(pathEle);
                     if (path != null)
@@ -111,7 +108,6 @@
                 else
                 {
                     oldPath.PathCompleted -= this.OnPathCompleted;
-                    this.IsEnabled = false;
                 }
             }
         }

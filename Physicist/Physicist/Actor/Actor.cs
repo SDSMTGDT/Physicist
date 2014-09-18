@@ -243,7 +243,6 @@
             if (pathManagerEle != null)
             {
                 this.PathManager.XmlDeserialize(pathManagerEle);
-                this.PathManager.IsEnabled = true;
             }
             
             // ----------------------------------

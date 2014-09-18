@@ -37,7 +37,7 @@
           </Rectangle>
         </BodyInfo>
         <PathManager>
-          <PhysicistPath name="SquarePath" class="PhysicistPath">
+          <PhysicistPath name="SquarePath" class="PhysicistPath" isEnabled="true">
             <path:ApproachPositionPathNode speed="60">
               <Position x="40" y="440"/>
             </path:ApproachPositionPathNode>
