@@ -166,8 +166,8 @@
             {
                 // Vector2 RotatedFollowing = Vector2.Transform(this.Following.Position, Matrix.CreateRotationZ(-1 * this.Rotation));
                 this.Position = new Vector2(
-                    -1 * this.Following.Position.X,
-                    -1 * this.Following.Position.Y);
+                    -1 * (this.Following.Position.X),
+                    -1 * (this.Following.Position.Y));
             }
         }
 

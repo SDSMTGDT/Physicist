@@ -8,6 +8,7 @@
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
@@ -34,6 +35,12 @@
             private set; 
         }
 
+        public static ContentManager ContentManager
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -44,6 +51,7 @@
         {
             ContentController.Instance.Initialize(this.Content, "Content");
             MainGame.GraphicsDev = this.GraphicsDevice;
+            MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             ScreenManager.Initialize(this.GraphicsDevice);

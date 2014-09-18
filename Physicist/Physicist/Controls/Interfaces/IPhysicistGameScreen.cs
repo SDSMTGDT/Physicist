@@ -3,7 +3,7 @@
     using FarseerPhysics.Dynamics;
     using Physicist.Actors;
 
-    public interface IPhysicistRegistration
+    public interface IPhysicistGameScreen
     {
         World World { get; }
 
