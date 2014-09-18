@@ -14,6 +14,7 @@
         private Dictionary<string, PhysicistPath> paths = new Dictionary<string, PhysicistPath>();
         private string currentPath;
         private Actor target;
+        private bool isEnabled;
 
         public PathManager(Actor target)
         {
@@ -21,7 +22,18 @@
             this.IsEnabled = true;
         }
 
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled 
+        { 
+            get 
+            {
+                return this.isEnabled;
+            }
+
+            set
+            {
+                this.isEnabled = this.paths.Count > 0 ? value : false;
+            }
+        }
 
         public string CurrentPath 
         {
@@ -87,7 +99,7 @@
             {
                 foreach (var pathEle in element.Elements())
                 {
-                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");
+                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");                    
                     path.Screen = this.Screen;
                     path.XmlDeserialize(pathEle);
                     if (path != null)
@@ -96,6 +108,9 @@
                         this.AddPath(path);
                     }
                 }
+
+                // Enabled AFTER paths have been added due to isEnabled check
+                this.IsEnabled = bool.Parse(element.Attribute("isEnabled").Value);
             }
         }
 

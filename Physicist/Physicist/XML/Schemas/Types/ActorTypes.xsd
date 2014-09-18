@@ -76,6 +76,11 @@
       <xs:element ref="PathNode" minOccurs="0" maxOccurs="unbounded"/>
     </xs:choice>
     <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="isEnabled" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is false</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="class" type="xs:string" default="PhysicstPath">
       <xs:annotation>
         <xs:documentation>[Optional] default is 'PhysicistPath'</xs:documentation>
