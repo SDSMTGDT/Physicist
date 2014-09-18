@@ -14,25 +14,10 @@
         private Dictionary<string, PhysicistPath> paths = new Dictionary<string, PhysicistPath>();
         private string currentPath;
         private Actor target;
-        private bool isEnabled;
 
         public PathManager(Actor target)
         {
             this.target = target;
-            this.IsEnabled = true;
-        }
-
-        public bool IsEnabled 
-        { 
-            get 
-            {
-                return this.isEnabled;
-            }
-
-            set
-            {
-                this.isEnabled = this.paths.Count > 0 ? value : false;
-            }
         }
 
         public string CurrentPath 
@@ -82,7 +67,7 @@
 
         public void Update(GameTime gameTime)
         {
-            if (this.IsEnabled)
+            if (this.paths.Count > 0)
             {
                 this.paths[this.CurrentPath].Update(gameTime);
             }
@@ -108,9 +93,6 @@
                         this.AddPath(path);
                     }
                 }
-
-                // Enabled AFTER paths have been added due to isEnabled check
-                this.IsEnabled = bool.Parse(element.Attribute("isEnabled").Value);
             }
         }
 
@@ -126,7 +108,6 @@
                 else
                 {
                     oldPath.PathCompleted -= this.OnPathCompleted;
-                    this.IsEnabled = false;
                 }
             }
         }
