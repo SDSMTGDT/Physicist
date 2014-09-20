@@ -164,10 +164,10 @@
             // Define the camera's position as centered on the player (or other object, if so desired)
             if (this.Following != null)
             {
-                // Vector2 RotatedFollowing = Vector2.Transform(this.Following.Position, Matrix.CreateRotationZ(-1 * this.Rotation));
+                // Vector2 RotatedFollowing = Vector2.Transform(this.Following.CenteredPosition, Matrix.CreateRotationZ(-1 * this.Rotation));
                 this.Position = new Vector2(
-                    -1 * (this.Following.Position.X),
-                    -1 * (this.Following.Position.Y));
+                    -1 * (this.Following.CenteredPosition.X),
+                    -1 * (this.Following.CenteredPosition.Y));
             }
         }
 

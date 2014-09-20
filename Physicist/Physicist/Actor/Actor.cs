@@ -14,6 +14,7 @@
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
     using Physicist.Extensions;
+    using FarseerPhysics;
 
     public class Actor : PhysicistGameScreenItem, IActor
     {
@@ -66,6 +67,23 @@
             set
             {
                 this.body.Position = value.ToSimUnits();
+            }
+        }
+
+        public Vector2 CenteredPosition
+        {
+            get
+            {
+                var centered = this.body.Position.ToDisplayUnits();
+
+                // Assume that the first fixture is the rotation fixture
+                FarseerPhysics.Collision.AABB aabb;
+                this.body.FixtureList[0].GetAABB(out aabb, 0);
+
+                centered.X -= aabb.Width;
+                centered.Y -= aabb.Height;
+
+                return centered;
             }
         }
 

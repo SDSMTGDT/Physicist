@@ -153,6 +153,10 @@
         {
             if (this.Camera != null)
             {
+                theta = theta % (float)(Math.PI * 2);
+                if (theta < 0)
+                    theta = (float)(2 * Math.PI) + theta;
+
                 this.World.Gravity = new Vector2((float)Math.Sin(theta) * 9.8f * this.gravityScalar, (float)Math.Cos(theta) * 9.8f * this.gravityScalar);
                 this.Camera.Rotation = theta;
                 this.ScreenRotation = theta;
