@@ -18,6 +18,7 @@
     {
         private int nextRotationTime;
         private int markedMilliseconds;
+        private bool isRotating;
 
         public Player() :
             base()
