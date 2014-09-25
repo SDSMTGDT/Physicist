@@ -25,7 +25,7 @@
         private Matrix translationMatrix;
         
         private Vector2 origin;
-        private Vector2 position;        
+        private Vector2 position;
         private float zoom;        
         private float rotation;
 
@@ -39,14 +39,14 @@
             this.Origin = Vector2.Zero;
         }
 
-        public CameraController(Vector2 position, Vector2 origin, IPosition following, float zoom, float rotation, Vector2 bounds)
+        public CameraController(Vector2 position, IPosition following, float zoom, float rotation, Vector2 bounds)
         {
             this.Bounds = bounds;
             this.Following = following;
             this.Zoom = zoom;
             this.Position = position;
             this.Rotation = rotation;
-            this.Origin = origin;
+            this.Origin = new Vector2(bounds.X / 2, bounds.Y / 2);
         }
 
         public Viewport CameraViewport { get; set; }
@@ -77,7 +77,7 @@
             private set
             {
                 this.position = value;
-                this.translationMatrix = Matrix.CreateTranslation(new Vector3(this.position, 0));
+                this.translationMatrix = Matrix.CreateTranslation(new Vector3(this.position, 0)); // *Matrix.CreateRotationZ(-this.Rotation);
             }
         }
 
@@ -90,7 +90,7 @@
                 return this.rotation;
             }
 
-            private set
+            set
             {
                 this.rotation = value;
                 this.UpdateOriginRotateScale();
@@ -115,13 +115,20 @@
         {
             get
             {
-                return this.translationMatrix * this.originScaleRotationMatrix;
+                if (this.Following != null)
+                {
+                    return this.translationMatrix * this.originScaleRotationMatrix * Matrix.CreateTranslation(this.CameraViewport.ViewportSize.Width / 2, this.CameraViewport.ViewportSize.Height / 2, 0);
+                }
+                else
+                {
+                    return this.translationMatrix * this.originScaleRotationMatrix;
+                }
             }
         }
 
         public void Move(Vector2 direction)
         {
-            this.Position += direction;
+            this.Position = this.Position + direction;
         }
 
         public void Rotate(float angle)
@@ -153,13 +160,14 @@
         }
 
         public void CenterOnFollowing()
-        {
+        {   
             // Define the camera's position as centered on the player (or other object, if so desired)
             if (this.Following != null)
             {
+                // Vector2 RotatedFollowing = Vector2.Transform(this.Following.CenteredPosition, Matrix.CreateRotationZ(-1 * this.Rotation));
                 this.Position = new Vector2(
-                    (-1) * Math.Min(this.Bounds.X - this.CameraViewport.ViewportSize.Width, Math.Max(0, this.Following.Position.X - ((this.CameraViewport.ViewportSize.Width / 2) / this.Zoom))),
-                    (-1) * Math.Min(this.Bounds.Y - this.CameraViewport.ViewportSize.Height, Math.Max(0, this.Following.Position.Y - ((this.CameraViewport.ViewportSize.Height / 2) / this.Zoom))));
+                    -1 * this.Following.CenteredPosition.X,
+                    -1 * this.Following.CenteredPosition.Y);
             }
         }
 
@@ -167,7 +175,7 @@
         {
             this.originScaleRotationMatrix = Matrix.CreateTranslation(new Vector3(-this.Origin.X, -this.Origin.Y, 0)) *
                                              Matrix.CreateScale(this.Zoom) *
-                                             Matrix.CreateRotationZ(this.Rotation) *
+                                             Matrix.CreateRotationZ(this.Rotation);
                                              Matrix.CreateTranslation(new Vector3(this.Origin.X, this.Origin.Y, 0));
         }
     }

@@ -22,14 +22,18 @@
 
         private List<string> maps;
         private string mapPath;
+        private float gravityScalar;
 
         private bool showDebugView = false;
 
         public PhysicistGameScreen(string name, string mapPath) :
             base(name)
         {
+            this.gravityScalar = 5.0f;
             this.mapPath = mapPath;
         }
+
+        public float ScreenRotation { get; set; }
 
         public World World
         {
@@ -62,7 +66,7 @@
             if (success)
             {
                 ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "ContentLoadError");
-                this.world = new World(new Vector2(0f, 9.81f));
+                this.world = new World(new Vector2(0f, 9.81f * this.gravityScalar));
 
                 this.map = MapLoader.Initialize(this.maps[0], this);
                 if (this.map == null || !MapLoader.LoadCurrentMap())
@@ -78,6 +82,8 @@
                     this.debugView.LoadContent(this.GraphicsDevice, MainGame.ContentManager);
                     this.debugViewMatrix = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(this.map.Width), ConvertUnits.ToSimUnits(this.map.Height), 0f, 0f, .01f);
                 }
+
+                this.Camera.Following = this.map.Players.ElementAt(0);
             }
 
             return success;
@@ -116,6 +122,8 @@
 
                 // TODO: Add your update logic here
                 this.map.Update(gameTime);
+                this.Camera.Rotation = this.ScreenRotation;
+                this.Camera.CenterOnFollowing();
             }
 
             base.Update(gameTime);
@@ -139,6 +147,33 @@
         {
             this.map.UnloadMedia();
             base.UnloadContent();
+        }
+
+        public void SetWorldRotation(float theta)
+        {
+            if (this.Camera != null)
+            {
+                theta = theta % (float)(Math.PI * 2);
+                if (theta < 0)
+                {
+                    theta = (float)(2 * Math.PI) + theta;
+                }
+
+                this.World.Gravity = new Vector2((float)Math.Sin(theta) * 9.8f * this.gravityScalar, (float)Math.Cos(theta) * 9.8f * this.gravityScalar);
+                this.Camera.Rotation = theta;
+                this.ScreenRotation = theta;
+            }
+        }
+
+        public void RotateWorld(float theta)
+        {
+            this.SetWorldRotation(this.ScreenRotation + theta);
+        }
+
+        public void ResetCameraGravity()
+        {
+            this.World.Gravity = new Vector2(0, 9.81f * this.gravityScalar);
+            this.Camera.Reset();
         }
     }
 }

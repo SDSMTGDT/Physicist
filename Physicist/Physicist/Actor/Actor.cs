@@ -7,6 +7,7 @@
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
+    using FarseerPhysics;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
@@ -24,10 +25,12 @@
 
         public Actor()
         {
+            this.RotatesWithWorld = false;
         }
 
         public Actor(string name)
         {
+            this.RotatesWithWorld = false;
             this.PathManager = new PathManager(this);
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
@@ -80,6 +83,23 @@
             set
             {
                 this.body.Position = value.ToSimUnits();
+            }
+        }
+
+        public Vector2 CenteredPosition
+        {
+            get
+            {
+                var centered = this.body.Position.ToDisplayUnits();
+
+                // Assume that the first fixture is the rotation fixture
+                FarseerPhysics.Collision.AABB aabb;
+                this.body.FixtureList[0].GetAABB(out aabb, 0);
+
+                centered.X -= aabb.Width;
+                centered.Y -= aabb.Height;
+
+                return centered;
             }
         }
 
@@ -145,6 +165,8 @@
 
         public Visibility VisibleState { get; set; }
 
+        protected bool RotatesWithWorld { get; set; }
+
         public virtual void Draw(ISpritebatch sb)
         {
             if (this.IsEnabled)
@@ -164,12 +186,19 @@
                             effect |= SpriteEffects.FlipVertically;
                         }
 
+                        // if the actor does not rotate with the world, keep it upright
+                        float drawRotation = -1 * this.Screen.ScreenRotation;
+                        if (this.RotatesWithWorld)
+                        {
+                            drawRotation = this.Rotation;      
+                        }
+
                         sb.Draw(
                             sprite.SpriteSheet,
                             this.Position + sprite.Offset - this.bodyInfo.ShapeOffset,
                             sprite.CurrentSprite,
                             Color.White,
-                            this.Rotation,
+                            drawRotation,
                             Vector2.Zero,
                             1f,
                             effect,

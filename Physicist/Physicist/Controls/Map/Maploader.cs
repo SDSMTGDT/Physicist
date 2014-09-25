@@ -381,10 +381,10 @@
                 bool canAdd = true;
                 string errorMessage = string.Format(CultureInfo.CurrentCulture, "while loading {0} of class: {1}, ", element.Name, instance.GetType());
 
-                var gameScreenItem = instance as IGameScreenItem;
+                var gameScreenItem = instance as IPhysicistGameScreenItem;
                 if (gameScreenItem != null)
                 {
-                    gameScreenItem.Screen = MapLoader.registration as GameScreen;
+                    gameScreenItem.Screen = MapLoader.registration as PhysicistGameScreen;
                 }
 
                 var deserialize = instance as IXmlSerializable;
