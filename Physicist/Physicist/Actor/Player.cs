@@ -103,7 +103,7 @@
                 spriteStateString = "Idle";
             }
 
-            if (this.Screen.IsKeyDown(KeyboardController.RotateRightKey))
+            if (this.Screen.IsKeyDown(KeyboardController.RotateLeftKey))
             {
                 if (this.markedMilliseconds > this.nextRotationTime)
                 {
@@ -113,7 +113,7 @@
                 }
             }
 
-            if (this.Screen.IsKeyDown(KeyboardController.RotateLeftKey))
+            if (this.Screen.IsKeyDown(KeyboardController.RotateRightKey))
             {
                 if (this.markedMilliseconds > this.nextRotationTime)
                 {
