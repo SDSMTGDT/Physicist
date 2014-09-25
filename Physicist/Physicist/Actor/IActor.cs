@@ -5,7 +5,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
     
-    public interface IActor : IPosition, IName, IUpdate, IDraw
+    public interface IActor : IPosition, IName, IUpdate, IDraw, IDamage
     {
         bool IsEnabled { get; set; }
 

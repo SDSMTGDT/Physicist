@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--Must have a width and height-->
+<Map xmlns="PhysicistTypes"
+     xmlns:path="PhysicistPaths"
+     xmlns:actor="PhysicistActors"
+     xmlns:system="SystemPrefabs"
+     xmlns:event="PhysicistEvents"
+     width="800" height="480">
+  <Media>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+  </Media>
+  
+  <LevelObjects>
+    <Backgrounds/>
+	  <Foregrounds/>
+	
+	  <Actors>
+      <actor:Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+        <MovementSpeed x="1.5" y="1.5"/>
+        <Sprites>
+          <GameSprite spriteName="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
+            <Offset x="0" y="0"/>
+            <FrameSize width="19" height="40"/>
+            <Animations>
+              <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Animation name="Down" struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Animation name="Up" struct="SpriteAnimation" rowIndex="0" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="true" flipHorizontal="false"/>
+              <Animation name="Right" struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+              <Animation name="Left" struct="SpriteAnimation" rowIndex="1" frameCount="8" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+            </Animations>
+          </GameSprite>
+        </Sprites>
+        <BodyInfo>
+          <Rectangle width="19" height="40" density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
+            <Position x="19" y="40"/>
+          </Rectangle>
+        </BodyInfo>
+        <PathManager>
+          <PhysicistPath name="SquarePath" class="PhysicistPath" isEnabled="true">
+            <path:ApproachPositionPathNode speed="60">
+              <Position x="40" y="440"/>
+            </path:ApproachPositionPathNode>
+            <path:ApproachPositionPathNode speed="60">
+              <Position x="760" y="440"/>
+            </path:ApproachPositionPathNode>
+            <path:ApproachPositionPathNode speed="60">
+              <Position x="760" y="40"/>
+            </path:ApproachPositionPathNode>
+            <path:ApproachPositionPathNode speed="60">
+              <Position x="40" y="40"/>
+            </path:ApproachPositionPathNode>
+          </PhysicistPath>
+        </PathManager>
+      </actor:Actor>
+	  </Actors>
+  </LevelObjects>
+</Map>
