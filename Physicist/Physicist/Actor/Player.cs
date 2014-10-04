@@ -17,15 +17,21 @@
     public class Player : Actor
     {
         private int nextRotationTime;
+        private int jumpEndTime;
+        private float dampening = 1.1f;
         private int markedMilliseconds;
+        private int passedJumpMilliseconds;
 
         public Player() :
             base()
         {
             this.RotatesWithWorld = false;
             this.RotationTiming = 10;
+            this.JumpTiming = 25;
+            this.JumpSpeed = 150;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
+            this.MaxSpeed = 100f;
         }
 
         public Player(string name) :
@@ -33,13 +39,24 @@
         {
             this.RotatesWithWorld = false;
             this.RotationTiming = 10;
+            this.JumpTiming = 50;
+            this.JumpSpeed = 150;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
+            this.MaxSpeed = 100f;
         }
 
         public float RotationSpeed { get; set; }
 
         public int RotationTiming { get; set; }
+
+        public int JumpTiming { get; set; }
+
+        public int JumpSpeed { get; set; }
+
+        public float MaxSpeed { get; set; }
+
+        public Vector2 MovementVelocity { get; set; }
 
         public new Body Body
         {
@@ -66,36 +83,68 @@
             string spriteStateString = string.Empty;
             Vector2 dp = Vector2.Zero;
 
-            this.MovementSpeed = new Vector2(1, 1);
+            this.MovementSpeed = new Vector2(5, 5);
+
+            // Jumping in progress
+            if (this.jumpEndTime > 0)
+            {
+                this.passedJumpMilliseconds += this.JumpTiming;
+                if (this.passedJumpMilliseconds > this.jumpEndTime)
+                {
+                    this.Body.GravityScale = 4;
+                    this.passedJumpMilliseconds = 0;
+                    this.jumpEndTime = 0;
+
+                    // remove the jump velocity
+                    Vector2 newVelocity = this.Body.LinearVelocity;
+
+                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
+                    newVelocity.Y = 0;
+                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+
+                    this.Body.LinearVelocity = newVelocity;
+                }
+            }
 
             if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true))
             {
-                this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1000), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                if (this.jumpEndTime == 0)
+                {
+                    this.jumpEndTime = 1000;
+                    this.Body.GravityScale = 0;
+                    this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1 * this.JumpSpeed), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                }
             }
 
-            if (this.Screen.IsKeyDown(KeyboardController.UpKey))
+            if (this.Screen.IsKeyDown(KeyboardController.LeftKey))
             {
-                dp -= Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                spriteStateString = "Up";
-                keypress = true;
-            }
-            else if (this.Screen.IsKeyDown(KeyboardController.DownKey))
-            {
-                dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                spriteStateString = "Down";
-                keypress = true;
-            }
-            else if (this.Screen.IsKeyDown(KeyboardController.LeftKey))
-            {
-                dp -= Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                if (dp.Length() < this.MaxSpeed)
+                {
+                    dp -= Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                }
+
                 spriteStateString = "Left";
                 keypress = true;
             }
             else if (this.Screen.IsKeyDown(KeyboardController.RightKey))
             {
-                dp += Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                if (dp.Length() < this.MaxSpeed)
+                {
+                    dp += Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                }
+
                 spriteStateString = "Right";
                 keypress = true;
+            }
+            else
+            {
+                Vector2 newVelocity = this.Body.LinearVelocity;
+             
+                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
+                newVelocity.X /= this.dampening;
+                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+             
+                this.Body.LinearVelocity = newVelocity;
             }
 
             if (!keypress)

@@ -29,7 +29,7 @@
         public PhysicistGameScreen(string name, string mapPath) :
             base(name)
         {
-            this.gravityScalar = 5.0f;
+            this.gravityScalar = 3.0f;
             this.mapPath = mapPath;
         }
 
