@@ -91,6 +91,12 @@
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Enums\KeyState.cs" />
+    <Compile Include="Enums\PrimativeTypes.cs" />
+    <Compile Include="Enums\TriggerSetOperation.cs" />
+    <Compile Include="Events\Modifiers\PrimitivePropertyModifier.cs" />
+    <Compile Include="Events\Triggers\KeyPressTrigger.cs" />
+    <Compile Include="Events\Triggers\TriggerSet.cs" />
     <Compile Include="Tools\DebugView\DebugViewXNA.cs" />
     <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
@@ -111,11 +117,11 @@
     <Compile Include="Events\Triggers\Trigger.cs" />
     <Compile Include="Events\Modifiers\VelocityModifier.cs" />
     <Compile Include="Extensions\GameScreenKeyedDictionary.cs" />
-    <Compile Include="Extensions\Primatives\ExtensionMethods.cs" />
+    <Compile Include="Extensions\Primitives\ExtensionMethods.cs" />
     <Compile Include="Extensions\MediaDictionary.cs" />
-    <Compile Include="Extensions\Primatives\IMediaInfo.cs" />
-    <Compile Include="Extensions\Primatives\MediaElement.cs" />
-    <Compile Include="Extensions\Primatives\Size.cs" />
+    <Compile Include="Extensions\Primitives\IMediaInfo.cs" />
+    <Compile Include="Extensions\Primitives\MediaElement.cs" />
+    <Compile Include="Extensions\Primitives\Size.cs" />
     <Compile Include="Extensions\XmlBodyFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainGame.cs" />
@@ -124,6 +130,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Levels\Blank.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\TriggerSetTest.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

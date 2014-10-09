@@ -3,6 +3,40 @@
     elementFormDefault="qualified"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
+  <xs:simpleType name="StandardKeyActions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Up"/>
+      <xs:enumeration value="Down"/>
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Jump"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="KeyState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Up"/>
+      <xs:enumeration value="Down"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="TriggerSetOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AND"/>
+      <xs:enumeration value="OR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrimitiveTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="int"/>
+      <xs:enumeration value="bool"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="char"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="UnitInterval">
     <xs:restriction base="xs:float">
       <xs:minInclusive value="0"/>

@@ -12,6 +12,7 @@
 
   <xs:element name="Trigger" abstract="true" type="mstns:TriggerType"/>  
   <xs:element name="Modifier" abstract="true" type="mstns:ModifierType"/>
+  <xs:element name="TriggerSet" abstract="true" type="mstns:TriggerSetType"/>
   
   <xs:simpleType name="TriggerStyle">
     <xs:restriction base="xs:string">
@@ -68,6 +69,7 @@
               </xs:unique>
             </xs:element>
           </xs:all>
+          <xs:attribute name="name" type="xs:string" use="required"/>
           <xs:attribute name="isEnabled" type="xs:boolean" default="true">
             <xs:annotation>
               <xs:documentation>[Optional] default is true</xs:documentation>
@@ -123,6 +125,10 @@
             <xs:element ref="mstns:Trigger"/>
           </xs:choice>
         </xs:complexType>
+        <xs:unique name="UniqueTriggersPerEvent">
+          <xs:selector xpath="./*/mstns:Trigger"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
       </xs:element>
       <xs:element name="Modifiers">
         <xs:complexType>
@@ -134,6 +140,13 @@
           <xs:selector xpath="./*/mstns:Modifier"/>
           <xs:field xpath="@name"/>
         </xs:unique>
+      </xs:element>
+      <xs:element name="TriggerSets" minOccurs="0">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="mstns:TriggerSet"/>
+          </xs:choice>
+        </xs:complexType>
       </xs:element>
     </xs:all>   
     <xs:attribute name="class" type="xs:string" default="PhysicistEvent">
@@ -148,6 +161,75 @@
     </xs:attribute>
   </xs:complexType>
 
+  <xs:complexType name="TriggerSetType">
+    <xs:all>
+      <xs:element name="Triggers">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element name="Trigger">
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="OnActivated" type="mstns:ModifierNameList" minOccurs="0">
+        <xs:unique name="UniqueSetModifiersOnActivated">
+          <xs:selector xpath="mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="OnDeactivated" type="mstns:ModifierNameList" minOccurs="0">
+        <xs:unique name="UniqueSetModifiersOnDeactivated">
+          <xs:selector xpath="mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="WhileActivated" type="mstns:ModifierNameList" minOccurs="0">
+        <xs:unique name="UniqueSetModifiersWhileActivated">
+          <xs:selector xpath="mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="WhileDeactivated" type="mstns:ModifierNameList" minOccurs="0">
+        <xs:unique name="UniqueSetModifiersWhileDeactivated">
+          <xs:selector xpath="mstns:Modifier"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="operation" type="mstns:TriggerSetOperation" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is ''</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="isEnabled" type="xs:boolean" default="true">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is true</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="isReuseable" type="xs:boolean" default="true">
+      <xs:annotation>
+        <xs:documentation>[Optional] If false, disables trigger upon activation toggle (reguardless of style), default is true</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="KeyPressTrigger">
+    <xs:complexContent>
+      <xs:extension base="mstns:TriggerType">
+        <xs:attribute name="triggerKey" use="required" type="mstns:StandardKeyActions"/>
+        <xs:attribute name="keyState" use="optional" type="mstns:KeyState">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is 'Down'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <xs:complexType name="ProximityTrigger">
     <xs:complexContent>
       <xs:extension base="mstns:TriggerType">
@@ -202,6 +284,21 @@
         <xs:sequence>
           <xs:element name="StepChange" type="mstns:Vector2"/>
         </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PrimitivePropertyModifier">
+    <xs:complexContent>
+      <xs:extension base="mstns:ModifierType">
+        <xs:attribute name="PropertyName" use="required" type="xs:string"/>
+        <xs:attribute name="PropertyType" use="required" type="mstns:PrimitiveTypes"/>
+        <xs:attribute name="NewValue" use="required" type="xs:string"/>
+        <xs:attribute name="HasMemory" use="optional" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is false</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

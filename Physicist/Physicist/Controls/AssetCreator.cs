@@ -13,6 +13,7 @@
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Extensions;
 
+    // Taken From Farseer Examples modified to fit purposes 
     public sealed class AssetCreator : IDisposable
     {
         private const int CircleSegments = 32;

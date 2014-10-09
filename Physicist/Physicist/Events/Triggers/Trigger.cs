@@ -31,11 +31,13 @@
             }
         }
 
-        public TriggerStyle Style { get; private set; }
+        public TriggerStyle Style { get; protected set; }
 
-        public bool IsInitialized { get; private set; }
+        public bool IsInitialized { get; protected set; }
 
-        public bool IsReusable { get; private set; }
+        public bool IsReusable { get; protected set; }
+
+        public string Name { get; protected set; }
 
         public bool IsEnabled 
         {
@@ -147,6 +149,12 @@
                 if (reuseableAtt != null)
                 {
                     this.IsReusable = bool.Parse(reuseableAtt.Value);
+                }
+
+                var nameAtt = element.Attribute("name");
+                if (nameAtt != null)
+                {
+                    this.Name = nameAtt.Value;
                 }
 
                 var styleAtt = element.Attribute("style");
