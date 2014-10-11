@@ -18,6 +18,12 @@
     <CasingExceptions>
       <Acronym>NPC</Acronym>
       <Acronym>FCC</Acronym>
+      <Acronym>AND</Acronym>
+      <Acronym>float</Acronym>
+      <Acronym>int</Acronym>
+      <Acronym>char</Acronym>
+      <Acronym>bool</Acronym>
+      <Acronym>string</Acronym> 
     </CasingExceptions>
   </Acronyms>
 </Dictionary>

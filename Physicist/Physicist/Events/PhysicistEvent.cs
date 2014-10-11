@@ -11,6 +11,7 @@
     {
         private List<IModifier> modifiers = new List<IModifier>();
         private List<ITrigger> triggers = new List<ITrigger>();
+        private List<ITrigger> triggerSets = new List<ITrigger>();
 
         public PhysicistEvent()
         {
@@ -44,6 +45,14 @@
             }
         }
 
+        public IEnumerable<ITrigger> TriggerSets
+        {
+            get
+            {
+                return this.triggerSets;
+            }
+        }
+
         public void AddModifier(IModifier modifier)
         {
             if (modifier != null)
@@ -60,11 +69,20 @@
             }
         }
 
+        public void AddTriggerSet(ITrigger triggerSet) 
+        {
+            if (triggerSet != null) 
+            {
+                this.triggerSets.Add(triggerSet);
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
             if (this.IsEnabled)
             {
                 this.triggers.ForEach(trigger => trigger.Update(gameTime));
+                this.triggerSets.ForEach(triggerset => triggerset.Update(gameTime));
             }
         }
 
@@ -106,6 +124,22 @@
                         trigger.XmlDeserialize(triggerEle);
                         trigger.Initialize(this.modifiers);
                         this.triggers.Add(trigger);
+                    }
+                }
+
+                var triggerSetsEle = element.Element("TriggerSets");
+                if (triggerSetsEle != null)
+                {
+                    foreach (var triggerSetEle in triggerSetsEle.Elements()) 
+                    {
+                        TriggerSet triggerSet = (TriggerSet)MapLoader.CreateInstance(triggerSetEle, null);
+                        if (triggerSet != null)
+                        {
+                            triggerSet.Screen = this.Screen;
+                            triggerSet.XmlDeserialize(triggerSetEle);
+                            triggerSet.Initialize(this.triggers, this.modifiers);
+                            this.triggerSets.Add(triggerSet);
+                        }
                     }
                 }
             }
