@@ -10,7 +10,10 @@
              schemaLocation="../Types/EventTypes.xsd"/>
 
   <xs:element name="ProximityTrigger" type="types:ProximityTrigger" substitutionGroup="types:Trigger"/>
+  <xs:element name="KeyPressTrigger" type="types:KeyPressTrigger" substitutionGroup="types:Trigger"/>
   <xs:element name="VelocityModifier" type="types:VelocityModifier" substitutionGroup="types:Modifier"/>
   <xs:element name="AnimateModifier" type="types:AnimateModifier" substitutionGroup="types:Modifier"/>
+  <xs:element name="PrimitivePropertyModifier" type="types:PrimitivePropertyModifier" substitutionGroup="types:Modifier"/>
+  <xs:element name="TriggerSet" type="types:TriggerSetType" substitutionGroup="types:TriggerSet"/>
 
 </xs:schema>

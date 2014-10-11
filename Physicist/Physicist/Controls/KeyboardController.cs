@@ -92,10 +92,15 @@
             bool canset = KeyboardController.mappedKeys.ContainsKey(keyAction) && !KeyboardController.mappedKeys.ContainsValue(newKey);
             if (canset)
             {
-                KeyboardController.mappedKeys[keyAction] = newKey;
+                KeyboardController.MappedKeys[keyAction] = newKey;
             }
 
             return canset;
+        }
+
+        public static Keys KeyForAction(StandardKeyAction keyAction)
+        {
+            return KeyboardController.MappedKeys[keyAction];
         }
     }
 }

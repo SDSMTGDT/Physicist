@@ -139,6 +139,9 @@
           </Trigger>
           <Position x="200" y="20"/>
         </event:ProximityTrigger>
+        <event:KeyPressTrigger keyState="Down" triggerKey="Jump">
+          <Trigger name="KeyPressTrig1"/>
+        </event:KeyPressTrigger>
       </Triggers>
       <Modifiers>
         <event:AnimateModifier targetSprite="MegaMan" targetAnimation="Left" >
@@ -146,7 +149,23 @@
             <Target name="MegaMan"/>
           </Modifier>
         </event:AnimateModifier>
+        <event:PrimitivePropertyModifier PropertyName="Health" PropertyType="int"  NewValue="0">
+          <Modifier name="KillMegaMan">
+            <Target name="MegaMan"/>
+          </Modifier>
+        </event:PrimitivePropertyModifier>
       </Modifiers>
+      <TriggerSets>
+        <event:TriggerSet operation="AND">
+          <Triggers>
+            <Trigger name="ProxTrig2"/>
+            <Trigger name="KeyPressTrig1"/>
+          </Triggers>
+          <OnActivated>
+            <Modifier name="KillMegaMan"/>
+          </OnActivated>
+        </event:TriggerSet>
+      </TriggerSets>
     </Event>
   </MapEvents>
 </Map>
