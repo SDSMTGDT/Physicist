@@ -16,23 +16,36 @@
     
     public class ProximityTrigger : Trigger, IXmlSerializable
     {
-        private Body sensorBody = null;
         private Fixture collisionFixture = null;
         private Fixture separationFixture = null;
+
+        public Body SensorBody { get; set; }
 
         public ProximityTrigger()
         {
         }
 
-        public ProximityTrigger(float sensorRadius, Vector2 position)
+        public ProximityTrigger(float sensorRadius, Vector2 position, World world = null)
         {
-            this.sensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
-            this.CreateSensors(this.sensorBody.FixtureList[0]);
+            if (this.World != world)
+                this.World = world;
+            this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
+            this.CreateSensors(this.SensorBody.FixtureList[0]);
         }
 
-        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate)
+        public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world = null)
         {
-            this.sensorBody = sensorBody;
+            if (this.World != world)
+                this.World = world;
+            this.SensorBody = BodyFactory.CreateRectangle(this.World, sensorWidth, sensorHeight, 1f, position);
+            this.CreateSensors(this.SensorBody.FixtureList[0]);
+        }
+
+        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world = null)
+        {
+            if (this.World != world)
+                this.World = world;
+            this.SensorBody = sensorBody;
             this.CreateSensors(sensorTemplate);
             this.IsEnabled = true;
             this.IsContinuous = false;
@@ -82,7 +95,7 @@
                     Actor target = this.Map.NamedObjects[attachedEle.Value] as Actor;
                     if (target != null)
                     {
-                        this.sensorBody = target.Body;
+                        this.SensorBody = target.Body;
                     }
                 }
 
@@ -98,10 +111,10 @@
 
                     tempBody.IsSensor = true;
                     
-                    if (this.sensorBody == null)
+                    if (this.SensorBody == null)
                     {
-                        this.sensorBody = tempBody;
-                        this.sensorBody.BodyType = BodyType.Static;
+                        this.SensorBody = tempBody;
+                        this.SensorBody.BodyType = BodyType.Static;
                     }
 
                     sensorTemplate = tempBody.FixtureList[0];
@@ -142,12 +155,12 @@
         private void CreateSensors(Fixture sensorTemplate)
         {
             this.collisionFixture = sensorTemplate;
-            if (!this.sensorBody.FixtureList.Contains(sensorTemplate))
+            if (!this.SensorBody.FixtureList.Contains(sensorTemplate))
             {
-                this.collisionFixture = sensorTemplate.CloneOnto(this.sensorBody);
+                this.collisionFixture = sensorTemplate.CloneOnto(this.SensorBody);
             }
 
-            this.separationFixture = this.collisionFixture.CloneOnto(this.sensorBody);
+            this.separationFixture = this.collisionFixture.CloneOnto(this.SensorBody);
 
             this.collisionFixture.OnCollision += this.OnCollision;
             this.collisionFixture.IsSensor = true;
@@ -156,7 +169,7 @@
             this.separationFixture.IsSensor = true;
             this.separationFixture.IgnoreCCDWith = Category.All;
 
-            foreach (var fixture in this.sensorBody.FixtureList)
+            foreach (var fixture in this.SensorBody.FixtureList)
             {
                 this.collisionFixture.IgnoreCollisionWith(fixture);
                 this.separationFixture.IgnoreCollisionWith(fixture);

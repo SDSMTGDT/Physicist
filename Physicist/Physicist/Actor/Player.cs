@@ -13,6 +13,8 @@
     using Physicist.Controls;
     using Physicist.Enums;
     using Physicist.Extensions;
+using Physicist.Events;
+    using FarseerPhysics.Collision;
 
     public class Player : Actor
     {
@@ -21,6 +23,8 @@
         private float dampening = 1.1f;
         private int markedMilliseconds;
         private int passedJumpMilliseconds;
+        private ProximityTrigger headButton = null;
+        private ProximityTrigger footButton = null;
 
         public Player() :
             base()
@@ -67,6 +71,7 @@
 
             set
             {
+                this.CreateButtons();
                 base.Body = value;
                 base.Body.OnCollision += this.Body_OnCollision;
             }
@@ -74,6 +79,15 @@
 
         public override void Update(GameTime gameTime)
         {
+            AABB aabb;
+            this.Body.FixtureList[0].GetAABB(out aabb, 0);
+
+            // update the locations of the head and foot buttons
+            if (this.headButton != null)
+                this.headButton.SensorBody.Position = new Vector2(this.Position.X, this.Position.Y - aabb.Height - 1).ToSimUnits();
+            if (this.footButton != null)
+                this.footButton.SensorBody.Position = new Vector2(this.Position.X, this.Position.Y + aabb.Height).ToSimUnits();
+
             if (gameTime != null)
             {
                 this.markedMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
@@ -84,37 +98,6 @@
             Vector2 dp = Vector2.Zero;
 
             this.MovementSpeed = new Vector2(5, 5);
-
-            // Jumping in progress
-            if (this.jumpEndTime > 0)
-            {
-                this.passedJumpMilliseconds += this.JumpTiming;
-                if (this.passedJumpMilliseconds > this.jumpEndTime)
-                {
-                    this.Body.GravityScale = 4;
-                    this.passedJumpMilliseconds = 0;
-                    this.jumpEndTime = 0;
-
-                    // remove the jump velocity
-                    Vector2 newVelocity = this.Body.LinearVelocity;
-
-                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
-                    newVelocity.Y = 0;
-                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-
-                    this.Body.LinearVelocity = newVelocity;
-                }
-            }
-
-            if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true))
-            {
-                if (this.jumpEndTime == 0)
-                {
-                    this.jumpEndTime = 1000;
-                    this.Body.GravityScale = 0;
-                    this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1 * this.JumpSpeed), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                }
-            }
 
             if (this.Screen.IsKeyDown(KeyboardController.LeftKey))
             {
@@ -138,6 +121,7 @@
             }
             else
             {
+                // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
                 Vector2 newVelocity = this.Body.LinearVelocity;
              
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
@@ -173,6 +157,42 @@
             }
 
             this.Body.LinearVelocity += dp;
+
+            // Jumping in progress
+            if (this.jumpEndTime > 0)
+            {
+                this.passedJumpMilliseconds += this.JumpTiming;
+                if (this.passedJumpMilliseconds >= this.jumpEndTime)
+                {
+                    this.Body.GravityScale = 4;
+                    this.passedJumpMilliseconds = 0;
+                    this.jumpEndTime = 0;
+
+                    // remove the jump velocity
+                    Vector2 newVelocity = this.Body.LinearVelocity;
+
+                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
+                    newVelocity.Y /= 2;
+                    newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+
+                    this.Body.LinearVelocity = newVelocity;
+                }
+            }
+
+            if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true))
+            {
+                if (this.jumpEndTime == 0)
+                {
+                    this.jumpEndTime = 1000;
+                    this.Body.GravityScale = 0;
+                    this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1 * this.JumpSpeed), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                }
+            }
+            if(! this.Screen.IsKeyDown(KeyboardController.JumpKey, false))
+            {
+                if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.passedJumpMilliseconds)
+                      this.passedJumpMilliseconds = this.jumpEndTime - 200;
+            }
 
             foreach (var sprite in this.Sprites.Values)
             {
@@ -227,12 +247,28 @@
 
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
+                this.CreateButtons();
             }
         }
 
         private bool Body_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             return true;
+        }
+
+        private void CreateButtons()
+        {
+            AABB aabb;
+            this.Body.FixtureList[0].GetAABB(out aabb, 0);
+            if (this.Position != null)
+            {
+                this.headButton = new ProximityTrigger(aabb.Width, 1, this.Position, this.World);
+                headButton.IsContinuous = false;
+                headButton.Initialize(null);
+                this.footButton = new ProximityTrigger(aabb.Width, 1, new Vector2(this.Position.X + 10, this.Position.Y), this.World);
+                footButton.IsContinuous = false;
+                footButton.Initialize(null);
+            }
         }
     }
 }

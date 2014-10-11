@@ -194,6 +194,7 @@
     </Content>
     <CodeAnalysisDictionary Include="CustomDictionary.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </CodeAnalysisDictionary>
     <Content Include="Icon.ico" />
   </ItemGroup>
