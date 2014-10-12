@@ -22,9 +22,19 @@
         <xs:sequence>
           <xs:element name="Position" type="Vector2"/>
         </xs:sequence>
-        <xs:attribute name="speed" default="10">
+        <xs:attribute name="speed" type="xs:float" default="10">
           <xs:annotation>
             <xs:documentation>[Optional] default is '10'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="disableAfterPathing" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is 'false'</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="hideAfterPathing" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is 'false'</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -140,6 +150,16 @@
     <xs:attribute name="visibleState" type="mstns:Visibility" default="Visible">
       <xs:annotation>
         <xs:documentation>[Optional] default is 'Visible'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="canBeDamaged" type="xs:boolean" default="true">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'true'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="attackDamage" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

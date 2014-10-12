@@ -1,10 +1,6 @@
 ﻿namespace Physicist.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Audio;
@@ -13,9 +9,8 @@
 
     public class BackgroundMusic : IBackgroundObject, IUpdate
     {
-        public BackgroundMusic(XElement element)
+        public BackgroundMusic()
         {
-            this.XmlDeserialize(element);
         }
 
         public BackgroundMusic(Vector2 location, Size dimensions, SoundEffect soundEffect)
@@ -58,16 +53,13 @@
 
         public void XmlDeserialize(XElement element)
         {
-            if (element == null)
+            if (element != null)
             {
-                throw new ArgumentNullException("element");
+                this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+                this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
+
+                this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(element.Attribute("soundref").Value);
             }
-
-            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
-
-            this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(
-                element.Attribute("soundref").Value);
         }
     }
 }

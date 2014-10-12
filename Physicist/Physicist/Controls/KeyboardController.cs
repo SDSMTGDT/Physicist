@@ -1,15 +1,15 @@
 ﻿namespace Physicist.Controls
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.Xna.Framework.Input;
+    using Physicist.Controls;
     using Physicist.Enums;
 
     public static class KeyboardController
     {
         private static Dictionary<StandardKeyAction, Keys> mappedKeys = null;
+
+        private static KeyboardDebouncer keyDebouncer = new KeyboardDebouncer();
 
         public static Keys UpKey
         {
@@ -101,6 +101,13 @@
         public static Keys KeyForAction(StandardKeyAction keyAction)
         {
             return KeyboardController.MappedKeys[keyAction];
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Consistent from XNA framework structure")]
+        public static KeyboardDebouncer GetState()
+        {
+            KeyboardController.keyDebouncer.UpdateKeys();
+            return KeyboardController.keyDebouncer;
         }
     }
 }

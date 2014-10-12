@@ -7,6 +7,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Enums;
+    using Physicist.Extensions;
 
     public class KeyPressTrigger : Trigger
     {
@@ -38,25 +39,21 @@
             }
         }
 
+        public override XElement XmlSerialize()
+        {
+            return new XElement(
+                "KeyPressTrigger",
+                new XAttribute("triggerKey", this.TriggerKey.ToString()),
+                new XAttribute("keyState", this.KeyState.ToString()),
+                base.XmlSerialize());
+        }
+
         public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
-                var triggerKeyEle = element.Attribute("triggerKey");
-                if (triggerKeyEle != null)
-                {
-                    var action = (StandardKeyAction)Enum.Parse(typeof(StandardKeyAction), triggerKeyEle.Value);
-                    this.TriggerKey = Physicist.Controls.KeyboardController.KeyForAction(action);
-                }
-
-                this.KeyState = Enums.KeyState.Down;
-
-                var keyStateEle = element.Attribute("keyState");
-                if (keyStateEle != null)
-                {
-                    this.KeyState = (Enums.KeyState)Enum.Parse(typeof(Enums.KeyState), keyStateEle.Value);
-                }
-
+                this.TriggerKey = Physicist.Controls.KeyboardController.KeyForAction(element.GetAttribute("triggerKey", StandardKeyAction.Jump));
+                this.KeyState = element.GetAttribute("keyState", Enums.KeyState.Down);
                 base.XmlDeserialize(element.Element("Trigger"));
             }
         }

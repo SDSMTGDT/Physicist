@@ -149,7 +149,7 @@
             <Target name="MegaMan"/>
           </Modifier>
         </event:AnimateModifier>
-        <event:PrimitivePropertyModifier PropertyName="Health" PropertyType="int"  NewValue="0">
+        <event:PrimitivePropertyModifier propertyName="Health" propertyType="int"  newValue="0">
           <Modifier name="KillMegaMan">
             <Target name="MegaMan"/>
           </Modifier>

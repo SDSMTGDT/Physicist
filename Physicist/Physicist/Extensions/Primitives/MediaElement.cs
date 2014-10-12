@@ -1,6 +1,6 @@
 ﻿namespace Physicist.Extensions.Primitives
 {
-    using System;
+    using Physicist.Controls;
     using Physicist.Enums;
 
     public class MediaElement : IMediaInfo

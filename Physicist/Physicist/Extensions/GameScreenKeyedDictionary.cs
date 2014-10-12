@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.ObjectModel;
-    using System.Runtime.Serialization;
     using Physicist.Controls;
     using Physicist.Enums;
 

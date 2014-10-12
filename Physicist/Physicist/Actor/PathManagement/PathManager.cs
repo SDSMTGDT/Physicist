@@ -1,12 +1,9 @@
 ﻿namespace Physicist.Actors
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
     using Physicist.Controls;
 
     public class PathManager : PhysicistGameScreenItem
@@ -20,7 +17,7 @@
             this.target = target;
         }
 
-        public string CurrentPath 
+        public string CurrentPath
         {
             get
             {
@@ -75,7 +72,13 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("PathManager");
+            foreach (var path in this.paths.Values)
+            {
+                element.Add(path.XmlSerialize());
+            }
+
+            return element;
         }
 
         public override void XmlDeserialize(XElement element)
@@ -84,11 +87,11 @@
             {
                 foreach (var pathEle in element.Elements())
                 {
-                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");                    
+                    PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");
                     path.Screen = this.Screen;
                     path.XmlDeserialize(pathEle);
                     if (path != null)
-                    {                            
+                    {
                         path.Target = this.target;
                         this.AddPath(path);
                     }

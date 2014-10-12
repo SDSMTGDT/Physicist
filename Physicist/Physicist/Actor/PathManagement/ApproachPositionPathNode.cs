@@ -1,11 +1,11 @@
 ﻿namespace Physicist.Actors
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
+    using Physicist.Enums;
     using Physicist.Extensions;
 
     public class ApproachPositionPathNode : PathNode
@@ -19,10 +19,7 @@
         {
             this.TargetLocation = position;
             this.Speed = speed;
-            this.DeactivateAfterPathing = false;
         }
-
-        public int MapHeight { get; set; }
 
         public Vector2 TargetLocation
         {
@@ -32,7 +29,7 @@
 
         public float Speed { get; set; }
 
-        public bool DeactivateAfterPathing { get; set; }
+        public bool DisableAfterPathing { get; set; }
 
         public bool HideAtEndOfPath { get; set; }
 
@@ -42,7 +39,7 @@
 
             if (this.IsActive && this.TargetActor.IsEnabled)
             {
-                if (!(this.TargetLocation == null))
+                if (this.TargetLocation != null)
                 {
                     Vector2 delta = this.TargetLocation - this.TargetActor.Position;
 
@@ -54,7 +51,7 @@
                     }
                     else
                     {
-                        if (this.DeactivateAfterPathing)
+                        if (this.DisableAfterPathing)
                         {
                             this.TargetActor.IsEnabled = false;
                         }
@@ -70,17 +67,28 @@
             }
         }
 
+        public override XElement XmlSerialize()
+        {
+            return new XElement(
+                "ApproachPositionPathNode",
+                new XAttribute("speed", this.Speed),
+                new XAttribute("disableAfterPathing", this.DisableAfterPathing),
+                new XAttribute("hideAfterPathing", this.HideAtEndOfPath),
+                ExtensionMethods.XmlSerialize(new Vector2(this.TargetLocation.X, this.Map.Height - this.TargetLocation.Y), "Position"),
+                base.XmlSerialize());
+        }
+
         public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("PathNode"));
 
-                var speedAtt = element.Attribute("speed");
-                if (speedAtt != null)
-                {
-                    this.Speed = int.Parse(speedAtt.Value, CultureInfo.CurrentCulture);
-                }
+                this.Speed = element.GetAttribute<int>("speed");
+
+                this.DisableAfterPathing = element.GetAttribute<bool>("disableAfterPathing");
+
+                this.HideAtEndOfPath = element.GetAttribute<bool>("hideAfterPathing", false);
 
                 var designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
                 this.TargetLocation = new Vector2(designPosition.X, this.Map.Height - designPosition.Y);

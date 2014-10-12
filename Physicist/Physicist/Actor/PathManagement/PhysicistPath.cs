@@ -8,9 +8,12 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
     using Physicist.Events;
+    using Physicist.Extensions;
 
     public class PhysicistPath : PhysicistGameScreenItem
     {
+        private List<IModifier> modifiers = new List<IModifier>();
+
         private Queue<PathNode> nodeQueue = new Queue<PathNode>();
 
         private Actor target = null;
@@ -26,7 +29,7 @@
 
         public event EventHandler PathCompleted;
 
-        public Actor Target 
+        public Actor Target
         {
             get
             {
@@ -50,6 +53,14 @@
         public string Name { get; set; }
 
         public string TargetPathUponCompletion { get; set; }
+
+        public IEnumerable<IModifier> Modifiers
+        {
+            get
+            {
+                return this.modifiers;
+            }
+        }
 
         public void AddPathNode(PathNode node)
         {
@@ -83,11 +94,11 @@
             var pathNode = sender as PathNode;
             if (pathNode != null && this.nodeQueue.Contains(pathNode))
             {
-                this.ChangeNodes();
+                this.NextNode();
             }
         }
 
-        public void ChangeNodes()
+        public void NextNode()
         {
             var oldNode = this.nodeQueue.Dequeue();
             if (oldNode != null)
@@ -112,14 +123,21 @@
             }
         }
 
-        public IEnumerator GetEnumerator()
-        {
-            return this.nodeQueue.GetEnumerator();
-        }
-
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement(
+                "PhysicistPath",
+                new XAttribute("name", this.Name),
+                new XAttribute("class", "PhysicistPath"),
+                new XAttribute("isEnabled", this.IsEnabled),
+                new XAttribute("loopPath", this.LoopPath),
+                new XAttribute("targetPathUponCompletion", this.TargetPathUponCompletion),
+                new XElement(
+                    "Modifiers",
+                    this.modifiers.Select(modifier => modifier.XmlSerialize()).ToArray()),
+                this.nodeQueue.Select(node => node.XmlSerialize()).ToArray());
+
+            return element;
         }
 
         public override void XmlDeserialize(XElement element)
@@ -128,27 +146,12 @@
             {
                 this.Name = element.Attribute("name").Value;
 
-                this.IsEnabled = true;
-                var isEnabledAtt = element.Attribute("isEnabled");
-                if (isEnabledAtt != null)
-                {
-                    this.IsEnabled = bool.Parse(isEnabledAtt.Value);
-                }
+                this.IsEnabled = element.GetAttribute<bool>("isEnabled", true);
 
-                this.LoopPath = true;
-                var loopPathAtt = element.Attribute("loopPath");
-                if (loopPathAtt != null)
-                {
-                    this.LoopPath = bool.Parse(loopPathAtt.Value);
-                }
+                this.LoopPath = element.GetAttribute<bool>("loopPath", true);
 
-                var targetPathUponComplteionEle = element.Attribute("targetPathUponCompletion");
-                if (targetPathUponComplteionEle != null)
-                {
-                    this.TargetPathUponCompletion = targetPathUponComplteionEle.Value;
-                }
+                this.TargetPathUponCompletion = element.GetAttribute<string>("targetPathUponCompletion", string.Empty);
 
-                var modifiers = new List<IModifier>();
                 var modifierEleList = element.Element("Modifiers");
                 if (modifierEleList != null)
                 {
@@ -156,7 +159,7 @@
                     {
                         IModifier modifier = (IModifier)MapLoader.CreateInstance(modifierEle, "class");
                         modifier.XmlDeserialize(modifierEle);
-                        modifiers.Add(modifier);
+                        this.modifiers.Add(modifier);
                     }
                 }
 
@@ -168,10 +171,10 @@
                     if (node != null)
                     {
                         node.TargetActor = this.target;
-                        node.Initialize(modifiers);
+                        node.Initialize(this.modifiers);
                         this.AddPathNode(node);
                     }
-                }                
+                }
             }
         }
 

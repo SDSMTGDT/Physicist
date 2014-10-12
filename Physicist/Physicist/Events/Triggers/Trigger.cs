@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
@@ -132,36 +131,27 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            return new XElement(
+                "Trigger",
+                new XAttribute("isEnabled", this.isEnabled),
+                new XAttribute("isReuseable", this.IsReusable),
+                new XAttribute("name", this.Name),
+                new XAttribute("style", this.Style),
+                ((TriggerMode[])Enum.GetValues(typeof(TriggerMode))).Select(mode => 
+                    new XElement(
+                        mode.ToString(), 
+                        this.modifiers[mode].Select(modifier => 
+                            new XElement("Modifier", new XAttribute("name", modifier.Key))))));
         }
 
         public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
-                var enabledAtt = element.Attribute("isEnabled");
-                if (enabledAtt != null)
-                {
-                    this.IsEnabled = bool.Parse(enabledAtt.Value);
-                }
-
-                var reuseableAtt = element.Attribute("isReuseable");
-                if (reuseableAtt != null)
-                {
-                    this.IsReusable = bool.Parse(reuseableAtt.Value);
-                }
-
-                var nameAtt = element.Attribute("name");
-                if (nameAtt != null)
-                {
-                    this.Name = nameAtt.Value;
-                }
-
-                var styleAtt = element.Attribute("style");
-                if (styleAtt != null)
-                {
-                    this.Style = (TriggerStyle)Enum.Parse(typeof(TriggerStyle), styleAtt.Value);
-                }
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
+                this.IsReusable = element.GetAttribute("isReuseable", true);
+                this.Name = element.GetAttribute("name", string.Empty);
+                this.Style = element.GetAttribute("style", TriggerStyle.Button);
 
                 foreach (TriggerMode mode in Enum.GetValues(typeof(TriggerMode)))
                 {

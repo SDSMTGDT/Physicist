@@ -1,15 +1,8 @@
 ﻿namespace Physicist.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Actors;
-    using Physicist.Controls;
     using Physicist.Extensions;
 
     public class Backdrop : IBackgroundObject, IDraw
@@ -60,45 +53,35 @@
         public XElement XmlSerialize()
         {
             XElement element = new XElement(
-                "backdrop",
+                "Backdrop",
                 this.Location.XmlSerialize("location"),
                 this.Dimensions.XmlSerialize("dimension"),
                 new XElement("depth", this.Depth),
                 new XAttribute("textureRef", this.Texture.Name),
-                new XAttribute("class", this.GetType().ToString()));
-
-            if (this.TileToBounds)
-            {
-                element.Add(new XAttribute("tile", this.TileToBounds));
-            }
+                new XAttribute("class", this.GetType().ToString()),
+                new XAttribute("tile", this.TileToBounds));
 
             return element;
         }
 
         public void XmlDeserialize(XElement element)
         {
-            if (element == null)
+            if (element != null)
             {
-                throw new ArgumentNullException("element");
-            }
+                this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+                this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimension"));
+                this.Depth = element.GetAttribute<float>("depth", 0f);
+                this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 
-            this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
-            this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimension"));
-            this.Depth = float.Parse(element.Attribute("depth").Value, CultureInfo.CurrentCulture);
-            this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
+                this.Scale = new Vector2(this.Dimensions.Width / (float)this.Texture.Width, this.Dimensions.Height / (float)this.Texture.Height);
 
-            this.Scale = new Vector2(this.Dimensions.Width / (float)this.Texture.Width, this.Dimensions.Height / (float)this.Texture.Height);
+                this.TileToBounds = element.GetAttribute<bool>("tile", false);
 
-            XAttribute tileEle = element.Attribute("tile");
-            if (tileEle != null)
-            {
-                this.TileToBounds = bool.Parse(tileEle.Value);
-            }
-
-            if (this.TileToBounds)
-            {
-                this.Texture = this.Texture.TileTexture(this.Dimensions);
-                this.Scale = new Vector2(1f, 1f);
+                if (this.TileToBounds)
+                {
+                    this.Texture = this.Texture.TileTexture(this.Dimensions);
+                    this.Scale = new Vector2(1f, 1f);
+                }
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿namespace Physicist.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -19,20 +17,11 @@
 
         public void SetBandwidth(float upperBound, float lowerBound)
         {
-            if (upperBound > 1f || lowerBound > 1f || upperBound < 0f || lowerBound < 0f)
-            {
-                throw new ArgumentException("Bounds must be between 0 and 1");
-            }
+            upperBound = MathHelper.Clamp(upperBound, 0f, 1f);
+            lowerBound = MathHelper.Clamp(lowerBound, 0f, 1f);
 
-            if (lowerBound > upperBound)
-            {
-                var temp = lowerBound;
-                lowerBound = upperBound;
-                upperBound = temp;
-            }
-
-            this.depthScale = upperBound - lowerBound;
-            this.lowBound = lowerBound;
+            this.depthScale = Math.Abs(upperBound - lowerBound);
+            this.lowBound = Math.Min(lowerBound, upperBound);
         }
 
         public new void Draw(Texture2D texture, Rectangle rectangle, Color color)

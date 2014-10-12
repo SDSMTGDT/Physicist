@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Xml.Linq;
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
@@ -14,6 +15,8 @@
 
     public class BodyInfo
     {
+        private static Dictionary<BodyCategory, MethodInfo> makeBodyHash = new Dictionary<BodyCategory, MethodInfo>();
+
         // Construction information
         private int mapHeight;
 
@@ -50,6 +53,14 @@
         private BodyType bodyType = BodyType.Static;
         private float friction = 0f;
         private float rotation = 0f;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Handles Changes to underlying enum")]
+        static BodyInfo()
+        {
+            // Create a simple dictionary to associate bodycategories with 'factory' methods 
+            Enum.GetValues(typeof(BodyCategory)).Cast<BodyCategory>().ToList().ForEach(
+                cat => makeBodyHash.Add(cat, typeof(BodyInfo).GetMethod("Make" + cat.ToString(), BindingFlags.Instance | BindingFlags.NonPublic)));
+        }
 
         public BodyInfo()
         {
@@ -219,135 +230,45 @@
 
         public XElement XmlSerialize()
         {
-            XElement bodyInfoXml = new XElement(Enum.GetName(typeof(BodyCategory), this.bodyCategory.Value));
-            bodyInfoXml.Add(ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "position"));
-
-            if (this.rotation != 0)
-            {
-                bodyInfoXml.Add(new XAttribute("rotation", this.rotation));
-            }
-
-            if (this.collidesWith != FarseerPhysics.Dynamics.Category.All)
-            {
-                bodyInfoXml.Add(new XAttribute("collidesWith", this.collidesWith.ToString()));
-            }
-
-            if (this.fixedRotation)
-            {
-                bodyInfoXml.Add(new XAttribute("fixedRotation", this.fixedRotation));
-            }
-
-            if (this.bodyType != FarseerPhysics.Dynamics.BodyType.Static)
-            {
-                bodyInfoXml.Add(new XAttribute("bodyType", this.bodyType.ToString()));
-            }
-
-            if (this.friction != 0f)
-            {
-                bodyInfoXml.Add(new XAttribute("friction", this.friction));
-            }
+            XElement bodyInfoXml = new XElement(
+                this.bodyCategory.Value.ToString(),
+                ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "Position"),
+                new XAttribute("rotation", this.rotation),
+                new XAttribute("collidesWith", this.collidesWith.ToString()),
+                new XAttribute("fixedRotation", this.fixedRotation),
+                new XAttribute("bodyType", this.bodyType.ToString()),
+                new XAttribute("friction", this.friction));
 
             if (this.vertexList != null)
             {
-                XElement verts = new XElement("VertexList");
-                foreach (var vert in this.vertexList)
-                {
-                    XElement vertices = new XElement("vertices");
-                    foreach (var vector in vert)
-                    {
-                        vertices.Add(new XElement("Vector2", new XAttribute("x", vector.X), new XAttribute("y", vector.Y)));
-                    }
+                XElement vertices = new XElement(
+                    "VertexList",
+                    this.vertexList.Select(vertex => new XElement(
+                                    "Vertices", 
+                                    vertex.Select(vector => ExtensionMethods.XmlSerialize(vector, "Vector2")))));
 
-                    if (this.vertexList.Count > 1)
-                    {
-                        verts.Add(vertices);
-                    }
-                    else
-                    {
-                        bodyInfoXml.Add(vertices);
-                    }
-                }
-
-                if (this.vertexList.Count > 1)
-                {
-                    bodyInfoXml.Add(verts);
-                }
+                bodyInfoXml.Add(this.vertexList.Count > 1 ? vertices : vertices.Element("Verticies"));
             }
 
-            if (this.density.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("density", this.density.Value));
-            }
-
-            if (this.height.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("height", this.height.Value));
-            }
-
-            if (this.width.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("width", this.width.Value));
-            }
-
-            if (this.radius.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("radius", this.radius.Value));
-            }
-
-            if (this.xradius.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("xRadius", this.xradius.Value));
-            }
-
-            if (this.yradius.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("yRadius", this.yradius.Value));
-            }
-
-            if (this.radians.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("radians", this.radians.Value));
-            }
-
-            if (this.angle.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("angle", this.angle.Value));
-            }
-
-            if (this.sides.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("sides", this.sides.Value));
-            }
-
-            if (this.segments.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("segments", this.segments.Value));
-            }
-
-            if (this.edges.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("edges", this.edges.Value));
-            }
-
-            if (this.topRadius.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("topRadius", this.topRadius.Value));
-            }
-
-            if (this.bottomRadius.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("bottomRadius", this.bottomRadius.Value));
-            }
-
-            if (this.topedge.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("topEdge", this.topedge.Value));
-            }
-
-            if (this.bottomEdge.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("bottomEdge", this.bottomEdge.Value));
-            }
+            bodyInfoXml.TryAddNullableAttributeToXml("density", this.density);
+            bodyInfoXml.TryAddNullableAttributeToXml("height", this.height);
+            bodyInfoXml.TryAddNullableAttributeToXml("width", this.width);
+            bodyInfoXml.TryAddNullableAttributeToXml("radius", this.radius);
+            bodyInfoXml.TryAddNullableAttributeToXml("xRadius", this.xradius);
+            bodyInfoXml.TryAddNullableAttributeToXml("yRadius", this.yradius);
+            bodyInfoXml.TryAddNullableAttributeToXml("radians", this.radians);
+            bodyInfoXml.TryAddNullableAttributeToXml("angle", this.angle);
+            bodyInfoXml.TryAddNullableAttributeToXml("sides", this.sides);
+            bodyInfoXml.TryAddNullableAttributeToXml("segments", this.segments);
+            bodyInfoXml.TryAddNullableAttributeToXml("edges", this.edges);
+            bodyInfoXml.TryAddNullableAttributeToXml("topRadius", this.topRadius);
+            bodyInfoXml.TryAddNullableAttributeToXml("bottomRadius", this.bottomRadius);
+            bodyInfoXml.TryAddNullableAttributeToXml("topEdge", this.topedge);
+            bodyInfoXml.TryAddNullableAttributeToXml("bottomEdge", this.bottomEdge);
+            bodyInfoXml.TryAddNullableAttributeToXml("closed", this.closed);
+            bodyInfoXml.TryAddNullableAttributeToXml("tipPercentage", this.tipPercentage);
+            bodyInfoXml.TryAddNullableAttributeToXml("numberOfTeeth", this.numberOfTeeth);
+            bodyInfoXml.TryAddNullableAttributeToXml("toothHeight", this.toothHeight);
 
             if (this.start.HasValue)
             {
@@ -359,134 +280,35 @@
                 bodyInfoXml.Add(new XElement("end", new XAttribute("x", this.end.Value.X), new XAttribute("y", this.end.Value.Y)));
             }
 
-            if (this.closed.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("closed", this.closed.Value));
-            }
-
-            if (this.tipPercentage.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("tipPercentage", this.tipPercentage.Value));
-            }
-
-            if (this.toothHeight.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("toothHeight", this.toothHeight.Value));
-            }
-
-            if (this.numberOfTeeth.HasValue)
-            {
-                bodyInfoXml.Add(new XAttribute("numberOfTeeth", this.numberOfTeeth.Value));
-            }
-
             return bodyInfoXml;
         }
 
         public void XmlDeserialize(XElement element)
         {
-            if (element == null)
+            if (element != null)
             {
-                throw new ArgumentNullException("element");
-            }
+                this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
 
-            this.bodyCategory = (BodyCategory)Enum.Parse(typeof(BodyCategory), element.Name.LocalName);
+                XElement posEle = element.Element("Position");
+                Vector2 designPosition = Vector2.Zero;
+                if (posEle != null)
+                {
+                    designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
+                }
 
-            XElement posEle = element.Element("Position");
-            Vector2 designPosition = Vector2.Zero;
-            if (posEle != null)
-            {
-                designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
-            }
+                this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
 
-            this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
+                this.collidesWith = element.GetAttribute<Category>("collidesWith", Category.All);
 
-            XAttribute collidesWithEle = element.Attribute("collidesWith");
-            if (collidesWithEle != null)
-            {
-                this.collidesWith = (Category)Enum.Parse(typeof(Category), collidesWithEle.Value);
-            }
+                this.fixedRotation = element.GetAttribute<bool>("fixedRotation", false);
 
-            XAttribute fixedRotEle = element.Attribute("fixedRotation");
-            if (fixedRotEle != null)
-            {
-                this.fixedRotation = bool.Parse(fixedRotEle.Value);
-            }
+                this.bodyType = element.GetAttribute<BodyType>("bodyType", BodyType.Static);
 
-            XAttribute bodyTypeEle = element.Attribute("bodyType");
-            if (bodyTypeEle != null)
-            {
-                this.bodyType = (BodyType)Enum.Parse(typeof(BodyType), bodyTypeEle.Value);
-            }
+                this.friction = element.GetAttribute<float>("friction", 0f);
 
-            XAttribute frictionEle = element.Attribute("friction");
-            if (frictionEle != null)
-            {
-                this.friction = float.Parse(frictionEle.Value, CultureInfo.CurrentCulture);
-            }
+                this.rotation = element.GetAttribute<float>("rotation", 0f);
 
-            XAttribute rotationEle = element.Attribute("rotation");
-            if (rotationEle != null)
-            {
-                this.rotation = float.Parse(rotationEle.Value, CultureInfo.CurrentCulture);
-            }
-
-            switch (this.bodyCategory)
-            {
-                case BodyCategory.BreakableBody:
-                    this.MakeBreakableBody(element);
-                    break;
-
-                case BodyCategory.Capsule:
-                    this.MakeCapsule(element);
-                    break;
-
-                case BodyCategory.ChainShape:
-                    this.MakeChainShape(element);
-                    break;
-
-                case BodyCategory.Circle:
-                    this.MakeCircle(element);
-                    break;
-
-                case BodyCategory.CompoundPolygon:
-                    this.MakeCompoundPolygon(element);
-                    break;
-
-                case BodyCategory.Edge:
-                    this.MakeEdge(element);
-                    break;
-
-                case BodyCategory.Ellipse:
-                    this.MakeEllipse(element);
-                    break;
-
-                case BodyCategory.Gear:
-                    this.MakeGear(element);
-                    break;
-
-                case BodyCategory.LineArc:
-                    this.MakeLineArc(element);
-                    break;
-
-                case BodyCategory.LoopShape:
-                    this.MakeLoopShape(element);
-                    break;
-
-                case BodyCategory.Polygon:
-                    this.MakePolygon(element);
-                    break;
-
-                case BodyCategory.Rectangle:
-                    this.MakeRectangle(element);
-                    break;
-
-                case BodyCategory.RoundedRectangle:
-                    this.MakeRoundedRectangle(element);
-                    break;
-
-                case BodyCategory.SolidArc:
-                    this.MakeSolidArc(element);
-                    break;
+                BodyInfo.makeBodyHash[this.bodyCategory.Value].Invoke(this, new object[] { element });
             }
         }
 

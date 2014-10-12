@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
     using FarseerPhysics;
     using FarseerPhysics.DebugView;
     using FarseerPhysics.Dynamics;
@@ -83,7 +82,10 @@
                     this.debugViewMatrix = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(this.map.Width), ConvertUnits.ToSimUnits(this.map.Height), 0f, 0f, .01f);
                 }
 
-                this.Camera.Following = this.map.Players.ElementAt(0);
+                if (this.map.Players.Count() > 0)
+                {
+                    this.Camera.Following = this.map.Players.ElementAt(0);
+                }
             }
 
             return success;
@@ -93,8 +95,10 @@
         {
             if (gameTime != null)
             {
+                var state = KeyboardController.GetState();
+
                 // Control debug view
-                if (this.debugView != null && this.IsKeyDown(Keys.F1, true))
+                if (this.debugView != null && state.IsKeyDown(Keys.F1, true))
                 {
                     if ((this.debugView.Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
                     {
@@ -108,12 +112,12 @@
                     this.showDebugView = !this.showDebugView;
                 }
 
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.IsKeyDown(Keys.Escape, true))
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || state.IsKeyDown(Keys.Escape, true))
                 {
                     this.PopScreen();
                 }
 
-                if (this.IsKeyDown(Keys.P))
+                if (state.IsKeyDown(Keys.P))
                 {
                     ScreenManager.AddScreen(Enums.SystemScreen.PauseScreen);
                 }
