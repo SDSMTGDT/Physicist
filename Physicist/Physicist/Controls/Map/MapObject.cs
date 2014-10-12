@@ -73,9 +73,9 @@
                 var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, element);
                 this.MapBody = bodyData.Item1;
                 this.MapBodyInfo = bodyData.Item2;
-                this.TextureReference = element.GetAttribute<string>("textureRef", string.Empty);
+                this.TextureReference = element.GetAttribute("textureRef", string.Empty);
 
-                this.fill = element.GetAttribute<bool>("fill", false);
+                this.fill = element.GetAttribute("fill", false);
 
                 if (this.fill)
                 {

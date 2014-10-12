@@ -84,11 +84,11 @@
             {
                 base.XmlDeserialize(element.Element("PathNode"));
 
-                this.Speed = element.GetAttribute<int>("speed");
+                this.Speed = element.GetAttribute("speed", 0);
 
-                this.DisableAfterPathing = element.GetAttribute<bool>("disableAfterPathing");
+                this.DisableAfterPathing = element.GetAttribute("disableAfterPathing", false);
 
-                this.HideAtEndOfPath = element.GetAttribute<bool>("hideAfterPathing", false);
+                this.HideAtEndOfPath = element.GetAttribute("hideAfterPathing", false);
 
                 var designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
                 this.TargetLocation = new Vector2(designPosition.X, this.Map.Height - designPosition.Y);

@@ -224,11 +224,11 @@
                 // Create animation dictionay
                 this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
 
-                this.frameLength = element.GetAttribute<float>("frameLength", 0.2f);
-                this.depth = element.GetAttribute<float>("depth", 0f);
+                this.frameLength = element.GetAttribute("frameLength", 0.2f);
+                this.depth = element.GetAttribute("depth", 0f);
 
                 // Get the name
-                this.SpriteName = element.GetAttribute<string>("spriteName", string.Empty);
+                this.SpriteName = element.GetAttribute("spriteName", string.Empty);
 
                 // Get the offset
                 this.Offset = ExtensionMethods.XmlDeserializeVector2(element.Element("Offset"));

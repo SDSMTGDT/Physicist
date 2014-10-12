@@ -81,10 +81,10 @@
         {
             if (element != null)
             {
-                this.Name = element.GetAttribute<string>("name", string.Empty);
-                this.IsSingleUse = element.GetAttribute<bool>("isSingleUse", false);
-                this.IsEnabled = element.GetAttribute<bool>("isEnabled", true);
-                this.isActive = element.GetAttribute<bool>("isActive", true);
+                this.Name = element.GetAttribute("name", string.Empty);
+                this.IsSingleUse = element.GetAttribute("isSingleUse", false);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
+                this.isActive = element.GetAttribute("isActive", true);
 
                 List<IName> targetObjects = new List<IName>();
                 foreach (var targetEle in element.Elements("Target"))

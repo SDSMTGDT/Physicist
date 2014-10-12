@@ -146,11 +146,11 @@
             {
                 this.Name = element.Attribute("name").Value;
 
-                this.IsEnabled = element.GetAttribute<bool>("isEnabled", true);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
 
-                this.LoopPath = element.GetAttribute<bool>("loopPath", true);
+                this.LoopPath = element.GetAttribute("loopPath", true);
 
-                this.TargetPathUponCompletion = element.GetAttribute<string>("targetPathUponCompletion", string.Empty);
+                this.TargetPathUponCompletion = element.GetAttribute("targetPathUponCompletion", string.Empty);
 
                 var modifierEleList = element.Element("Modifiers");
                 if (modifierEleList != null)

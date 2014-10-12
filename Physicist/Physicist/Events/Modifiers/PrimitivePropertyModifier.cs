@@ -34,12 +34,12 @@
         {
             if (element != null)
             {
-                this.targetPropertyName = element.GetAttribute<string>("propertyName", string.Empty);
-                this.targetPropertyType = PrimitiveTypesHelper.ToSystemType(element.GetAttribute<PrimitiveType>("propertyType", PrimitiveType.@string));
-                this.hasMemory = element.GetAttribute<bool>("hasMemory", true);
+                this.targetPropertyName = element.GetAttribute("propertyName", string.Empty);
+                this.targetPropertyType = PrimitiveTypesHelper.ToSystemType(element.GetAttribute("propertyType", PrimitiveType.@string));
+                this.hasMemory = element.GetAttribute("hasMemory", true);
 
                 var converter = TypeDescriptor.GetConverter(this.targetPropertyType);
-                this.newValue = converter.ConvertFrom(element.GetAttribute<string>("newValue", string.Empty));
+                this.newValue = converter.ConvertFrom(element.GetAttribute("newValue", string.Empty));
 
                 base.XmlDeserialize(element.Element("Modifier"));
             }

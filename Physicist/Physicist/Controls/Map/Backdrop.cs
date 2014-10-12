@@ -70,12 +70,12 @@
             {
                 this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
                 this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimension"));
-                this.Depth = element.GetAttribute<float>("depth", 0f);
+                this.Depth = element.GetAttribute("depth", 0f);
                 this.Texture = ContentController.Instance.GetContent<Texture2D>(element.Attribute("textureRef").Value);
 
                 this.Scale = new Vector2(this.Dimensions.Width / (float)this.Texture.Width, this.Dimensions.Height / (float)this.Texture.Height);
 
-                this.TileToBounds = element.GetAttribute<bool>("tile", false);
+                this.TileToBounds = element.GetAttribute("tile", false);
 
                 if (this.TileToBounds)
                 {

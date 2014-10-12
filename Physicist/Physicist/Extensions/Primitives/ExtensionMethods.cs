@@ -30,7 +30,7 @@
         /// </summary>
         public static T GetAttribute<T>(this XElement element, string attributeName)
         {
-            return element.GetAttribute<T>(attributeName, default(T));
+            return element.GetAttribute(attributeName, default(T));
         }
 
         /// <summary>

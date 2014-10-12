@@ -47,12 +47,12 @@
             {
                 base.XmlDeserialize(element.Element("Modifier"));
 
-                this.targetSprite = element.GetAttribute<string>("targetSprite", string.Empty);
-                this.targetAnimationName = element.GetAttribute<string>("targetAnimation", string.Empty);
+                this.targetSprite = element.GetAttribute("targetSprite", string.Empty);
+                this.targetAnimationName = element.GetAttribute("targetAnimation", string.Empty);
 
-                this.IsOneShot = element.GetAttribute<bool>("isOneShot", false);
+                this.IsOneShot = element.GetAttribute("isOneShot", false);
 
-                this.HasMemory = element.GetAttribute<bool>("hasMemory", true);
+                this.HasMemory = element.GetAttribute("hasMemory", true);
             }
         }
 

@@ -273,15 +273,15 @@
 
                 // --------------------------------------------------------
                 // Assign the new values to the Actor after body is created
-                this.Name = element.GetAttribute<string>("name", string.Empty);
+                this.Name = element.GetAttribute("name", string.Empty);
                 this.MovementSpeed = ExtensionMethods.XmlDeserializeVector2(element.Element("MovementSpeed"));
-                this.Health = element.GetAttribute<int>("health", 1);
-                this.Rotation = element.GetAttribute<float>("rotation", 0f);
-                this.IsEnabled = element.GetAttribute<bool>("isEnabled", true);
-                this.VisibleState = element.GetAttribute<Visibility>("visibleState", Visibility.Visible);
-                this.RotatesWithWorld = element.GetAttribute<bool>("rotatesWithWorld", false);
-                this.CanBeDamaged = element.GetAttribute<bool>("canBeDamaged", true);
-                this.AttackDamage = element.GetAttribute<int>("attackDamage", 0);
+                this.Health = element.GetAttribute("health", 1);
+                this.Rotation = element.GetAttribute("rotation", 0f);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
+                this.VisibleState = element.GetAttribute("visibleState", Visibility.Visible);
+                this.RotatesWithWorld = element.GetAttribute("rotatesWithWorld", false);
+                this.CanBeDamaged = element.GetAttribute("canBeDamaged", true);
+                this.AttackDamage = element.GetAttribute("attackDamage", 0);
             }
         }
 

@@ -94,8 +94,8 @@
             if (element != null)
             {
                 this.IsEnabled = true;
-                this.Name = element.GetAttribute<string>("name", string.Empty);
-                this.IsEnabled = element.GetAttribute<bool>("isEnabled", true);
+                this.Name = element.GetAttribute("name", string.Empty);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
 
                 var modifiersEle = element.Element("Modifiers");
                 if (modifiersEle != null)

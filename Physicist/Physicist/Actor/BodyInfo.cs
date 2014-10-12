@@ -298,15 +298,15 @@
 
                 this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
 
-                this.collidesWith = element.GetAttribute<Category>("collidesWith", Category.All);
+                this.collidesWith = element.GetAttribute("collidesWith", Category.All);
 
-                this.fixedRotation = element.GetAttribute<bool>("fixedRotation", false);
+                this.fixedRotation = element.GetAttribute("fixedRotation", false);
 
-                this.bodyType = element.GetAttribute<BodyType>("bodyType", BodyType.Static);
+                this.bodyType = element.GetAttribute("bodyType", BodyType.Static);
 
-                this.friction = element.GetAttribute<float>("friction", 0f);
+                this.friction = element.GetAttribute("friction", 0f);
 
-                this.rotation = element.GetAttribute<float>("rotation", 0f);
+                this.rotation = element.GetAttribute("rotation", 0f);
 
                 BodyInfo.makeBodyHash[this.bodyCategory.Value].Invoke(this, new object[] { element });
             }
