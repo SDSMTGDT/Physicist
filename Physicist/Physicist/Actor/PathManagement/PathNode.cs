@@ -24,6 +24,11 @@
 
         public PathNode(Actor target)
         {
+            this.IsInitialized = false;
+            this.modifiers.Add(TriggerMode.OnActivated, new Dictionary<string, IModifier>());
+            this.modifiers.Add(TriggerMode.WhileActivated, new Dictionary<string, IModifier>());
+            this.modifiers.Add(TriggerMode.OnDeactivated, new Dictionary<string, IModifier>());
+
             this.TargetActor = target;
         }
 

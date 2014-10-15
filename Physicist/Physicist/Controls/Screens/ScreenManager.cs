@@ -117,7 +117,7 @@
         }
 
         public static void Update(GameTime gameTime)
-        {            
+        {
             // Update popups
             for (int i = modalCount; i < ScreenManager.activeScreens.Count; i++)
             {
