@@ -15,9 +15,11 @@
     using Physicist.Extensions;
 using Physicist.Events;
     using FarseerPhysics.Collision;
+    using FarseerPhysics.Factories;
 
     public class Player : Actor
     {
+        private bool rotating = false;
         private int nextRotationTime;
         private int jumpEndTime;
         private float dampening = 1.1f;
@@ -79,15 +81,6 @@ using Physicist.Events;
 
         public override void Update(GameTime gameTime)
         {
-            AABB aabb;
-            this.Body.FixtureList[0].GetAABB(out aabb, 0);
-
-            // update the locations of the head and foot buttons
-            if (this.headButton != null)
-                this.headButton.SensorBody.Position = new Vector2(this.Position.X, this.Position.Y - aabb.Height - 1).ToSimUnits();
-            if (this.footButton != null)
-                this.footButton.SensorBody.Position = new Vector2(this.Position.X, this.Position.Y + aabb.Height).ToSimUnits();
-
             if (gameTime != null)
             {
                 this.markedMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
@@ -103,7 +96,12 @@ using Physicist.Events;
             {
                 if (dp.Length() < this.MaxSpeed)
                 {
-                    dp -= Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    if(!this.footButton.IsActive)
+                    {
+                        speedMod /= 5;
+                    }
+                    dp -= speedMod;
                 }
 
                 spriteStateString = "Left";
@@ -113,13 +111,18 @@ using Physicist.Events;
             {
                 if (dp.Length() < this.MaxSpeed)
                 {
-                    dp += Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    if (!this.footButton.IsActive)
+                    {
+                        speedMod /= 5;
+                    }
+                    dp += speedMod;
                 }
 
                 spriteStateString = "Right";
                 keypress = true;
             }
-            else
+            else if(this.footButton.IsActive)
             {
                 // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
                 Vector2 newVelocity = this.Body.LinearVelocity;
@@ -138,6 +141,8 @@ using Physicist.Events;
 
             if (this.Screen.IsKeyDown(KeyboardController.RotateLeftKey))
             {
+                this.rotating = true;
+
                 if (this.markedMilliseconds > this.nextRotationTime)
                 {
                     this.Body.Awake = true;
@@ -145,15 +150,20 @@ using Physicist.Events;
                     this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
                 }
             }
-
-            if (this.Screen.IsKeyDown(KeyboardController.RotateRightKey))
+            else if (this.Screen.IsKeyDown(KeyboardController.RotateRightKey))
             {
+                this.rotating = true;
+
                 if (this.markedMilliseconds > this.nextRotationTime)
                 {
                     this.Body.Awake = true;
                     this.Screen.RotateWorld(this.RotationSpeed);
                     this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
                 }
+            }
+            else
+            {
+                this.rotating = false;
             }
 
             this.Body.LinearVelocity += dp;
@@ -178,8 +188,12 @@ using Physicist.Events;
                     this.Body.LinearVelocity = newVelocity;
                 }
             }
+            else
+            {
+                this.Body.GravityScale = 4;
+            }
 
-            if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true))
+            if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true) && this.footButton.IsActive)
             {
                 if (this.jumpEndTime == 0)
                 {
@@ -188,7 +202,8 @@ using Physicist.Events;
                     this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1 * this.JumpSpeed), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 }
             }
-            if(! this.Screen.IsKeyDown(KeyboardController.JumpKey, false))
+
+            if(! this.Screen.IsKeyDown(KeyboardController.JumpKey, false) || this.headButton.IsActive)
             {
                 if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.passedJumpMilliseconds)
                       this.passedJumpMilliseconds = this.jumpEndTime - 200;
@@ -230,7 +245,10 @@ using Physicist.Events;
                 sprite.Offset = rotationSpriteOffset;
             }
 
-            this.Screen.IsKeyDown(KeyboardController.UpKey, false);
+            if (this.rotating)
+            {
+                this.Body.GravityScale = 0;
+            }
             base.Update(gameTime);
         }
 
@@ -258,15 +276,19 @@ using Physicist.Events;
 
         private void CreateButtons()
         {
+            this.Body.CollisionCategories = PhysicistCategory.Player;
             AABB aabb;
             this.Body.FixtureList[0].GetAABB(out aabb, 0);
+
             if (this.Position != null)
             {
-                this.headButton = new ProximityTrigger(aabb.Width, 1, this.Position, this.World);
-                headButton.IsContinuous = false;
+                Fixture headButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, -aabb.Height).ToSimUnits(), new Body(this.World));
+                Fixture footButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, aabb.Height).ToSimUnits(), new Body(this.World));
+
+                this.headButton = new ProximityTrigger(this.Body, headButtonFixture);
                 headButton.Initialize(null);
-                this.footButton = new ProximityTrigger(aabb.Width, 1, new Vector2(this.Position.X + 10, this.Position.Y), this.World);
-                footButton.IsContinuous = false;
+
+                this.footButton = new ProximityTrigger(this.Body, footButtonFixture);
                 footButton.Initialize(null);
             }
         }

@@ -31,6 +31,8 @@
                 this.World = world;
             this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
             this.CreateSensors(this.SensorBody.FixtureList[0]);
+            this.IsEnabled = true;
+            this.IsContinuous = false;
         }
 
         public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world = null)
@@ -39,6 +41,8 @@
                 this.World = world;
             this.SensorBody = BodyFactory.CreateRectangle(this.World, sensorWidth, sensorHeight, 1f, position);
             this.CreateSensors(this.SensorBody.FixtureList[0]);
+            this.IsEnabled = true;
+            this.IsContinuous = false;
         }
 
         public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world = null)

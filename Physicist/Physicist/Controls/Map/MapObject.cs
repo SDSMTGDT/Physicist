@@ -26,6 +26,7 @@
             this.MapBody = body;
             this.MapBodyInfo = bodyInfo;
             this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(textureRef), Vector2.Zero));
+            this.MapBody.CollisionCategories = PhysicistCategory.Map1;
         }
 
         public string TextureReference
@@ -116,6 +117,10 @@
             else
             {
                 this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(this.TextureReference), Vector2.Zero));
+            }
+            if (this.MapBody != null)
+            {
+                this.MapBody.CollisionCategories = PhysicistCategory.Map1;
             }
         }
     }

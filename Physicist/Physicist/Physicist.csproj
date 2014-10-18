@@ -97,6 +97,7 @@
     <Compile Include="Events\Modifiers\PrimitivePropertyModifier.cs" />
     <Compile Include="Events\Triggers\KeyPressTrigger.cs" />
     <Compile Include="Events\Triggers\TriggerSet.cs" />
+    <Compile Include="Extensions\PhysicistCategory.cs" />
     <Compile Include="Tools\DebugView\DebugViewXNA.cs" />
     <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
