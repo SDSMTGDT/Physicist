@@ -1,14 +1,6 @@
 ﻿namespace Physicist.Actors
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Linq;
-    using Microsoft.Xna.Framework;
-    using Physicist.Controls;
 
     public struct SpriteAnimation 
     {

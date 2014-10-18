@@ -1,7 +1,5 @@
 ﻿namespace Physicist.Enums
 {
-    using System;
-
     public enum StandardKeyAction
     {
         Up,

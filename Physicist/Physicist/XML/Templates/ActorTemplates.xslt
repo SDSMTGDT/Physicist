@@ -45,7 +45,7 @@
       <xsl:call-template name="Actor_Template">     
         <xsl:with-param name="BodyInfo">
           <BodyInfo>
-            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="2">
+            <Rectangle width="19" height="40"  density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
               <xsl:copy-of select="system:Position"/>
             </Rectangle>
           </BodyInfo>

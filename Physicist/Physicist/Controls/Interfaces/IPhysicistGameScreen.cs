@@ -1,7 +1,6 @@
 ﻿namespace Physicist.Controls
 {
     using FarseerPhysics.Dynamics;
-    using Physicist.Actors;
 
     public interface IPhysicistGameScreen
     {

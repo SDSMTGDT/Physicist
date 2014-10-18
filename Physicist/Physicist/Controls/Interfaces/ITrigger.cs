@@ -1,8 +1,7 @@
-﻿namespace Physicist.Events
+﻿namespace Physicist.Controls
 {
     using System;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
 
     public interface ITrigger : IName, IUpdate, IXmlSerializable
     {

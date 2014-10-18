@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Actors;
     using Physicist.Controls;
+    using Physicist.Extensions;
 
     public abstract class Modifier<T> : PhysicistGameScreenItem, IModifier, IXmlSerializable
     {
@@ -27,11 +29,9 @@
 
         public string Name { get; set; }
 
-        public bool IsSingleUse
-        {
-            get;
-            private set;
-        }
+        public bool IsSingleUse { get; private set; }
+
+        public bool IsEnabled { get; set; }
 
         public bool IsActive 
         {
@@ -58,8 +58,6 @@
             }
         }
 
-        public bool IsEnabled { get; set; }
-
         public IEnumerable<T> Targets
         {
             get
@@ -70,43 +68,23 @@
 
         public override XElement XmlSerialize()
         {
-            XElement modifierElement = new XElement(
-                                            "Modifier",
-                                            new XAttribute("isEnabled", this.IsEnabled),
-                                            new XAttribute("isActive", this.IsActive));
-
-            this.targets.ForEach(target => modifierElement.Add(new XElement("Target", ((IName)target).Name)));
-
-            return modifierElement;
+            return new XElement(
+                    "Modifier",
+                    new XAttribute("isEnabled", this.IsEnabled),
+                    new XAttribute("isActive", this.IsActive),
+                    new XAttribute("name", this.Name),
+                    new XAttribute("isSingleUse", this.IsSingleUse),
+                    this.targets.Select(target => new XElement("Target", ((IName)target).Name)));
         }
 
         public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
-                var nameAtt = element.Attribute("name");
-                if (nameAtt != null)
-                {
-                    this.Name = nameAtt.Value;
-                }
-
-                var singleUseAtt = element.Attribute("isSingleUse");
-                if (singleUseAtt != null)
-                {
-                    this.IsSingleUse = bool.Parse(singleUseAtt.Value);
-                }
-
-                var enabledAtt = element.Attribute("isEnabled");
-                if (enabledAtt != null)
-                {
-                    this.IsEnabled = bool.Parse(enabledAtt.Value);
-                }
-
-                var activeAtt = element.Attribute("isActive");
-                if (activeAtt != null)
-                {
-                    this.IsActive = bool.Parse(activeAtt.Value);
-                }
+                this.Name = element.GetAttribute("name", string.Empty);
+                this.IsSingleUse = element.GetAttribute("isSingleUse", false);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
+                this.isActive = element.GetAttribute("isActive", true);
 
                 List<IName> targetObjects = new List<IName>();
                 foreach (var targetEle in element.Elements("Target"))

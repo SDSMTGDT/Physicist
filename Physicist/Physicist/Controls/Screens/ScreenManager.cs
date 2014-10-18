@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Enums;
@@ -48,7 +47,6 @@
                 if (value != null && ScreenManager.currentScreen != value)
                 {
                     ScreenManager.currentScreen = value;
-                    ScreenManager.currentScreen.NavigatingTo();
                 }
             }
         }
@@ -126,12 +124,10 @@
                 var screen = ScreenManager.activeScreens[i];
                 if (screen.IsActive)
                 {
-                    screen.UpdateKeys();
                     screen.Update(gameTime);
                 }
             }
 
-            ScreenManager.CurrentScreen.UpdateKeys();
             ScreenManager.CurrentScreen.Update(gameTime);
         }
 

@@ -1,9 +1,5 @@
 ﻿namespace Physicist.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -37,7 +33,10 @@
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (this.IsKeyDown(Keys.Escape, true))
+
+            var state = KeyboardController.GetState();
+
+            if (state.IsKeyDown(Keys.Escape, true))
             {
                 this.PopScreen();
             }

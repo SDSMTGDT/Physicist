@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
@@ -62,7 +61,12 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            return new XElement(
+                "TriggerSet",
+                new XAttribute("operation", this.Operation),
+                new XElement(
+                    "Triggers",
+                    this.triggers.Select(trigger => new XElement("Trigger", new XAttribute("name", trigger.Key)))));
         }
 
         public override void XmlDeserialize(XElement element)
@@ -71,11 +75,7 @@
             {
                 base.XmlDeserialize(element);
 
-                var operationAtt = element.Attribute("operation");
-                if (operationAtt != null)
-                {
-                    this.Operation = (TriggerSetOperation)Enum.Parse(typeof(TriggerSetOperation), operationAtt.Value);
-                }
+                this.Operation = element.GetAttribute("operation", TriggerSetOperation.AND);
 
                 var triggersEle = element.Element("Triggers");
                 if (triggersEle != null)

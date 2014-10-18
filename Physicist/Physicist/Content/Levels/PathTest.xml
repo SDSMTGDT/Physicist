@@ -16,7 +16,7 @@
 	  <Foregrounds/>
 	
 	  <Actors>
-      <actor:Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+      <actor:Actor name="mario" class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
         <MovementSpeed x="1.5" y="1.5"/>
         <Sprites>
           <GameSprite spriteName="mario" textureRef="NOTSTOLEN" frameLength="0.2" depth="0">
