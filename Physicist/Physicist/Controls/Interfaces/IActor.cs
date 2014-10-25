@@ -1,9 +1,10 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.Controls
 {
     using System.Collections.Generic;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
+    using Physicist.Actors;
+    using Physicist.Enums;
     
     public interface IActor : IPosition, IName, IUpdate, IDraw, IDamage
     {

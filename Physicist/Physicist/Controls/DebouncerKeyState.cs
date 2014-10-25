@@ -1,11 +1,8 @@
 ﻿namespace Physicist.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Microsoft.Xna.Framework.Input;
 
-    public class KeyDebouncer
+    public class DebouncerKeyState
     {
         public KeyState PreviousState { get; set; }
 

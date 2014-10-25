@@ -51,11 +51,11 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
-    <Compile Include="Actor\IDamage.cs" />
+    <Compile Include="Controls\Interfaces\IDamage.cs" />
     <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
     <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
     <Compile Include="Actor\PathManagement\PathManager.cs" />
-    <Compile Include="Actor\IActor.cs" />
+    <Compile Include="Controls\Interfaces\IActor.cs" />
     <Compile Include="Actor\NPC\Enemy.cs" />
     <Compile Include="Actor\NPC\NPC.cs" />
     <Compile Include="Actor\NPC\Slug.cs" />
@@ -64,7 +64,7 @@
     <Compile Include="Controls\Interfaces\IBackgroundObject.cs" />
     <Compile Include="Controls\Interfaces\IGameScreenItem.cs" />
     <Compile Include="Controls\Interfaces\IMapObject.cs" />
-    <Compile Include="Controls\KeyDebouncer.cs" />
+    <Compile Include="Controls\KeyboardDebouncer.cs" />
     <Compile Include="Controls\AssetCreator.cs" />
     <Compile Include="Controls\Camera\CameraController.cs" />
     <Compile Include="Controls\Camera\Viewport.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="Controls\Interfaces\IUpdate.cs" />
     <Compile Include="Controls\Interfaces\IXmlSerializable.cs" />
     <Compile Include="Controls\Interfaces\IPhysicistGameScreen.cs" />
+    <Compile Include="Controls\DebouncerKeyState.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
     <Compile Include="Controls\Map\BackgroundMusic.cs" />
     <Compile Include="Controls\Map\Backdrop.cs" />
@@ -108,11 +109,10 @@
     <Compile Include="Enums\TriggerStyle.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
     <Compile Include="Enums\SystemScreens.cs" />
-    <Compile Include="Events\IPhysicistEvent.cs" />
     <Compile Include="Events\Modifiers\AnimateModifier.cs" />
-    <Compile Include="Events\Modifiers\IModifier.cs" />
+    <Compile Include="Controls\Interfaces\IModifier.cs" />
     <Compile Include="Events\PhysicistEvent.cs" />
-    <Compile Include="Events\Triggers\ITrigger.cs" />
+    <Compile Include="Controls\Interfaces\ITrigger.cs" />
     <Compile Include="Events\Modifiers\Modifier.cs" />
     <Compile Include="Events\Triggers\ProximityTrigger.cs" />
     <Compile Include="Events\Triggers\Trigger.cs" />
@@ -120,7 +120,7 @@
     <Compile Include="Extensions\GameScreenKeyedDictionary.cs" />
     <Compile Include="Extensions\Primitives\ExtensionMethods.cs" />
     <Compile Include="Extensions\MediaDictionary.cs" />
-    <Compile Include="Extensions\Primitives\IMediaInfo.cs" />
+    <Compile Include="Controls\Interfaces\IMediaInfo.cs" />
     <Compile Include="Extensions\Primitives\MediaElement.cs" />
     <Compile Include="Extensions\Primitives\Size.cs" />
     <Compile Include="Extensions\XmlBodyFactory.cs" />

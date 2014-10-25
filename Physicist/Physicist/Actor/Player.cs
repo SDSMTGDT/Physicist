@@ -2,20 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using FarseerPhysics;
+    using FarseerPhysics.Collision;
     using FarseerPhysics.Dynamics;
+    using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
     using Physicist.Enums;
+    using Physicist.Events;
     using Physicist.Extensions;
-using Physicist.Events;
-    using FarseerPhysics.Collision;
-    using FarseerPhysics.Factories;
 
     public class Player : Actor
     {
@@ -27,6 +25,7 @@ using Physicist.Events;
         private int passedJumpMilliseconds;
         private ProximityTrigger headButton = null;
         private ProximityTrigger footButton = null;
+        private string spriteStateString = "Idle";
 
         public Player() :
             base()
@@ -38,6 +37,7 @@ using Physicist.Events;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
+            this.MovementSpeed = new Vector2(5, 5);
         }
 
         public Player(string name) :
@@ -50,6 +50,7 @@ using Physicist.Events;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
+            this.MovementSpeed = new Vector2(5, 5);
         }
 
         public float RotationSpeed { get; set; }
@@ -64,21 +65,6 @@ using Physicist.Events;
 
         public Vector2 MovementVelocity { get; set; }
 
-        public new Body Body
-        {
-            get
-            {
-                return base.Body;
-            }
-
-            set
-            {
-                this.CreateButtons();
-                base.Body = value;
-                base.Body.OnCollision += this.Body_OnCollision;
-            }
-        }
-
         public override void Update(GameTime gameTime)
         {
             if (gameTime != null)
@@ -86,89 +72,82 @@ using Physicist.Events;
                 this.markedMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             }
 
-            bool keypress = false;
-            string spriteStateString = string.Empty;
-            Vector2 dp = Vector2.Zero;
+            var state = KeyboardController.GetState();
+            this.spriteStateString = "Idle";
+            this.Body.LinearVelocity += this.GetMovementSpeed(state);
+            this.rotating = this.GetRotation(state);
+            this.GetJump(state);
 
-            this.MovementSpeed = new Vector2(5, 5);
-
-            if (this.Screen.IsKeyDown(KeyboardController.LeftKey))
+            // update the animations
+            foreach (var sprite in this.Sprites.Values)
             {
-                if (dp.Length() < this.MaxSpeed)
+                sprite.CurrentAnimationString = this.spriteStateString;
+            }
+
+            // rotate the body and move the sprite so it is drawn in the correct position
+            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
+
+            this.FixOffsetForRotation();
+
+            if (this.rotating)
+            {
+                this.Body.GravityScale = 0;
+            }
+
+            base.Update(gameTime);
+        }
+
+        public override XElement XmlSerialize()
+        {
+            return new XElement(
+                "Player",
+                new XAttribute("class", "Player"),
+                base.XmlSerialize());
+        }
+
+        public override void XmlDeserialize(XElement element)
+        {
+            if (element != null)
+            {
+                base.XmlDeserialize(element.Element("Actor"));
+                this.MovementSpeed = new Vector2(5, 5);
+                this.Body.BodyType = BodyType.Dynamic;
+                this.Body.FixedRotation = true;
+                this.CreateButtons();
+            }
+        }
+
+        private void FixOffsetForRotation()
+        {
+            // A temporary rotational fix.  Need to change origin of rotation in actuality:
+            var rotationSpriteOffset = new Vector2();
+            foreach (var sprite in this.Sprites.Values)
+            {
+                // the offset calculation
+                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
+
+                // bizzare x offset of 3
+                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
+
+                // weird -width y offset at 3 pi / 2
+                if (this.Screen.ScreenRotation > Math.PI)
                 {
-                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                    if(!this.footButton.IsActive)
-                    {
-                        speedMod /= 5;
-                    }
-                    dp -= speedMod;
+                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
                 }
 
-                spriteStateString = "Left";
-                keypress = true;
-            }
-            else if (this.Screen.IsKeyDown(KeyboardController.RightKey))
-            {
-                if (dp.Length() < this.MaxSpeed)
+                // weird x offset of 2 at pi / 2
+                if (this.Screen.ScreenRotation < Math.PI)
                 {
-                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                    if (!this.footButton.IsActive)
-                    {
-                        speedMod /= 5;
-                    }
-                    dp += speedMod;
+                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
                 }
 
-                spriteStateString = "Right";
-                keypress = true;
+                sprite.Offset = rotationSpriteOffset;
             }
-            else if(this.footButton.IsActive)
-            {
-                // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
-                Vector2 newVelocity = this.Body.LinearVelocity;
-             
-                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
-                newVelocity.X /= this.dampening;
-                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-             
-                this.Body.LinearVelocity = newVelocity;
-            }
+        }
 
-            if (!keypress)
-            {
-                spriteStateString = "Idle";
-            }
-
-            if (this.Screen.IsKeyDown(KeyboardController.RotateLeftKey))
-            {
-                this.rotating = true;
-
-                if (this.markedMilliseconds > this.nextRotationTime)
-                {
-                    this.Body.Awake = true;
-                    this.Screen.RotateWorld(-this.RotationSpeed);
-                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
-                }
-            }
-            else if (this.Screen.IsKeyDown(KeyboardController.RotateRightKey))
-            {
-                this.rotating = true;
-
-                if (this.markedMilliseconds > this.nextRotationTime)
-                {
-                    this.Body.Awake = true;
-                    this.Screen.RotateWorld(this.RotationSpeed);
-                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
-                }
-            }
-            else
-            {
-                this.rotating = false;
-            }
-
-            this.Body.LinearVelocity += dp;
-
-            // Jumping in progress
+        private void GetJump(KeyboardDebouncer state)
+        {
             if (this.jumpEndTime > 0)
             {
                 this.passedJumpMilliseconds += this.JumpTiming;
@@ -193,7 +172,7 @@ using Physicist.Events;
                 this.Body.GravityScale = 4;
             }
 
-            if (this.Screen.IsKeyDown(KeyboardController.JumpKey, true) && this.footButton.IsActive)
+            if (state.IsKeyDown(KeyboardController.JumpKey, true) && this.footButton.IsActive)
             {
                 if (this.jumpEndTime == 0)
                 {
@@ -203,75 +182,105 @@ using Physicist.Events;
                 }
             }
 
-            if(! this.Screen.IsKeyDown(KeyboardController.JumpKey, false) || this.headButton.IsActive)
+            if (!state.IsKeyDown(KeyboardController.JumpKey, false) || this.headButton.IsActive)
             {
                 if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.passedJumpMilliseconds)
-                      this.passedJumpMilliseconds = this.jumpEndTime - 200;
-            }
-
-            foreach (var sprite in this.Sprites.Values)
-            {
-                sprite.CurrentAnimationString = spriteStateString;
-            }
-
-            // rotate the body and move the sprite so it is drawn in the correct position
-            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
-
-            // A temporary rotational fix.  Need to change origin of rotation in actuality:
-            Vector2 rotationSpriteOffset = new Vector2();
-            foreach (var sprite in this.Sprites.Values)
-            {
-                // the offset calculation
-                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
-                
-                // bizzare x offset of 3
-                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
-
-                // weird -width y offset at 3 pi / 2
-                if (this.Screen.ScreenRotation > Math.PI)
                 {
-                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                    this.passedJumpMilliseconds = this.jumpEndTime - 200;
+                }
+            }
+        }
+
+        private bool GetRotation(KeyboardDebouncer state)
+        {
+            if (state.IsKeyDown(KeyboardController.RotateLeftKey))
+            {
+                if (this.markedMilliseconds > this.nextRotationTime)
+                {
+                    this.Body.Awake = true;
+                    this.Screen.RotateWorld(-this.RotationSpeed);
+                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
                 }
 
-                sprite.Offset = rotationSpriteOffset;
+                return true;
+            }
 
-                // weird x offset of 2 at pi / 2
-                if (this.Screen.ScreenRotation < Math.PI)
+            if (state.IsKeyDown(KeyboardController.RotateRightKey))
+            {
+                if (this.markedMilliseconds > this.nextRotationTime)
                 {
-                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
+                    this.Body.Awake = true;
+                    this.Screen.RotateWorld(this.RotationSpeed);
+                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
                 }
 
-                sprite.Offset = rotationSpriteOffset;
+                return true;
             }
 
-            if (this.rotating)
-            {
-                this.Body.GravityScale = 0;
-            }
-            base.Update(gameTime);
+            return false;
         }
 
-        public override XElement XmlSerialize()
+        private Vector2 GetMovementSpeed(KeyboardDebouncer state)
         {
-            return new XElement("Player", new XAttribute("class", typeof(Player).ToString()), base.XmlSerialize());
-        }
+            var dp = Vector2.Zero;
 
-        public override void XmlDeserialize(XElement element)
-        {            
-            if (element != null)
+            if (state.IsKeyDown(KeyboardController.JumpKey, true))
             {
-                base.XmlDeserialize(element.Element("Actor"));
+                if (dp.Length() < this.MaxSpeed)
+                {
+                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    if (!this.footButton.IsActive)
+                    {
+                        speedMod /= 5;
+                    }
 
-                this.Body.BodyType = BodyType.Dynamic;
-                this.Body.FixedRotation = true;
-                this.CreateButtons();
+                    dp -= speedMod;
+                }
             }
-        }
 
-        private bool Body_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
-        {
-            return true;
+            if (state.IsKeyDown(KeyboardController.UpKey))
+            {
+                dp -= Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                this.spriteStateString = "Up";
+            }
+            else if (state.IsKeyDown(KeyboardController.DownKey))
+            {
+                dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                this.spriteStateString = "Down";
+            }
+            else if (state.IsKeyDown(KeyboardController.LeftKey))
+            {
+                dp -= Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                this.spriteStateString = "Left";
+            }
+            else if (state.IsKeyDown(KeyboardController.RightKey))
+            {
+                if (dp.Length() < this.MaxSpeed)
+                {
+                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                    if (!this.footButton.IsActive)
+                    {
+                        speedMod /= 5;
+                    }
+
+                    dp += speedMod;
+                }
+
+                this.spriteStateString = "Right";
+            }
+            else if (this.footButton.IsActive)
+            {
+                // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
+                Vector2 newVelocity = this.Body.LinearVelocity;
+             
+                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
+                newVelocity.X /= this.dampening;
+                newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+             
+                this.Body.LinearVelocity = newVelocity;
+            }
+
+            return dp;
         }
 
         private void CreateButtons()
@@ -282,14 +291,18 @@ using Physicist.Events;
 
             if (this.Position != null)
             {
-                Fixture headButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, -aabb.Height).ToSimUnits(), new Body(this.World));
-                Fixture footButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, aabb.Height).ToSimUnits(), new Body(this.World));
+                using (var headBody = new Body(this.World))
+                using (var footBody = new Body(this.World))
+                {
+                    Fixture headButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, -aabb.Height).ToSimUnits(), headBody);
+                    Fixture footButtonFixture = FixtureFactory.AttachRectangle(aabb.Width * 9f / 10f, 1, 0, new Vector2(0, aabb.Height).ToSimUnits(), footBody);
 
-                this.headButton = new ProximityTrigger(this.Body, headButtonFixture);
-                headButton.Initialize(null);
+                    this.headButton = new ProximityTrigger(this.Body, headButtonFixture, null);
+                    this.headButton.Initialize(null);
 
-                this.footButton = new ProximityTrigger(this.Body, footButtonFixture);
-                footButton.Initialize(null);
+                    this.footButton = new ProximityTrigger(this.Body, footButtonFixture, null);
+                    this.footButton.Initialize(null);
+                }
             }
         }
     }

@@ -5,7 +5,8 @@
     using Microsoft.Xna.Framework;
     using Physicist.Actors;
     using Physicist.Controls;
-    
+    using Physicist.Extensions;
+
     public class AnimateModifier : Modifier<Actor>
     {
         private string targetAnimationName;
@@ -14,8 +15,6 @@
 
         public AnimateModifier()
         {
-            this.IsOneShot = false;
-            this.HasMemory = true;
         }
 
         public AnimateModifier(Actor target, string targetSprite, string targetAnimation, bool isOneShot, bool hasMemory)
@@ -33,7 +32,13 @@
 
         public override XElement XmlSerialize()
         {
-            throw new System.NotImplementedException();
+            return new XElement(
+                "AnimateModifier",
+                new XAttribute("targetSprite", this.targetSprite),
+                new XAttribute("targetAnimation", this.targetAnimationName),
+                new XAttribute("isOneShot", this.IsOneShot),
+                new XAttribute("hasMemory", this.HasMemory),
+                base.XmlSerialize());
         }
 
         public override void XmlDeserialize(XElement element)
@@ -42,20 +47,12 @@
             {
                 base.XmlDeserialize(element.Element("Modifier"));
 
-                this.targetSprite = element.Attribute("targetSprite").Value;
-                this.targetAnimationName = element.Attribute("targetAnimation").Value;
+                this.targetSprite = element.GetAttribute("targetSprite", string.Empty);
+                this.targetAnimationName = element.GetAttribute("targetAnimation", string.Empty);
 
-                var oneShotAtt = element.Attribute("isOneShot");
-                if (oneShotAtt != null)
-                {
-                    this.IsOneShot = bool.Parse(oneShotAtt.Value);
-                }
+                this.IsOneShot = element.GetAttribute("isOneShot", false);
 
-                var hasMemoryAtt = element.Attribute("hasMemory");
-                if (hasMemoryAtt != null)
-                {
-                    this.HasMemory = bool.Parse(hasMemoryAtt.Value);
-                }
+                this.HasMemory = element.GetAttribute("hasMemory", true);
             }
         }
 

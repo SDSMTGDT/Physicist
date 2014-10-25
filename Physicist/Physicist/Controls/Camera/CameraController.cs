@@ -1,9 +1,6 @@
 ﻿namespace Physicist.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Extensions;
@@ -11,14 +8,15 @@
     /// <summary>
     /// The camera controller.  Should be present in the main game only, 
     /// although multiple instances could be used for cinematic purposes. 
-    /// 
+    /// </summary>
+    /// <remarks>
     /// To modify a camera's property, use the following:
     ///     -   Camera.Following: sets the object for the camera to follow
     ///     -   ZoomIn(): zooms in a given amount
     ///     -   ZoomOut(): zooms out a given amount
     ///     -   Move(): moves the camera around
     ///     -   CenterOnFollowing(): focuses on Following, should be used like an update step.
-    /// </summary>
+    /// </remarks>
     public class CameraController
     {
         private Matrix originScaleRotationMatrix;

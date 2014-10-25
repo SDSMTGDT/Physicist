@@ -1,13 +1,13 @@
 ﻿namespace Physicist.Events
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
+    using Physicist.Extensions;
 
-    public class PhysicistEvent : PhysicistGameScreenItem, IPhysicistEvent
+    public class PhysicistEvent : PhysicistGameScreenItem, IUpdate, IName
     {
         private List<IModifier> modifiers = new List<IModifier>();
         private List<ITrigger> triggers = new List<ITrigger>();
@@ -17,17 +17,9 @@
         {
         }
 
-        public bool IsEnabled
-        {
-            get;
-            set;
-        }
+        public bool IsEnabled { get; set; }
 
-        public string Name
-        {
-            get;
-            private set;
-        }
+        public string Name { get; private set; }
 
         public IEnumerable<IModifier> Modifiers
         {
@@ -88,7 +80,13 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            return new XElement(
+                "Event",
+                new XAttribute("class", "PhysicistEvent"),
+                new XAttribute("name", this.Name),
+                new XElement("Triggers", this.triggers.Select(trigger => trigger.XmlSerialize()).ToArray()),
+                new XElement("Modifiers", this.modifiers.Select(modifier => modifier.XmlSerialize()).ToArray()),
+                new XElement("TriggerSets", this.triggerSets.Select(triggerset => triggerset.XmlSerialize()).ToArray()));
         }
 
         public override void XmlDeserialize(XElement element)
@@ -96,34 +94,37 @@
             if (element != null)
             {
                 this.IsEnabled = true;
-                this.Name = element.Attribute("name").Value;
+                this.Name = element.GetAttribute("name", string.Empty);
+                this.IsEnabled = element.GetAttribute("isEnabled", true);
 
-                XAttribute enabledAtt = element.Attribute("isEnabled");
-                if (enabledAtt != null)
+                var modifiersEle = element.Element("Modifiers");
+                if (modifiersEle != null)
                 {
-                    this.IsEnabled = bool.Parse(enabledAtt.Value);
-                }
-
-                foreach (var modifierEle in element.Element("Modifiers").Elements())
-                {
-                    IModifier modifier = (IModifier)MapLoader.CreateInstance(modifierEle, null);
-                    if (modifier != null)
+                    foreach (var modifierEle in modifiersEle.Elements())
                     {
-                        modifier.Screen = this.Screen;
-                        modifier.XmlDeserialize(modifierEle);
-                        this.modifiers.Add(modifier);
+                        IModifier modifier = (IModifier)MapLoader.CreateInstance(modifierEle, null);
+                        if (modifier != null)
+                        {
+                            modifier.Screen = this.Screen;
+                            modifier.XmlDeserialize(modifierEle);
+                            this.modifiers.Add(modifier);
+                        }
                     }
                 }
 
-                foreach (var triggerEle in element.Element("Triggers").Elements())
+                var triggersEle = element.Element("Triggers");
+                if (triggersEle != null)
                 {
-                    Trigger trigger = (Trigger)MapLoader.CreateInstance(triggerEle, null);
-                    if (trigger != null)
+                    foreach (var triggerEle in triggersEle.Elements())
                     {
-                        trigger.Screen = this.Screen;
-                        trigger.XmlDeserialize(triggerEle);
-                        trigger.Initialize(this.modifiers);
-                        this.triggers.Add(trigger);
+                        Trigger trigger = (Trigger)MapLoader.CreateInstance(triggerEle, null);
+                        if (trigger != null)
+                        {
+                            trigger.Screen = this.Screen;
+                            trigger.XmlDeserialize(triggerEle);
+                            trigger.Initialize(this.modifiers);
+                            this.triggers.Add(trigger);
+                        }
                     }
                 }
 

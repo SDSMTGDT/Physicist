@@ -7,6 +7,7 @@
     using System.Reflection;
     using System.Xml.Linq;
     using Physicist.Enums;
+    using Physicist.Extensions;
 
     public class PrimitivePropertyModifier : Modifier<object>
     {
@@ -18,39 +19,27 @@
         private Dictionary<int, PropertyInfo> propertyInfo = new Dictionary<int, PropertyInfo>();
         private Dictionary<int, object> previousValues = new Dictionary<int, object>();
 
+        public override XElement XmlSerialize()
+        {
+            return new XElement(
+                "PrimitivePropertyModifier",
+                new XAttribute("propertyName", this.targetPropertyName),
+                new XAttribute("propertyType", this.targetPropertyType),
+                new XAttribute("hasMemory", this.hasMemory),
+                new XAttribute("newValue", this.newValue),
+                base.XmlSerialize());
+        }
+
         public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
-                var propNameAtt = element.Attribute("PropertyName");
-                if (propNameAtt != null)
-                {
-                    this.targetPropertyName = propNameAtt.Value;
-                }
+                this.targetPropertyName = element.GetAttribute("propertyName", string.Empty);
+                this.targetPropertyType = PrimitiveTypesHelper.ToSystemType(element.GetAttribute("propertyType", PrimitiveType.@string));
+                this.hasMemory = element.GetAttribute("hasMemory", true);
 
-                var propTypeAtt = element.Attribute("PropertyType");
-                if (propTypeAtt != null)
-                {
-                    // Checking supported type in event of unvalidated schema
-                    var supportedPropertyType = PrimitiveTypesHelper.ToSystemType((PrimitiveType)Enum.Parse(typeof(PrimitiveType), propTypeAtt.Value));
-                    if (supportedPropertyType != null)
-                    {
-                        this.targetPropertyType = supportedPropertyType;
-                    }
-                }
-
-                var hasMemoryAtt = element.Attribute("HasMemory");
-                if (hasMemoryAtt != null)
-                {
-                    this.hasMemory = bool.Parse(hasMemoryAtt.Value);
-                }
-
-                var newValueAtt = element.Attribute("NewValue");
-                if (newValueAtt != null)
-                {
-                    var converter = TypeDescriptor.GetConverter(this.targetPropertyType);
-                    this.newValue = converter.ConvertFrom(newValueAtt.Value);
-                }
+                var converter = TypeDescriptor.GetConverter(this.targetPropertyType);
+                this.newValue = converter.ConvertFrom(element.GetAttribute("newValue", string.Empty));
 
                 base.XmlDeserialize(element.Element("Modifier"));
             }

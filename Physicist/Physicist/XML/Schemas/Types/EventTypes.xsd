@@ -291,10 +291,10 @@
   <xs:complexType name="PrimitivePropertyModifier">
     <xs:complexContent>
       <xs:extension base="mstns:ModifierType">
-        <xs:attribute name="PropertyName" use="required" type="xs:string"/>
-        <xs:attribute name="PropertyType" use="required" type="mstns:PrimitiveTypes"/>
-        <xs:attribute name="NewValue" use="required" type="xs:string"/>
-        <xs:attribute name="HasMemory" use="optional" type="xs:boolean">
+        <xs:attribute name="propertyName" use="required" type="xs:string"/>
+        <xs:attribute name="propertyType" use="required" type="mstns:PrimitiveTypes"/>
+        <xs:attribute name="newValue" use="required" type="xs:string"/>
+        <xs:attribute name="hasMemory" default="false" type="xs:boolean">
           <xs:annotation>
             <xs:documentation>[Optional] default is false</xs:documentation>
           </xs:annotation>

@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
@@ -51,7 +49,10 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            return new XElement(
+                "VelocityModifier",
+                this.stepChange.XmlSerialize("StepChange"),
+                base.XmlSerialize());
         }
 
         protected override void SetTargets(IEnumerable<object> targetObjects)

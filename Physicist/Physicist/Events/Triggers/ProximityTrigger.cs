@@ -16,44 +16,55 @@
     
     public class ProximityTrigger : Trigger, IXmlSerializable
     {
+        private BodyInfo bodyInfo = null;
+        private Body sensorBody = null;
         private Fixture collisionFixture = null;
         private Fixture separationFixture = null;
-
-        public Body SensorBody { get; set; }
 
         public ProximityTrigger()
         {
         }
 
-        public ProximityTrigger(float sensorRadius, Vector2 position, World world = null)
+        public ProximityTrigger(float sensorRadius, Vector2 position, World world)
         {
             if (this.World != world)
+            {
                 this.World = world;
+            }
+
             this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
             this.CreateSensors(this.SensorBody.FixtureList[0]);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
 
-        public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world = null)
+        public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world)
         {
             if (this.World != world)
+            {
                 this.World = world;
+            }
+
             this.SensorBody = BodyFactory.CreateRectangle(this.World, sensorWidth, sensorHeight, 1f, position);
             this.CreateSensors(this.SensorBody.FixtureList[0]);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
 
-        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world = null)
+        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world)
         {
             if (this.World != world)
+            {
                 this.World = world;
+            }
+
             this.SensorBody = sensorBody;
             this.CreateSensors(sensorTemplate);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
+
+        public Body SensorBody { get; set; }
 
         public bool IsContinuous 
         {
@@ -78,11 +89,6 @@
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-        }
-
-        public override XElement XmlSerialize()
-        {
-            throw new NotImplementedException();
         }
 
         public override void XmlDeserialize(XElement element)
@@ -127,18 +133,35 @@
                 {
                     var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, bodyInfoEle.Elements().ElementAt(0));
                     this.World.RemoveBody(bodyData.Item1);
+                    this.bodyInfo = bodyData.Item2;
                     sensorTemplate = bodyData.Item1.FixtureList[0];                   
                 }
 
                 this.CreateSensors(sensorTemplate);
-                this.IsContinuous = false;
-
-                var continuousAtt = element.Attribute("IsContinuous");
-                if (continuousAtt != null)
-                {
-                    this.IsContinuous = bool.Parse(continuousAtt.Value);
-                }
+                this.IsContinuous = element.GetAttribute("isContinuous", false);
             }
+        }
+
+        public override XElement XmlSerialize()
+        {
+            XElement element = new XElement(
+                "ProximityTrigger",
+                new XAttribute("isContinuous", this.IsContinuous),
+                new XAttribute("attachedTarget", ((Actor)this.sensorBody.UserData).Name),
+                base.XmlSerialize());
+
+            if (this.bodyInfo != null)
+            {
+                element.Add(new XElement("FixtureTemplate", this.bodyInfo.XmlSerialize()));
+            }
+            else
+            {
+                element.Add(
+                    new XAttribute("radius", ((FarseerPhysics.Collision.Shapes.CircleShape)this.sensorBody.FixtureList[0].Shape).Radius),
+                    new Vector2(this.sensorBody.Position.X, this.Map.Height - this.sensorBody.Position.Y).XmlSerialize("Position"));
+            }
+
+            return element;
         }
 
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)

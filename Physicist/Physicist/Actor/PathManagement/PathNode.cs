@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
@@ -25,12 +24,17 @@
 
         public PathNode(Actor target)
         {
+            this.IsInitialized = false;
+            this.modifiers.Add(TriggerMode.OnActivated, new Dictionary<string, IModifier>());
+            this.modifiers.Add(TriggerMode.WhileActivated, new Dictionary<string, IModifier>());
+            this.modifiers.Add(TriggerMode.OnDeactivated, new Dictionary<string, IModifier>());
+
             this.TargetActor = target;
         }
 
         public event EventHandler<EventArgs> Deactivated;
 
-        public bool IsInitialized { get; set; }
+        public bool IsInitialized { get; private set; }
 
         public bool IsActive
         {
@@ -127,7 +131,19 @@
 
         public override XElement XmlSerialize()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("PathNode");
+            foreach (var mode in this.modifiers.Keys)
+            {
+                XElement modeElement = new XElement(mode.ToString());
+                foreach (var modifierName in this.modifiers[mode].Keys)
+                {
+                    modeElement.Add(new XElement("Modifier", new XAttribute("name", modifierName)));
+                }
+
+                element.Add(modeElement);
+            }
+
+            return element;
         }
 
         public override void XmlDeserialize(XElement element)

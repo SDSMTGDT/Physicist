@@ -25,17 +25,9 @@
             }
         }
 
-        public World World
-        {
-            get;
-            set;
-        }
+        public World World { get; set; }
 
-        public Map Map
-        {
-            get;
-            set;
-        }
+        public Map Map { get; set; }
 
         public abstract XElement XmlSerialize();
 

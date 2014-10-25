@@ -1,9 +1,6 @@
 ﻿namespace Physicist.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Physicist.Enums;
@@ -42,11 +39,12 @@
 
         public override void Update(GameTime gameTime)
         {
-            if (this.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
+            var state = KeyboardController.GetState();
+            if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
             {
                 this.PopScreen();
             }
-            else if (this.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+            else if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
             {
                 using (System.Windows.Forms.OpenFileDialog selectMap = new System.Windows.Forms.OpenFileDialog())
                 {

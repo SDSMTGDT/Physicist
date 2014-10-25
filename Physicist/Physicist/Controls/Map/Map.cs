@@ -1,9 +1,6 @@
 ﻿namespace Physicist.Controls
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using FarseerPhysics.Collision.Shapes;
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
@@ -145,7 +142,7 @@
                 }
 
                 var nameObj = instance as IName;
-                if (nameObj != null && nameObj.Name != null)
+                if (nameObj != null && !string.IsNullOrEmpty(nameObj.Name))
                 {
                     this.namedObjects.Add(nameObj.Name, nameObj);
                     known = true;

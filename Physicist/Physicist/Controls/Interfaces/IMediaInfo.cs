@@ -1,6 +1,5 @@
-﻿namespace Physicist.Extensions.Primitives
+﻿namespace Physicist.Controls
 {
-    using System;
     using Physicist.Enums;
 
     public interface IMediaInfo

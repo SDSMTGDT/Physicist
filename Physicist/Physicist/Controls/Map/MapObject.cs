@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
@@ -29,23 +28,11 @@
             this.MapBody.CollisionCategories = PhysicistCategory.Map1;
         }
 
-        public string TextureReference
-        {
-            get;
-            private set;
-        }
+        public string TextureReference { get; private set; }
 
-        public Body MapBody
-        {
-            get;
-            private set;
-        }
+        public Body MapBody { get; private set; }
 
-        public BodyInfo MapBodyInfo
-        {
-            get;
-            private set;
-        }
+        public BodyInfo MapBodyInfo { get; private set; }
 
         public void Draw(ISpritebatch sb)
         {
@@ -73,54 +60,51 @@
         public override XElement XmlSerialize()
         {
             var bodyXml = this.MapBodyInfo.XmlSerialize();
-            bodyXml.Add(new XAttribute("textureRef", this.TextureReference));
-            bodyXml.Add(new XAttribute("class", this.GetType().FullName));
+            bodyXml.Add(
+                new XAttribute("textureRef", this.TextureReference),
+                new XAttribute("class", this.GetType().FullName));
+
             return bodyXml;
         }
 
         public override void XmlDeserialize(XElement element)
         {
-            if (element == null)
+            if (element != null)
             {
-                throw new ArgumentNullException("element");
-            }
+                var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, element);
+                this.MapBody = bodyData.Item1;
+                this.MapBodyInfo = bodyData.Item2;
+                this.TextureReference = element.GetAttribute("textureRef", string.Empty);
 
-            var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, element);
-            this.MapBody = bodyData.Item1;
-            this.MapBodyInfo = bodyData.Item2;
-            this.TextureReference = element.Attribute("textureRef").Value;
+                this.fill = element.GetAttribute("fill", false);
 
-            XAttribute fillAtt = element.Attribute("fill");
-            if (fillAtt != null)
-            {
-                this.fill = bool.Parse(fillAtt.Value);
-            }
-
-            if (this.fill)
-            {
-                if (this.MapBodyInfo.BodyCategory != Enums.BodyCategory.LoopShape)
+                if (this.fill)
                 {
-                    foreach (var fixture in this.MapBody.FixtureList)
+                    if (this.MapBodyInfo.BodyCategory != Enums.BodyCategory.LoopShape)
                     {
-                        Tuple<Texture2D, Vector2> textureInfo = new Tuple<Texture2D, Vector2>(
-                                                    AssetCreator.Instance.TextureFromShape(fixture.Shape, this.TextureReference, Color.White, 1f),
-                                                    fixture.FixtureOffset(this.MapBodyInfo.BodyCategory, this.MapBodyInfo.Position, this.MapBodyInfo.ShapeOffset));
+                        foreach (var fixture in this.MapBody.FixtureList)
+                        {
+                            Tuple<Texture2D, Vector2> textureInfo = new Tuple<Texture2D, Vector2>(
+                                                        AssetCreator.Instance.TextureFromShape(fixture.Shape, this.TextureReference, Color.White, 1f),
+                                                        fixture.FixtureOffset(this.MapBodyInfo.BodyCategory, this.MapBodyInfo.Position, this.MapBodyInfo.ShapeOffset));
 
-                        this.textures.Add(textureInfo);
+                            this.textures.Add(textureInfo);
+                        }
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("Error! Loop Shape is not supported for fill");
                     }
                 }
                 else
                 {
-                    System.Console.WriteLine("Error! Loop Shape is not supported for fill");
+                    this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(this.TextureReference), Vector2.Zero));
                 }
-            }
-            else
-            {
-                this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(this.TextureReference), Vector2.Zero));
-            }
-            if (this.MapBody != null)
-            {
-                this.MapBody.CollisionCategories = PhysicistCategory.Map1;
+
+                if (this.MapBody != null)
+                {
+                    this.MapBody.CollisionCategories = PhysicistCategory.Map1;
+                }
             }
         }
     }
