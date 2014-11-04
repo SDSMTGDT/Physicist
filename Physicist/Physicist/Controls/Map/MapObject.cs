@@ -15,7 +15,6 @@
         private bool fill = false;
 
         public MapObject()
-            : base()
         {
         }
 
