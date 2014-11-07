@@ -86,36 +86,6 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-/*      if (gameTime != null)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                {
-                    this.Exit();
-                }
-
-                MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
-
-                foreach (var actor in MainGame.actors)
-                {
-                    Player player = actor as Player;
-                    player.PlayerCamera = this.camera;
-                    if (player != null)
-                    {
-                        this.camera.Following = player;
-                        player.RotateWorld(.001f);
-                        player.Update(gameTime, Keyboard.GetState());
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
-                }
-
-                // TODO: Add your update logic here
-                this.camera.CenterOnFollowing();
-                MainGame.map.Update(gameTime);
-            }
-*/
             ScreenManager.Update(gameTime);
             base.Update(gameTime);
         }

@@ -16,6 +16,7 @@
   </Words>
   <Acronyms>
     <CasingExceptions>
+      <Acronym>GUI</Acronym>
       <Acronym>NPC</Acronym>
       <Acronym>FCC</Acronym>
       <Acronym>AND</Acronym>

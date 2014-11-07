@@ -58,6 +58,8 @@
 
             systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.MenuScreen));
             systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.PauseScreen));
+            systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.OptionsScreen));
+            systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.ExtrasScreen));
 
             ScreenManager.CurrentScreen = ScreenManager.systemScreens[SystemScreen.MenuScreen];
         }
@@ -135,7 +137,10 @@
         {
             foreach (var screen in ScreenManager.activeScreens)
             {
-                screen.Dispose();                
+                if (!ScreenManager.systemScreens.Contains(screen))
+                {
+                    screen.Dispose();
+                }
             }
 
             foreach (var screen in ScreenManager.systemScreens)
@@ -154,6 +159,12 @@
                     ScreenManager.activeScreens.Add(ScreenManager.systemScreens[SystemScreen.PauseScreen]);
                     ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.PauseScreen];
                     ScreenManager.popupCount++;
+                    ScreenManager.modalCount++;
+                    break;
+
+                case SystemScreen.OptionsScreen:
+                    ScreenManager.activeScreens.Add(ScreenManager.systemScreens[SystemScreen.OptionsScreen]);
+                    ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.OptionsScreen];
                     ScreenManager.modalCount++;
                     break;
             }
@@ -253,12 +264,23 @@
                     case SystemScreen.PauseScreen:
                         tempScreen = new PauseScreen();
                         break;
+
+                    case SystemScreen.OptionsScreen:
+                        tempScreen = new OptionsScreen();
+                        break;
+
+                    case SystemScreen.ExtrasScreen:
+                        tempScreen = new ExtrasScreen();
+                        break;
                 }
 
                 tempScreen.Initialize(ScreenManager.GraphicsDevice);
                 tempScreen.LoadContent();
                 systemScreen = tempScreen;
                 tempScreen = null;
+            }
+            catch (NullReferenceException)
+            {
             }
             finally
             {

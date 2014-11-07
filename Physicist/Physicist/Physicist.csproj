@@ -51,6 +51,10 @@
     <Compile Include="Actor\Field\IField.cs" />
     <Compile Include="Actor\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
+    <Compile Include="Controls\GUIControls\Button.cs" />
+    <Compile Include="Controls\GUIControls\ButtonBase.cs" />
+    <Compile Include="Controls\GUIControls\Enums\ButtonState.cs" />
+    <Compile Include="Controls\GUIControls\TextBox.cs" />
     <Compile Include="Controls\Interfaces\IDamage.cs" />
     <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
     <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
@@ -84,9 +88,11 @@
     <Compile Include="Controls\KeyboardController.cs" />
     <Compile Include="Controls\Map\Map.cs" />
     <Compile Include="Controls\Map\MapLoader.cs" />
+    <Compile Include="Controls\Screens\ExtrasScreen.cs" />
     <Compile Include="Controls\Screens\FCCSpriteBatch.cs" />
     <Compile Include="Controls\Screens\GameScreen.cs" />
     <Compile Include="Controls\Screens\MenuScreen.cs" />
+    <Compile Include="Controls\Screens\OptionsScreen.cs" />
     <Compile Include="Controls\Screens\PauseScreen.cs" />
     <Compile Include="Controls\Screens\PhysicistGameScreen.cs" />
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
