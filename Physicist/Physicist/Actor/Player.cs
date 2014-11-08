@@ -258,6 +258,12 @@
                     this.footButton = new ProximityTrigger(this.Body, footButtonFixture, null);
                     this.footButton.Initialize(null);
                 }
+
+                this.Body.BodyType = BodyType.Dynamic;
+                this.Body.FixedRotation = true;
+
+                this.Body.CollidesWith = Category.All ^ Category.Cat3;
+                this.Body.CollisionCategories = Category.All ^ Category.Cat3;
             }
         }
     }

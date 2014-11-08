@@ -10,6 +10,7 @@
   <xs:include id="Common" schemaLocation="../Proxies/PhysicistCommon.xsd"/>
   <xs:include id="Actor" schemaLocation="ActorTypes.xsd"/>
   <xs:include id="Events" schemaLocation="EventTypes.xsd"/>
+  <xs:include id="Fields" schemaLocation="FieldTypes.xsd"/>
   <xs:import namespace="PhysicistActors" schemaLocation="../Nodes/PhysicistActors.xsd"/>
 
   <xs:complexType name="MediaList">
@@ -106,7 +107,14 @@
   <xs:complexType name="LevelObjects">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element name="Backgrounds" type="BackgroundList" minOccurs="0"/>
-      <xs:element name="Foregrounds" type="FarseerShapeList" minOccurs="0"/>
+      <xs:element name="Foregrounds">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="MapObject"/>
+            <xs:element ref="FieldContainer"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="Actors" type="ActorList" minOccurs="0"/>
     </xs:choice>
   </xs:complexType>

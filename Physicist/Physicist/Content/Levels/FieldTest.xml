@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Map xmlns="PhysicistTypes"
+     xmlns:system="SystemPrefabs"
+     xmlns:actor="PhysicistActors"
+     xmlns:fields="PhysicistFields"
+     width="800"
+     height="480">
+  <Media>
+    <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+    <Texture2D name="BlueField" location="Textures/BlueField"/>
+    <Texture2D name="Background" location="Textures/Background"/>
+    <Texture2D name="OrangeField" location="Textures/OrangeField"/>
+    <Texture2D name="YellowField" location="Textures/YellowField"/>
+    <Texture2D name="Platform" location="Textures/Platform"/>
+  </Media>
+  <LevelObjects>
+    <Backgrounds>
+      <Backdrop textureRef="Background" tile="true">
+        <Dimension height="600" width="300"/>
+        <Location x="0" y="0"/>
+      </Backdrop>
+    </Backgrounds>
+    <Foregrounds>
+      <Rectangle width="50" height="10" textureRef="Platform" fill="true">
+        <Position x="100" y="350"/>
+      </Rectangle>
+      <Rectangle width="10" height="50" textureRef="Platform" fill="true">
+        <Position x="75" y="325"/>
+      </Rectangle>
+      
+      <fields:AccelerationField>
+        <BodyInfo xmlns="PhysicistTypes">
+          <Rectangle width="100" height="300" textureRef="BlueField" fill="true">
+            <Position x="100" y="330"/>
+          </Rectangle>            
+        </BodyInfo>
+        <Field xmlns="PhysicistTypes">
+          <FieldVector x="0" y="-40"/>
+        </Field>
+      </fields:AccelerationField>
+
+      <fields:VelocityField xmlns="PhysicistActors">
+        <BodyInfo xmlns="PhysicistTypes">
+          <Rectangle width="100" height="300" textureRef="OrangeField" fill="true" rotation="1.57">
+            <Position x="100" y="330"/>
+          </Rectangle>
+        </BodyInfo>
+        <Field xmlns="PhysicistTypes">
+          <FieldVector x="-0.4" y="0"/>
+        </Field>
+      </fields:VelocityField>
+
+      <fields:HealthField xmlns="PhysicistActors" hitsPerSecond="1">
+        <BodyInfo xmlns="PhysicistTypes">
+          <Circle radius="50" textureRef="YellowField" fill="true">
+            <Position x="300" y="50"/>
+          </Circle>          
+        </BodyInfo>
+        <Field xmlns="PhysicistTypes">
+          <FieldVector x="-1" y="0"/>
+        </Field>
+      </fields:HealthField>
+    </Foregrounds>
+    <Actors>      
+      <system:Mario textureRef="NOTSTOLEN">
+        <system:Position x="19" y="40"/>
+      </system:Mario>
+    </Actors>
+  </LevelObjects>
+</Map>

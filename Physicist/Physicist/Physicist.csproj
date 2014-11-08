@@ -44,12 +44,12 @@
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\BodyInfo.cs" />
     <Compile Include="Actor\Door.cs" />
-    <Compile Include="Actor\Field\FieldContainer.cs" />
-    <Compile Include="Actor\Field\AccelerationField.cs" />
-    <Compile Include="Actor\Field\Field.cs" />
-    <Compile Include="Actor\Field\HealthField.cs" />
-    <Compile Include="Actor\Field\IField.cs" />
-    <Compile Include="Actor\Field\VelocityField.cs" />
+    <Compile Include="Controls\Map\Field\FieldContainer.cs" />
+    <Compile Include="Controls\Map\Field\AccelerationField.cs" />
+    <Compile Include="Controls\Map\Field\Field.cs" />
+    <Compile Include="Controls\Map\Field\HealthField.cs" />
+    <Compile Include="Controls\Interfaces\IField.cs" />
+    <Compile Include="Controls\Map\Field\VelocityField.cs" />
     <Compile Include="Actor\GameSprite.cs" />
     <Compile Include="Controls\Interfaces\IDamage.cs" />
     <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Controls\Screens\GameScreen.cs" />
     <Compile Include="Controls\Screens\MenuScreen.cs" />
     <Compile Include="Controls\Screens\PauseScreen.cs" />
-    <Compile Include="Controls\Screens\PhysicistGameScreen.cs" />
+    <Compile Include="Controls\PhysicistGameScreen.cs" />
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
@@ -130,9 +130,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Textures\BlueField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Levels\Blank.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\FieldTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Levels\TriggerSetTest.xml">
       <SubType>Designer</SubType>
@@ -168,6 +175,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\MegamanSprite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\OrangeField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\YellowField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Tools\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll">
@@ -222,6 +235,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="XML\Schemas\Nodes\PhysicistEvents.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistFields.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -315,6 +332,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="XML\Schemas\Nodes\PhysicistActors.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Types\FieldTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
