@@ -20,19 +20,18 @@
         private bool rotating = false;
         private int nextRotationTime;
         private int jumpEndTime;
-        private float dampening = 1.1f;
-        private int markedMilliseconds;
-        private int passedJumpMilliseconds;
+        private float dampening = 5f;
+        private int markedRotateMilliseconds;
+        private int markedJumpMilliseconds;
         private ProximityTrigger headButton = null;
         private ProximityTrigger footButton = null;
         private string spriteStateString = "Idle";
 
-        public Player() :
-            base()
+        public Player()
         {
             this.RotatesWithWorld = false;
             this.RotationTiming = 10;
-            this.JumpTiming = 25;
+            this.JumpTiming = 500;
             this.JumpSpeed = 150;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
@@ -45,7 +44,7 @@
         {
             this.RotatesWithWorld = false;
             this.RotationTiming = 10;
-            this.JumpTiming = 50;
+            this.JumpTiming = 500;
             this.JumpSpeed = 150;
             this.nextRotationTime = 0;
             this.RotationSpeed = .02f;
@@ -69,7 +68,8 @@
         {
             if (gameTime != null)
             {
-                this.markedMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
+                this.markedRotateMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
+                this.markedJumpMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             }
 
             var state = KeyboardController.GetState();
@@ -110,7 +110,7 @@
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
-                this.MovementSpeed = new Vector2(5, 5);
+                
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();
@@ -150,11 +150,9 @@
         {
             if (this.jumpEndTime > 0)
             {
-                this.passedJumpMilliseconds += this.JumpTiming;
-                if (this.passedJumpMilliseconds >= this.jumpEndTime)
+                if (this.markedJumpMilliseconds >= this.jumpEndTime)
                 {
                     this.Body.GravityScale = 4;
-                    this.passedJumpMilliseconds = 0;
                     this.jumpEndTime = 0;
 
                     // remove the jump velocity
@@ -172,78 +170,68 @@
                 this.Body.GravityScale = 4;
             }
 
-            if (state.IsKeyDown(KeyboardController.JumpKey, true) && this.footButton.IsActive)
+            if (state.IsKeyDown(KeyboardController.UpKey) && this.footButton.IsActive)
             {
                 if (this.jumpEndTime == 0)
                 {
-                    this.jumpEndTime = 1000;
+                    this.jumpEndTime = this.JumpTiming;
+                    this.markedJumpMilliseconds = 0;
                     this.Body.GravityScale = 0;
                     this.Body.LinearVelocity += Vector2.Transform(new Vector2(0, -1 * this.JumpSpeed), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 }
             }
 
-            if (!state.IsKeyDown(KeyboardController.JumpKey, false) || this.headButton.IsActive)
+            if (!state.IsKeyDown(KeyboardController.UpKey) || this.headButton.IsActive)
             {
-                if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.passedJumpMilliseconds)
+                if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.markedJumpMilliseconds)
                 {
-                    this.passedJumpMilliseconds = this.jumpEndTime - 200;
+                    this.jumpEndTime = this.markedJumpMilliseconds + 200;
                 }
             }
         }
 
         private bool GetRotation(KeyboardDebouncer state)
         {
+            bool rotated = false;
+
             if (state.IsKeyDown(KeyboardController.RotateLeftKey))
             {
-                if (this.markedMilliseconds > this.nextRotationTime)
+                if (this.markedRotateMilliseconds > this.nextRotationTime)
                 {
                     this.Body.Awake = true;
                     this.Screen.RotateWorld(-this.RotationSpeed);
-                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
+                    this.nextRotationTime = this.RotationTiming;
+                    this.markedRotateMilliseconds = 0;
                 }
 
-                return true;
+                rotated = true;
             }
-
-            if (state.IsKeyDown(KeyboardController.RotateRightKey))
+            else if (state.IsKeyDown(KeyboardController.RotateRightKey))
             {
-                if (this.markedMilliseconds > this.nextRotationTime)
+                if (this.markedRotateMilliseconds > this.nextRotationTime)
                 {
                     this.Body.Awake = true;
                     this.Screen.RotateWorld(this.RotationSpeed);
-                    this.nextRotationTime = this.markedMilliseconds + this.RotationTiming;
+                    this.nextRotationTime = this.RotationTiming;
+                    this.markedRotateMilliseconds = 0;
                 }
 
-                return true;
+                rotated = true;
             }
 
-            return false;
+            return rotated;
         }
 
         private Vector2 GetMovementSpeed(KeyboardDebouncer state)
         {
             var dp = Vector2.Zero;
 
-            if (state.IsKeyDown(KeyboardController.JumpKey, true))
-            {
-                if (dp.Length() < this.MaxSpeed)
-                {
-                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                    if (!this.footButton.IsActive)
-                    {
-                        speedMod /= 5;
-                    }
-
-                    dp -= speedMod;
-                }
-            }
-
-            if (state.IsKeyDown(KeyboardController.UpKey))
+            /*if (state.IsKeyDown(KeyboardController.UpKey))
             {
                 dp -= Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 this.spriteStateString = "Up";
-            }
-            else if (state.IsKeyDown(KeyboardController.DownKey))
+            }*/
+            if (state.IsKeyDown(KeyboardController.DownKey))
             {
                 dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 this.spriteStateString = "Down";
@@ -255,16 +243,13 @@
             }
             else if (state.IsKeyDown(KeyboardController.RightKey))
             {
-                if (dp.Length() < this.MaxSpeed)
+                var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                if (!this.footButton.IsActive)
                 {
-                    var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                    if (!this.footButton.IsActive)
-                    {
-                        speedMod /= 5;
-                    }
-
-                    dp += speedMod;
+                    speedMod /= this.dampening;
                 }
+
+                dp += speedMod;
 
                 this.spriteStateString = "Right";
             }

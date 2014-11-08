@@ -33,7 +33,6 @@
             }
 
             this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
-            this.CreateSensors(this.SensorBody.FixtureList[0]);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
@@ -58,13 +57,25 @@
                 this.World = world;
             }
 
-            this.SensorBody = sensorBody;
+            this.sensorBody = sensorBody;
             this.CreateSensors(sensorTemplate);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
 
-        public Body SensorBody { get; set; }
+        public Body SensorBody
+        {
+            get
+            {
+                return this.sensorBody;
+            }
+
+            set
+            {
+                this.sensorBody = value;
+                this.CreateSensors(value.FixtureList[0]);
+            }
+        }
 
         public bool IsContinuous 
         {
@@ -105,7 +116,7 @@
                     Actor target = this.Map.NamedObjects[attachedEle.Value] as Actor;
                     if (target != null)
                     {
-                        this.SensorBody = target.Body;
+                        this.sensorBody = target.Body;
                     }
                 }
 
@@ -121,10 +132,10 @@
 
                     tempBody.IsSensor = true;
                     
-                    if (this.SensorBody == null)
+                    if (this.sensorBody == null)
                     {
-                        this.SensorBody = tempBody;
-                        this.SensorBody.BodyType = BodyType.Static;
+                        this.sensorBody = tempBody;
+                        this.sensorBody.BodyType = BodyType.Static;
                     }
 
                     sensorTemplate = tempBody.FixtureList[0];
@@ -182,12 +193,12 @@
         private void CreateSensors(Fixture sensorTemplate)
         {
             this.collisionFixture = sensorTemplate;
-            if (!this.SensorBody.FixtureList.Contains(sensorTemplate))
+            if (!this.sensorBody.FixtureList.Contains(sensorTemplate))
             {
-                this.collisionFixture = sensorTemplate.CloneOnto(this.SensorBody);
+                this.collisionFixture = sensorTemplate.CloneOnto(this.sensorBody);
             }
 
-            this.separationFixture = this.collisionFixture.CloneOnto(this.SensorBody);
+            this.separationFixture = this.collisionFixture.CloneOnto(this.sensorBody);
 
             this.collisionFixture.OnCollision += this.OnCollision;
             this.collisionFixture.IsSensor = true;
@@ -196,7 +207,7 @@
             this.separationFixture.IsSensor = true;
             this.separationFixture.IgnoreCCDWith = Category.All;
 
-            foreach (var fixture in this.SensorBody.FixtureList)
+            foreach (var fixture in this.sensorBody.FixtureList)
             {
                 this.collisionFixture.IgnoreCollisionWith(fixture);
                 this.separationFixture.IgnoreCollisionWith(fixture);
