@@ -140,7 +140,7 @@
                 this.Body.GravityScale = 4;
             }
 
-            if (state.IsKeyDown(KeyboardController.UpKey) && this.footButton.IsActive)
+            if (state.IsKeyDown(KeyboardController.JumpKey) && this.footButton.IsActive)
             {
                 if (this.jumpEndTime == 0)
                 {
@@ -151,7 +151,7 @@
                 }
             }
 
-            if (!state.IsKeyDown(KeyboardController.UpKey) || this.headButton.IsActive)
+            if (!state.IsKeyDown(KeyboardController.JumpKey) || this.headButton.IsActive)
             {
                 if (this.jumpEndTime != 0 && this.jumpEndTime - 200 > this.markedJumpMilliseconds)
                 {
