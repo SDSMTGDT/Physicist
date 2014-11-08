@@ -212,6 +212,8 @@
                     sprite.Update(gameTime);
                 }
 
+                this.FixOffsetForRotation();
+
                 this.PathManager.Update(gameTime);
             }
         }
@@ -287,6 +289,9 @@
 
         protected void FixOffsetForRotation()
         {
+            // rotate the body and move the sprite so it is drawn in the correct position
+            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
+
             // A temporary rotational fix.  Need to change origin of rotation in actuality:
             var rotationSpriteOffset = new Vector2();
             foreach (var sprite in this.Sprites.Values)

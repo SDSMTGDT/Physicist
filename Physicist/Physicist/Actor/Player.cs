@@ -75,8 +75,10 @@
 
             var state = KeyboardController.GetState();
             this.spriteStateString = "Idle";
+
             var dp = this.GetMovementSpeed(state);
             this.Body.LinearVelocity += dp;
+
             this.rotating = this.GetRotation(state);
             this.GetJump(state);
 
@@ -85,11 +87,6 @@
             {
                 sprite.CurrentAnimationString = this.spriteStateString;
             }
-
-            // rotate the body and move the sprite so it is drawn in the correct position
-            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
-
-            this.FixOffsetForRotation();
 
             if (this.rotating)
             {
@@ -205,7 +202,13 @@
             }
             else if (state.IsKeyDown(KeyboardController.LeftKey))
             {
-                dp -= Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                var speedMod = Vector2.Transform(new Vector2(-1 * this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
+                if (!this.footButton.IsActive)
+                {
+                    speedMod /= this.midairDampening;
+                }
+
+                dp += speedMod;
                 this.spriteStateString = "Left";
             }
             else if (state.IsKeyDown(KeyboardController.RightKey))
