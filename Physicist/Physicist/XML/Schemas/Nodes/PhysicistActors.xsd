@@ -6,8 +6,7 @@
     xmlns:types="PhysicistTypes"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-  <xs:import namespace="PhysicistTypes" 
-             schemaLocation="../Types/ActorTypes.xsd"/>
+  <xs:import namespace="PhysicistTypes" schemaLocation="../Types/ActorTypes.xsd"/>
 
   <xs:element name="Actor" type="types:Actor"/>
   <xs:element name="Player" type="types:Player"/>
