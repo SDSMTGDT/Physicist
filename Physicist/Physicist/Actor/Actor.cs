@@ -285,6 +285,35 @@
             }
         }
 
+        protected void FixOffsetForRotation()
+        {
+            // A temporary rotational fix.  Need to change origin of rotation in actuality:
+            var rotationSpriteOffset = new Vector2();
+            foreach (var sprite in this.Sprites.Values)
+            {
+                // the offset calculation
+                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
+
+                // bizzare x offset of 3
+                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
+
+                // weird -width y offset at 3 pi / 2
+                if (this.Screen.ScreenRotation > Math.PI)
+                {
+                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                }
+
+                // weird x offset of 2 at pi / 2
+                if (this.Screen.ScreenRotation < Math.PI)
+                {
+                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
+                }
+
+                sprite.Offset = rotationSpriteOffset;
+            }
+        }
+
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             if (this.IsEnabled && this.CanBeDamaged && fixtureB != null)

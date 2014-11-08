@@ -73,7 +73,10 @@
             set
             {
                 this.sensorBody = value;
-                this.CreateSensors(value.FixtureList[0]);
+                if (value != null && value.FixtureList[0] != null)
+                {
+                    this.CreateSensors(value.FixtureList[0]);
+                }
             }
         }
 

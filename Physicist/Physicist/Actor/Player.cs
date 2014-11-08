@@ -20,7 +20,8 @@
         private bool rotating = false;
         private int nextRotationTime;
         private int jumpEndTime;
-        private float dampening = 5f;
+        private float midairDampening = 5f;
+        private float groundDampening = 1.1f;
         private int markedRotateMilliseconds;
         private int markedJumpMilliseconds;
         private ProximityTrigger headButton = null;
@@ -74,7 +75,8 @@
 
             var state = KeyboardController.GetState();
             this.spriteStateString = "Idle";
-            this.Body.LinearVelocity += this.GetMovementSpeed(state);
+            var dp = this.GetMovementSpeed(state);
+            this.Body.LinearVelocity += dp;
             this.rotating = this.GetRotation(state);
             this.GetJump(state);
 
@@ -114,35 +116,6 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();
-            }
-        }
-
-        private void FixOffsetForRotation()
-        {
-            // A temporary rotational fix.  Need to change origin of rotation in actuality:
-            var rotationSpriteOffset = new Vector2();
-            foreach (var sprite in this.Sprites.Values)
-            {
-                // the offset calculation
-                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
-
-                // bizzare x offset of 3
-                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
-
-                // weird -width y offset at 3 pi / 2
-                if (this.Screen.ScreenRotation > Math.PI)
-                {
-                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                }
-
-                // weird x offset of 2 at pi / 2
-                if (this.Screen.ScreenRotation < Math.PI)
-                {
-                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
-                }
-
-                sprite.Offset = rotationSpriteOffset;
             }
         }
 
@@ -225,12 +198,6 @@
         private Vector2 GetMovementSpeed(KeyboardDebouncer state)
         {
             var dp = Vector2.Zero;
-
-            /*if (state.IsKeyDown(KeyboardController.UpKey))
-            {
-                dp -= Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                this.spriteStateString = "Up";
-            }*/
             if (state.IsKeyDown(KeyboardController.DownKey))
             {
                 dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
@@ -246,7 +213,7 @@
                 var speedMod = Vector2.Transform(new Vector2(this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 if (!this.footButton.IsActive)
                 {
-                    speedMod /= this.dampening;
+                    speedMod /= this.midairDampening;
                 }
 
                 dp += speedMod;
@@ -259,7 +226,7 @@
                 Vector2 newVelocity = this.Body.LinearVelocity;
              
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
-                newVelocity.X /= this.dampening;
+                newVelocity.X /= this.groundDampening;
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
              
                 this.Body.LinearVelocity = newVelocity;
