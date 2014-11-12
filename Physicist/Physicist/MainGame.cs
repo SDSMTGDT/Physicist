@@ -54,8 +54,6 @@
             MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
-            ScreenManager.Initialize(this.GraphicsDevice);
-            ScreenManager.Quit += this.RequestQuit;
            
             base.Initialize();
         }
@@ -66,7 +64,21 @@
         /// </summary>
         protected override void LoadContent()
         {
-            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "Pericles6");
+            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "System\\Fonts\\Pericles6");
+            ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "System\\Textures\\ContentLoadError");
+            ContentController.Instance.LoadContent<SpriteFont>("DebugFount", "System\\Fonts\\DebugFont");
+        }
+
+        /// <summary>
+        /// Called before first update loop place to initialized components
+        /// dependant upon content
+        /// </summary>
+        protected override void BeginRun()
+        {
+            ScreenManager.Initialize(this.GraphicsDevice);
+            ScreenManager.Quit += this.RequestQuit;
+
+            base.BeginRun();
         }
 
         /// <summary>
@@ -87,6 +99,8 @@
         protected override void Update(GameTime gameTime)
         {
             ScreenManager.Update(gameTime);
+            KeyboardController.Update(gameTime);
+            MouseController.Update(gameTime);
             base.Update(gameTime);
         }
 

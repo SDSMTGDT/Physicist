@@ -12,6 +12,7 @@
       <Word>Sim</Word>
       <Word>Pathing</Word>
       <Word>Triggerable</Word>
+      <Word>gui</Word>
     </Recognized>
   </Words>
   <Acronyms>
@@ -24,7 +25,7 @@
       <Acronym>int</Acronym>
       <Acronym>char</Acronym>
       <Acronym>bool</Acronym>
-      <Acronym>string</Acronym> 
+      <Acronym>string</Acronym>
     </CasingExceptions>
   </Acronyms>
 </Dictionary>

@@ -3,65 +3,78 @@
     using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Controls.GUIControls;
+    using Microsoft.Xna.Framework.Input;
+    using Physicist.Controls;
     using Physicist.Enums;
 
-    public class OptionsScreen : GameScreen
+    /// <summary>
+    /// OptionsScreen is the 'main' screen for this section of
+    /// your game. It is used to host content and update components.
+    /// </summary>
+    public partial class OptionsScreen : GameScreen
     {
-        private Texture2D screenBack;
-        
-        private Button backButton;
-
-        public OptionsScreen()
-            : base(SystemScreen.OptionsScreen.ToString())
+        public OptionsScreen() :
+            base(SystemScreen.OptionsScreen.ToString())
         {
-            this.IsModal = true;
-            this.BackgroundColor = Color.Black;
+            this.BackgroundColor = new Color(0, 0, 0, 0.8f);
         }
 
+        /// <summary>
+        /// Allows the screen to perform any initialization logic before starting.
+        /// Use it to load any non-graphical content
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        /// <summary>
+        /// LoadContent is called once per instance of screen and is used to 
+        /// load all of the graphical content
+        /// </summary>
         public override bool LoadContent()
         {
-            Color[] screenColor = new Color[ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height];
-            for (int i = 0; i < ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height; i++)
-            {
-                screenColor[i] = new Color(0, 0, 0, 0.8f);
-            }
-
-            this.screenBack = new Texture2D(ScreenManager.GraphicsDevice, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
-            this.screenBack.SetData(screenColor);
-
-            this.backButton = new Button(this.GraphicsDevice);
-            this.backButton.Bounds = new Rectangle((ScreenManager.GraphicsDevice.Viewport.Width / 2) - 35, this.GraphicsDevice.Viewport.Height - 50, 70, 50);
-            this.backButton.BackgroundColor = Color.Gray;
-            this.backButton.Text = "Back";
-            this.backButton.OnPressed += (s, e) => { this.PopScreen(); };
-
             return base.LoadContent();
         }
 
+        /// <summary>
+        /// UnloadContent is called once per instance of screen and is used to 
+        /// unload all of the graphical content
+        /// </summary>
         public override void UnloadContent()
         {
-            this.screenBack.Dispose();
-            this.screenBack = null;
-
             base.UnloadContent();
         }
 
+        /// <summary>
+        /// Allows the screen to run updating logic like checking user inputs,
+        /// changing item properties or playing music
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            this.backButton.Update(gameTime);
+            if (gameTime != null)
+            {
+                var ks = KeyboardController.GetState();
 
-            base.Update(gameTime);
+                if (ks.IsKeyDown(Keys.Escape, true))
+                {
+                    this.PopScreen();
+                }
+
+                base.Update(gameTime);
+            }
         }
 
+        /// <summary>
+        /// Called every time the screen is to re-draw itself
+        /// </summary>
+        /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
         public override void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
                 base.Draw(sb);
-                sb.Draw(this.screenBack, Vector2.Zero, Color.White);
-
-                this.backButton.Draw(sb);
             }
         }
     }

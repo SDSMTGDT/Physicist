@@ -11,11 +11,42 @@
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
     using Physicist.Enums;
 
     public static class ExtensionMethods
     {
+        public static Color Invert(this Color color)
+        {
+            return new Color(255 - color.R, 255 - color.G, 255 - color.B, color.A);
+        }
+
+        public static Color Brighten(this Color color, float percent)
+        {
+            percent = percent < 0 ? 0 : percent;
+            int r = (int)MathHelper.Clamp(color.R * (1 + (percent / 100f)), 0, 255f);
+            int g = (int)MathHelper.Clamp(color.G * (1 + (percent / 100f)), 0, 255f);
+            int b = (int)MathHelper.Clamp(color.B * (1 + (percent / 100f)), 0, 255f);
+
+            return new Color(r, g, b, color.A);
+        }
+
+        public static Color Darken(this Color color, float percent)
+        {
+            percent = percent < 0 ? 0 : percent;
+            int r = (int)MathHelper.Clamp(color.R * (1 - (percent / 100f)), 0, 255f);
+            int g = (int)MathHelper.Clamp(color.G * (1 - (percent / 100f)), 0, 255f);
+            int b = (int)MathHelper.Clamp(color.B * (1 - (percent / 100f)), 0, 255f);
+
+            return new Color(r, g, b, color.A);
+        }
+
+        public static bool IsAlpha(this Keys key)
+        {
+            return (int)key >= 65 && (int)key <= 90;
+        }
+
         public static Point ToPoint(this Vector2 vector)
         {
             return new Point((int)vector.X, (int)vector.Y);

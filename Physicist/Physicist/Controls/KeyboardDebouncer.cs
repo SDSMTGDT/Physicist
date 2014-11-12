@@ -43,6 +43,25 @@
             return isKeyDown;
         }
 
+        public Keys[] GetPressedKeys()
+        {
+            return this.GetPressedKeys(false);
+        }
+
+        public Keys[] GetPressedKeys(bool debounce)
+        {
+            List<Keys> pressedKeys = new List<Keys>();
+            foreach (var key in this.trackedKeys.Keys)
+            {
+                if (this.IsKeyDown(key, debounce))
+                {
+                    pressedKeys.Add(key);
+                }
+            }
+
+            return pressedKeys.ToArray();
+        }
+
         public void UpdateKeys()
         {
             var pressedKeys = Keyboard.GetState().GetPressedKeys();

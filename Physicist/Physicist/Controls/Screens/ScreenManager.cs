@@ -80,7 +80,7 @@
                         null, 
                         ScreenManager.systemScreens[SystemScreen.MenuScreen].Camera.Transform);
 
-                    ScreenManager.systemScreens[SystemScreen.MenuScreen].Draw(sb);
+                    ScreenManager.systemScreens[SystemScreen.MenuScreen].DrawScreen(sb);
                     sb.End();
                 }
                 else
@@ -108,7 +108,7 @@
                                 null,
                                 screen.Camera.Transform);
 
-                            screen.Draw(sb);
+                            screen.DrawScreen(sb);
                             sb.End();
                         }
                     }
@@ -126,11 +126,11 @@
                 var screen = ScreenManager.activeScreens[i];
                 if (screen.IsActive)
                 {
-                    screen.Update(gameTime);
+                    screen.UpdateScreen(gameTime);
                 }
             }
 
-            ScreenManager.CurrentScreen.Update(gameTime);
+            ScreenManager.CurrentScreen.UpdateScreen(gameTime);
         }
 
         public static void UnloadContent()
@@ -167,6 +167,12 @@
                     ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.OptionsScreen];
                     ScreenManager.modalCount++;
                     break;
+
+                case SystemScreen.ExtrasScreen:
+                    ScreenManager.activeScreens.Add(ScreenManager.systemScreens[SystemScreen.ExtrasScreen]);
+                    ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.ExtrasScreen];
+                    ScreenManager.modalCount++;
+                    break;
             }
         }
 
@@ -174,8 +180,8 @@
         {
             if (ScreenManager.IsInitialized && screen != null && !ScreenManager.activeScreens.Contains(screen))
             {
-                screen.Initialize(ScreenManager.GraphicsDevice);
-                if (screen.LoadContent())
+                screen.InitializeScreen(ScreenManager.GraphicsDevice);
+                if (screen.LoadScreenContent())
                 {
                     if (screen.IsPopup)
                     {
@@ -274,8 +280,8 @@
                         break;
                 }
 
-                tempScreen.Initialize(ScreenManager.GraphicsDevice);
-                tempScreen.LoadContent();
+                tempScreen.InitializeScreen(ScreenManager.GraphicsDevice);
+                tempScreen.LoadScreenContent();
                 systemScreen = tempScreen;
                 tempScreen = null;
             }

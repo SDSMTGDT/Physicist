@@ -3,66 +3,50 @@
     using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls.GUIControls;
+    using Physicist.Controls;
     using Physicist.Enums;
 
-    public class MenuScreen : GameScreen
+    /// <summary>
+    /// MenuScreen is the 'main' screen for this section of
+    /// your game. It is used to host content and update components.
+    /// </summary>
+    public partial class MenuScreen : GameScreen
     {
-        private Texture2D menuBack;
-
-        private Button playButton;
-        private Button optionsButton;
-        private Button extrasButton;
-
         public MenuScreen() :
             base(SystemScreen.MenuScreen.ToString())
         {
-            this.BackgroundColor = Color.Black;
+            this.BackgroundColor = new Color(0, 0, 0, 0.8f);
         }
 
+        /// <summary>
+        /// Allows the screen to perform any initialization logic before starting.
+        /// Use it to load any non-graphical content
+        /// </summary>
+        public override void Initialize()
+        {
+        }
+
+        /// <summary>
+        /// LoadContent is called once per instance of screen and is used to 
+        /// load all of the graphical content
+        /// </summary>
         public override bool LoadContent()
         {
-            Color[] menuColor = new Color[ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height];
-            for (int i = 0; i < ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height; i++)
-            {
-                menuColor[i] = new Color(0, 0, 0, 0.8f);
-            }
-            
-            this.menuBack = new Texture2D(ScreenManager.GraphicsDevice, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
-            this.menuBack.SetData(menuColor);
-
-            this.playButton = new Button(this.GraphicsDevice);
-            this.playButton.Bounds = new Rectangle((ScreenManager.GraphicsDevice.Viewport.Width / 2) - 155, this.GraphicsDevice.Viewport.Height - 130, 310, 50);
-            this.playButton.BackgroundColor = Color.Goldenrod;
-            this.playButton.Text = "Play Game";
-            this.playButton.OnPressed += this.StartPhysicist;
-
-            this.optionsButton = new Button(this.GraphicsDevice);
-            this.optionsButton.Bounds = new Rectangle((ScreenManager.GraphicsDevice.Viewport.Width / 2) - 155, this.GraphicsDevice.Viewport.Height - 75, 153, 50);
-            this.optionsButton.BackgroundColor = Color.Goldenrod;
-            this.optionsButton.Text = "Options";
-            this.optionsButton.OnPressed += this.StartOptions;
-
-            this.extrasButton = new Button(this.GraphicsDevice);
-            this.extrasButton.Bounds = new Rectangle((ScreenManager.GraphicsDevice.Viewport.Width / 2) + 3, this.GraphicsDevice.Viewport.Height - 75, 153, 50);
-            this.extrasButton.BackgroundColor = Color.Goldenrod;
-            this.extrasButton.Text = "Extras";
-            this.extrasButton.OnPressed += this.StartExtras;
-
             return base.LoadContent();
         }
 
+        /// <summary>
+        /// UnloadContent is called once per instance of screen and is used to 
+        /// unload all of the graphical content
+        /// </summary>
         public override void UnloadContent()
         {
-            this.menuBack.Dispose();
-            this.menuBack = null;
-
             base.UnloadContent();
         }
 
         public void StartExtras(object sender, EventArgs e)
         {
+            ScreenManager.AddScreen(SystemScreen.ExtrasScreen);
         }
 
         public void StartOptions(object sender, EventArgs e)
@@ -86,12 +70,13 @@
             }
         }
 
+        /// <summary>
+        /// Allows the screen to run updating logic like checking user inputs,
+        /// changing item properties or playing music
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            this.playButton.Update(gameTime);
-            this.optionsButton.Update(gameTime);
-            this.extrasButton.Update(gameTime);
-
             var state = KeyboardController.GetState();
             if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
             {
@@ -101,26 +86,15 @@
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Called every time the screen is to re-draw itself
+        /// </summary>
+        /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
         public override void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
                 base.Draw(sb);
-                sb.Draw(this.menuBack, Vector2.Zero, Color.White);
-                sb.DrawString(
-                                ContentController.Instance.GetContent<SpriteFont>("MenuFont"),
-                                "Menu Screen: \n\n Esc to Quit",
-                                new Vector2(100, 50),
-                                Color.White,
-                                0f,
-                                Vector2.Zero,
-                                1f,
-                                SpriteEffects.None,
-                                1f);
-
-                this.playButton.Draw(sb);
-                this.optionsButton.Draw(sb);
-                this.extrasButton.Draw(sb);
             }
         }
 
