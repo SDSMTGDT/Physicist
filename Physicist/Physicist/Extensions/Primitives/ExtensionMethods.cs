@@ -13,10 +13,27 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
+    using Physicist.Controls.GUIControls;
     using Physicist.Enums;
 
     public static class ExtensionMethods
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "No new instances are created")]
+        public static bool TrySet<T>(this NotifyProperty notify, ref T value, T newValue)
+        {
+            var change = false;
+            if (notify != null)
+            {
+                if (!value.Equals(newValue))
+                {
+                    value = newValue;
+                    change = true;
+                }
+            }
+
+            return change;
+        }
+
         public static Color Invert(this Color color)
         {
             return new Color(255 - color.R, 255 - color.G, 255 - color.B, color.A);

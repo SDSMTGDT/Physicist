@@ -6,12 +6,10 @@
 
     public class Label : GUIElement
     {
-        private SpriteFont font;
-
         public Label(object parent)
             : base(parent)
         {
-            this.font = ContentController.Instance.GetContent<SpriteFont>("MenuFont");
+            this.Font = ContentController.Instance.GetContent<SpriteFont>("MenuFont");
             this.Text = string.Empty;
             this.TextColor = Color.White;
             this.Visibility = Visibility.Visible;
@@ -21,15 +19,15 @@
 
         public Color TextColor { get; set; }
 
+        public SpriteFont Font { get; set; }
+
         public Rectangle Bounds { get; set; }
 
-        public Visibility Visibility { get; set; }
-
-        public override void Draw(ISpritebatch sb)
+        protected override void DrawElement(ISpritebatch sb)
         {
-            if (sb != null && this.Visibility == Visibility.Visible)
+            if (sb != null)
             {
-                sb.DrawString(this.font, this.Text, new Vector2(this.Bounds.X, this.Bounds.Center.Y - (this.font.MeasureString(this.Text).Y / 2f)), this.TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, .1f);
+                sb.DrawString(this.Font, this.Text, new Vector2(this.Bounds.X, this.Bounds.Center.Y - (this.Font.MeasureString(this.Text).Y / 2f)), this.TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, .1f);
             }
         }
     }

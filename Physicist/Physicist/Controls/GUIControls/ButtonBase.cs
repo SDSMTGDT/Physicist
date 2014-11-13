@@ -23,16 +23,12 @@
         {
             this.Device = device;
             this.TextColor = Color.Black;
-            this.Visibility = Visibility.Visible;
-            this.IsEnabled = true;
             this.TextFont = ContentController.Instance.GetContent<SpriteFont>("MenuFont");
         }
 
         public event EventHandler OnPressed;
 
         public event EventHandler OnReleased;
-
-        public bool IsEnabled { get; set; }
 
         public Texture2D BackgroundImage { get; set; }
 
@@ -45,11 +41,15 @@
 
             set
             {
-                this.pressedBackgroundColor = value;
-                this.heldBackgroundColor = value;
-                this.releasedBackgroundColor = value;
-                this.hoverBackgroundColor = value;
-                this.SetBackgroundTexture();
+                var press = this.TrySet(ref this.pressedBackgroundColor, value);
+                var held = this.TrySet(ref this.heldBackgroundColor, value);
+                var release = this.TrySet(ref this.releasedBackgroundColor, value);
+                var hover = this.TrySet(ref this.hoverBackgroundColor, value);
+
+                if (press || held || release || hover)
+                {
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -62,8 +62,10 @@
 
             set
             {
-                this.pressedBackgroundColor = value;
-                this.SetBackgroundTexture();
+                if (this.TrySet(ref this.pressedBackgroundColor, value))
+                {
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -76,8 +78,10 @@
 
             set
             {
-                this.hoverBackgroundColor = value;
-                this.SetBackgroundTexture();
+                if (this.TrySet(ref this.hoverBackgroundColor, value))
+                {
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -90,8 +94,10 @@
 
             set
             {
-                this.heldBackgroundColor = value;
-                this.SetBackgroundTexture();
+                if (this.TrySet(ref this.heldBackgroundColor, value))
+                {
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -104,8 +110,10 @@
 
             set
             {
-                this.releasedBackgroundColor = value;
-                this.SetBackgroundTexture();
+                if (this.TrySet(ref this.releasedBackgroundColor, value))
+                {
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -114,8 +122,6 @@
         public Color TextColor { get; set; }
 
         public SpriteFont TextFont { get; set; }
-
-        public Visibility Visibility { get; set; }
 
         public ButtonState State 
         {
@@ -127,23 +133,25 @@
             protected set
             {
                 var previous = this.state;
-                this.state = value;
-                if (this.state == ButtonState.Pressed && (previous == ButtonState.Released || previous == ButtonState.Hover))
+                if (this.TrySetNotify(ref this.state, value))
                 {
-                    if (this.OnPressed != null)
+                    if (this.state == ButtonState.Pressed && (previous == ButtonState.Released || previous == ButtonState.Hover))
                     {
-                        this.OnPressed(this, EventArgs.Empty);
+                        if (this.OnPressed != null)
+                        {
+                            this.OnPressed(this, EventArgs.Empty);
+                        }
                     }
-                }
-                else if (this.state == ButtonState.Released && (previous == ButtonState.Pressed || previous == ButtonState.Held))
-                {
-                    if (this.OnReleased != null)
+                    else if (this.state == ButtonState.Released && (previous == ButtonState.Pressed || previous == ButtonState.Held))
                     {
-                        this.OnReleased(this, EventArgs.Empty);
+                        if (this.OnReleased != null)
+                        {
+                            this.OnReleased(this, EventArgs.Empty);
+                        }
                     }
-                }
 
-                this.SetBackgroundTexture();
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
@@ -156,32 +164,17 @@
 
             set
             {
-                this.bounds = value;
-
-                // Reset background color to fill new bounds
-                this.SetBackgroundTexture();
+                if (this.TrySetNotify(ref this.bounds, value))
+                {
+                    // Reset background color to fill new bounds
+                    this.SetBackgroundTexture();
+                }
             }
         }
 
         protected Texture2D BackgroundColorTexture { get; set; }
 
         protected GraphicsDevice Device { get; set; }
-
-        public override void Draw(ISpritebatch sb)
-        {
-            if (this.Visibility == Visibility.Visible)
-            {
-                this.DrawButton(sb);
-            }
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (this.IsEnabled)
-            {
-                this.UpdateButton(gameTime);
-            }
-        }
 
         public override void UnloadContent()
         {
@@ -199,10 +192,6 @@
 
             base.UnloadContent();
         }
-
-        protected abstract void UpdateButton(GameTime gameTime);
-
-        protected abstract void DrawButton(ISpritebatch sb);
 
         protected abstract void SetBackgroundTexture();
     }

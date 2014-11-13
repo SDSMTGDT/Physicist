@@ -64,7 +64,7 @@
             base.UnloadContent();
         }
 
-        protected override void UpdateButton(GameTime gameTime)
+        protected override void UpdateElement(GameTime gameTime)
         {
             var mouseState = MouseController.GetState();
 
@@ -99,7 +99,7 @@
             }
         }
 
-        protected override void DrawButton(ISpritebatch sb)
+        protected override void DrawElement(ISpritebatch sb)
         {
             if (sb != null)
             {

@@ -27,9 +27,6 @@
             this.device = device;
             this.CanEdit = true;
             this.ShowCursor = true;
-            this.IsEnabled = true;
-            this.Visibility = Visibility.Visible;
-
             this.CursorTexture = new Texture2D(this.device, 1, 1);
             this.CursorTexture.SetData(new Color[1] { Color.Black });
         }
@@ -43,7 +40,7 @@
 
             set
             {
-                if (this.TrySetNotify(ref this.backgroundColor, value))
+                if (this.TrySet(ref this.backgroundColor, value))
                 {
                     this.UpdateTextures();
                 }
@@ -52,11 +49,7 @@
 
         public bool CanEdit { get; set; }
 
-        public bool IsEnabled { get; set; }
-
         public bool IsActive { get; set; }
-
-        public Visibility Visibility { get; set; }
 
         public Rectangle Bounds
         {
@@ -88,7 +81,27 @@
 
         private bool ShowCursor { get; set; }
 
-        public override void Draw(ISpritebatch sb)
+        public override void UnloadContent()
+        {
+            if (this.CursorTexture != null)
+            {
+                this.CursorTexture.Dispose();
+            }
+
+            if (this.BackgroundColorTexture != null)
+            {
+                this.BackgroundColorTexture.Dispose();
+            }
+
+            if (this.device != null)
+            {
+                this.device = null;
+            }
+
+            base.UnloadContent();
+        }
+
+        protected override void DrawElement(ISpritebatch sb)
         {
             if (sb != null && this.IsEnabled && this.Visibility == Visibility.Visible)
             {
@@ -107,7 +120,7 @@
             }
         }
 
-        public override void Update(GameTime gameTime)
+        protected override void UpdateElement(GameTime gameTime)
         {
             if (this.IsEnabled)
             {
@@ -161,26 +174,6 @@
                     }
                 }
             }
-        }
-
-        public override void UnloadContent()
-        {
-            if (this.CursorTexture != null)
-            {
-                this.CursorTexture.Dispose();
-            }
-
-            if (this.BackgroundColorTexture != null)
-            {
-                this.BackgroundColorTexture.Dispose();
-            }
-
-            if (this.device != null)
-            {
-                this.device = null;
-            }
-
-            base.UnloadContent();
         }
 
         private void UpdateTextures()
