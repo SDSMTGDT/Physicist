@@ -40,7 +40,7 @@
             }
         }
         
-        public static Category Map3
+        public static Category Field
         {
             get
             {
@@ -165,6 +165,14 @@
             get
             {
                 return Category.Cat20;
+            }
+        }
+
+        public static Category All
+        {
+            get
+            {
+                return Category.All;
             }
         }
     }

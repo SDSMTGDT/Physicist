@@ -262,8 +262,8 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
 
-                this.Body.CollidesWith = Category.All ^ Category.Cat3;
-                this.Body.CollisionCategories = Category.All ^ Category.Cat3;
+                this.Body.CollidesWith = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollisionCategories = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
             }
         }
     }

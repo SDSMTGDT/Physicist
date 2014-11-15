@@ -84,14 +84,14 @@
         {
             get
             {
-                return !(this.collisionFixture.IgnoreCCDWith == Category.All);
+                return !(this.collisionFixture.IgnoreCCDWith == PhysicistCategory.All);
             }
 
             set
             {
                 if (!value)
                 {
-                    this.collisionFixture.IgnoreCCDWith = Category.All;
+                    this.collisionFixture.IgnoreCCDWith = PhysicistCategory.All;
                 }
                 else
                 {
@@ -208,7 +208,7 @@
 
             this.separationFixture.OnSeparation += this.OnSeparation;
             this.separationFixture.IsSensor = true;
-            this.separationFixture.IgnoreCCDWith = Category.All;
+            this.separationFixture.IgnoreCCDWith = PhysicistCategory.All;
 
             foreach (var fixture in this.sensorBody.FixtureList)
             {

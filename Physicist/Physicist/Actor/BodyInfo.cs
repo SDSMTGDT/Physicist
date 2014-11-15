@@ -49,7 +49,7 @@
 
         // Non-null Defaults
         private bool fixedRotation = false;
-        private Category collidesWith = FarseerPhysics.Dynamics.Category.All;
+        private Category collidesWith = PhysicistCategory.All;
         private BodyType bodyType = BodyType.Static;
         private float friction = 0f;
         private float rotation = 0f;
@@ -298,7 +298,7 @@
 
                 this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
 
-                this.collidesWith = element.GetAttribute("collidesWith", Category.All);
+                this.collidesWith = element.GetAttribute("collidesWith", PhysicistCategory.All);
 
                 this.fixedRotation = element.GetAttribute("fixedRotation", false);
 
