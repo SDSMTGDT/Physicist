@@ -41,7 +41,7 @@
                 this.fieldBody = value;
                 if (this.fieldBody != null)
                 {
-                    this.fieldBody.CollisionCategories = Category.Cat3;
+                    this.fieldBody.CollisionCategories = PhysicistCategory.Field;
                 }
             }
         }

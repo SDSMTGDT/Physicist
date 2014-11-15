@@ -77,7 +77,7 @@
           <xsl:call-template name="DefaultParameter">
             <xsl:with-param name="Input" select="MovementSpeed"/>
             <xsl:with-param name="DefaultValue">              
-              <MovementSpeed x="3" y="3"/>
+              <MovementSpeed x="5" y="5"/>
             </xsl:with-param>
           </xsl:call-template>
         </xsl:with-param>

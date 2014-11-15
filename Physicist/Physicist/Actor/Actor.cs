@@ -212,6 +212,8 @@
                     sprite.Update(gameTime);
                 }
 
+                this.FixOffsetForRotation();
+
                 this.PathManager.Update(gameTime);
             }
         }
@@ -282,6 +284,38 @@
                 this.RotatesWithWorld = element.GetAttribute("rotatesWithWorld", false);
                 this.CanBeDamaged = element.GetAttribute("canBeDamaged", true);
                 this.AttackDamage = element.GetAttribute("attackDamage", 0);
+            }
+        }
+
+        protected void FixOffsetForRotation()
+        {
+            // rotate the body and move the sprite so it is drawn in the correct position
+            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
+
+            // A temporary rotational fix.  Need to change origin of rotation in actuality:
+            var rotationSpriteOffset = new Vector2();
+            foreach (var sprite in this.Sprites.Values)
+            {
+                // the offset calculation
+                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
+
+                // bizzare x offset of 3
+                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
+
+                // weird -width y offset at 3 pi / 2
+                if (this.Screen.ScreenRotation > Math.PI)
+                {
+                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                }
+
+                // weird x offset of 2 at pi / 2
+                if (this.Screen.ScreenRotation < Math.PI)
+                {
+                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
+                }
+
+                sprite.Offset = rotationSpriteOffset;
             }
         }
 
