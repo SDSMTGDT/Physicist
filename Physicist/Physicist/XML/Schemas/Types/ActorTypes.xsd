@@ -157,11 +157,6 @@
         <xs:documentation>[Optional] default is 'true'</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="attackDamage" type="xs:int" default="0">
-      <xs:annotation>
-        <xs:documentation>[Optional] default is '0'</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="Player">
@@ -171,13 +166,4 @@
     <xs:attribute name="class" type="xs:string" default="Player"/>
   </xs:complexType>
             
-  <xs:complexType name="ActorList">
-    <xs:sequence minOccurs="0">
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:any namespace="PhysicistActors" processContents="lax"/>
-        <xs:any namespace="ActorExtensions" processContents="lax"/>
-        <xs:any namespace="SystemPrefabs" processContents="lax"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:complexType>
 </xs:schema>

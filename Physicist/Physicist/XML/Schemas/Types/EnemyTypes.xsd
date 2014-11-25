@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="EnemyTypes"
+    targetNamespace="PhysicistTypes"
+    elementFormDefault="qualified"
+    xmlns="PhysicistTypes"
+    xmlns:mstns="PhysicistTypes"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:system="SystemPrefabs"
+>
+  
+  <xs:include schemaLocation="ActorTypes.xsd"/>
+
+  <xs:complexType name="NPC">
+    <xs:all>
+      <xs:element name="Actor" type="Actor"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="Enemy">
+    <xs:all>
+      <xs:element name="NPC" type="NPC"/>
+    </xs:all>
+    <xs:attribute name="maxSpeed" type="xs:float" default="10">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 10</xs:documentation>
+      </xs:annotation>          
+    </xs:attribute>
+    <xs:attribute name="attackDamage" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 0</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="Slug">
+    <xs:all>
+      <xs:element name="Enemy" type="Enemy"/>
+    </xs:all>
+    <xs:attribute name="followDistance" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is false</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="travelDistance" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 0</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="startDirection" type="mstns:XDirections" default="Right">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is 'Right'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>       
+  </xs:complexType>
+
+</xs:schema>

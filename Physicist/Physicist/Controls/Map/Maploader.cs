@@ -235,13 +235,13 @@
 
                 try
                 {
-                    if (classAttribute == null)
+                    if (classAttValue == null)
                     {
                         className = objecttype;
                     }
                     else
                     {
-                        className = element.Attribute(classAttribute).Value;
+                        className = classAttValue;
                     }
 
                     // Try to create type from fully quantified name in current assembly

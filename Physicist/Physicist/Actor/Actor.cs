@@ -33,14 +33,11 @@
             this.CanBeDamaged = true;
             this.Health = 1;
             this.Name = name;
-            this.AttackDamage = 0;
         }
 
         public string Name { get; private set; }
 
         public bool CanBeDamaged { get; set; }
-
-        public int AttackDamage { get; set; }
 
         // Farseer Structures
         public Body Body
@@ -231,7 +228,6 @@
                 new XAttribute("isEnabled", this.IsEnabled),
                 new XAttribute("visibleState", this.VisibleState.ToString()),
                 new XAttribute("canBeDamaged", this.CanBeDamaged),
-                new XAttribute("attackDamage", this.AttackDamage),
                 ExtensionMethods.XmlSerialize(this.MovementSpeed, "MovementSpeed"),
                 new XElement("Sprites", this.sprites.Values.Select(sprite => sprite.XmlSerialize()).ToArray()),
                 new XElement("BodyInfo", this.bodyInfo.XmlSerialize()));
@@ -283,39 +279,41 @@
                 this.VisibleState = element.GetAttribute("visibleState", Visibility.Visible);
                 this.RotatesWithWorld = element.GetAttribute("rotatesWithWorld", false);
                 this.CanBeDamaged = element.GetAttribute("canBeDamaged", true);
-                this.AttackDamage = element.GetAttribute("attackDamage", 0);
             }
         }
 
         protected void FixOffsetForRotation()
         {
-            // rotate the body and move the sprite so it is drawn in the correct position
-            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
-
-            // A temporary rotational fix.  Need to change origin of rotation in actuality:
-            var rotationSpriteOffset = new Vector2();
-            foreach (var sprite in this.Sprites.Values)
+            if (this.Body != null)
             {
-                // the offset calculation
-                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
+                // rotate the body and move the sprite so it is drawn in the correct position
+                this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
 
-                // bizzare x offset of 3
-                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
-
-                // weird -width y offset at 3 pi / 2
-                if (this.Screen.ScreenRotation > Math.PI)
+                // A temporary rotational fix.  Need to change origin of rotation in actuality:
+                var rotationSpriteOffset = new Vector2();
+                foreach (var sprite in this.Sprites.Values)
                 {
-                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                }
+                    // the offset calculation
+                    rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                    rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
 
-                // weird x offset of 2 at pi / 2
-                if (this.Screen.ScreenRotation < Math.PI)
-                {
-                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
-                }
+                    // bizzare x offset of 3
+                    rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
 
-                sprite.Offset = rotationSpriteOffset;
+                    // weird -width y offset at 3 pi / 2
+                    if (this.Screen.ScreenRotation > Math.PI)
+                    {
+                        rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
+                    }
+
+                    // weird x offset of 2 at pi / 2
+                    if (this.Screen.ScreenRotation < Math.PI)
+                    {
+                        rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
+                    }
+
+                    sprite.Offset = rotationSpriteOffset;
+                }
             }
         }
 

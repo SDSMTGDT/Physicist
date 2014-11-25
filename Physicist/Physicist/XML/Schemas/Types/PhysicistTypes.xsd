@@ -119,6 +119,17 @@
     </xs:choice>
   </xs:complexType>
 
+  <xs:complexType name="ActorList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:any namespace="PhysicistActors" processContents="lax"/>
+        <xs:any namespace="ActorExtensions" processContents="lax"/>
+        <xs:any namespace="SystemPrefabs" processContents="lax"/>
+        <xs:any namespace="PhysicistEnemies" processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="MapEvents">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element name="Event" type="EventType"/>

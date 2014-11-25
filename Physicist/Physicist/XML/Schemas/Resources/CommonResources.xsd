@@ -3,6 +3,13 @@
     elementFormDefault="qualified"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
+  <xs:simpleType name="XDirections">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Left"/>       
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="StandardKeyActions">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Up"/>

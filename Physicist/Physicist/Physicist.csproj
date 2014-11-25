@@ -92,6 +92,7 @@
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Enums\StandardBehavior.cs" />
     <Compile Include="Enums\KeyState.cs" />
     <Compile Include="Enums\PrimativeTypes.cs" />
     <Compile Include="Enums\TriggerSetOperation.cs" />
@@ -103,12 +104,12 @@
     <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
     <Compile Include="Enums\StandardAnimations.cs" />
-    <Compile Include="Enums\StandardKeyActions.cs" />
+    <Compile Include="Enums\StandardKeyAction.cs" />
     <Compile Include="Enums\Visibility.cs" />
     <Compile Include="Enums\TriggerMode.cs" />
     <Compile Include="Enums\TriggerStyle.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
-    <Compile Include="Enums\SystemScreens.cs" />
+    <Compile Include="Enums\SystemScreen.cs" />
     <Compile Include="Events\Modifiers\AnimateModifier.cs" />
     <Compile Include="Controls\Interfaces\IModifier.cs" />
     <Compile Include="Events\PhysicistEvent.cs" />
@@ -130,6 +131,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Levels\EnemyTests.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\BlueField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -180,6 +184,9 @@
     <Content Include="Content\Textures\OrangeField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Slug.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\YellowField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -224,6 +231,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Content\Pericles6.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -233,6 +241,9 @@
     <None Include="XML\Schemas\Extensions\ActorExtensions.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistEnemies.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="XML\Schemas\Nodes\PhysicistEvents.xsd">
       <SubType>Designer</SubType>
@@ -322,6 +333,9 @@
     </None>
     <None Include="Content\Textures\SolidArc.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Types\EnemyTypes.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="XML\Schemas\Types\EventTypes.xsd">
       <SubType>Designer</SubType>
