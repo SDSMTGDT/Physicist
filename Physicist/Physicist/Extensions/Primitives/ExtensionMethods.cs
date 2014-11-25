@@ -204,6 +204,16 @@
                 float.Parse(element.Attribute("y").Value, CultureInfo.CurrentCulture));
         }
 
+        public static double Angle(this Vector2 value)
+        {
+            return Math.Acos(value.X / value.Length());
+        }
+
+        public static Vector2 UnitVector(this Vector2 value)
+        {
+            return value / value.Length();
+        }
+
         public static Vector2 ToSimUnits(this Vector2 value)
         {
             return ConvertUnits.ToSimUnits(value);

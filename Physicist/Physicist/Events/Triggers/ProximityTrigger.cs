@@ -25,34 +25,73 @@
         {
         }
 
-        public ProximityTrigger(float sensorRadius, Vector2 position)
+        public ProximityTrigger(float sensorRadius, Vector2 position, World world)
         {
-            this.sensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
-            this.CreateSensors(this.sensorBody.FixtureList[0]);
+            if (this.World != world)
+            {
+                this.World = world;
+            }
+
+            this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
 
-        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate)
+        public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world)
         {
+            if (this.World != world)
+            {
+                this.World = world;
+            }
+
+            this.SensorBody = BodyFactory.CreateRectangle(this.World, sensorWidth, sensorHeight, 1f, position);
+            this.CreateSensors(this.SensorBody.FixtureList[0]);
+            this.IsEnabled = true;
+            this.IsContinuous = false;
+        }
+
+        public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world)
+        {
+            if (this.World != world)
+            {
+                this.World = world;
+            }
+
             this.sensorBody = sensorBody;
             this.CreateSensors(sensorTemplate);
             this.IsEnabled = true;
             this.IsContinuous = false;
         }
 
+        public Body SensorBody
+        {
+            get
+            {
+                return this.sensorBody;
+            }
+
+            set
+            {
+                this.sensorBody = value;
+                if (value != null && value.FixtureList[0] != null)
+                {
+                    this.CreateSensors(value.FixtureList[0]);
+                }
+            }
+        }
+
         public bool IsContinuous 
         {
             get
             {
-                return !(this.collisionFixture.IgnoreCCDWith == Category.All);
+                return !(this.collisionFixture.IgnoreCCDWith == PhysicistCategory.All);
             }
 
             set
             {
                 if (!value)
                 {
-                    this.collisionFixture.IgnoreCCDWith = Category.All;
+                    this.collisionFixture.IgnoreCCDWith = PhysicistCategory.All;
                 }
                 else
                 {
@@ -169,7 +208,7 @@
 
             this.separationFixture.OnSeparation += this.OnSeparation;
             this.separationFixture.IsSensor = true;
-            this.separationFixture.IgnoreCCDWith = Category.All;
+            this.separationFixture.IgnoreCCDWith = PhysicistCategory.All;
 
             foreach (var fixture in this.sensorBody.FixtureList)
             {

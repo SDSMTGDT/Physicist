@@ -170,7 +170,7 @@
     </xs:all>
     <xs:attribute name="class" type="xs:string" default="Player"/>
   </xs:complexType>
-  
+            
   <xs:complexType name="ActorList">
     <xs:sequence minOccurs="0">
       <xs:choice maxOccurs="unbounded" minOccurs="0">

@@ -136,7 +136,7 @@
 
     <Actors>
 		  <NPC class="" textureRef="NOTSTOLEN"/>
-		  
+      		  
 		  <Player class="Player">
         <Actor class="Actor" health="10" rotation="0" isEnabled="true" visibleState="Visible">
           <MovementSpeed x="3" y="3"/>

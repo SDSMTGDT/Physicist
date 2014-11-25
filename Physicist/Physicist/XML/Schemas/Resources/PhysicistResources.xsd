@@ -71,9 +71,9 @@
           <xs:documentation>[Optional] Frame rate (sec/frame), default is 0.2</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="depth" type="UnitInterval" default="0">
+      <xs:attribute name="depth" type="UnitInterval" default="1">
         <xs:annotation>
-          <xs:documentation>[Optional] Draw depth, default is '0'</xs:documentation>
+          <xs:documentation>[Optional] Draw depth, default is '1'</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
@@ -103,7 +103,7 @@
           <xs:documentation>[Optional] default is '1'</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="friction" type="UnitInterval" default="0">
+      <xs:attribute name="friction" type="xs:float" default="0">
         <xs:annotation>
           <xs:documentation>[Optional] default is '0'</xs:documentation>
         </xs:annotation>
