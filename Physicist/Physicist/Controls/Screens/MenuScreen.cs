@@ -3,40 +3,78 @@
     using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Physicist.Controls;
     using Physicist.Enums;
 
-    public class MenuScreen : GameScreen
+    /// <summary>
+    /// MenuScreen is the 'main' screen for this section of
+    /// your game. It is used to host content and update components.
+    /// </summary>
+    public partial class MenuScreen : GameScreen
     {
-        private Texture2D menuBack;
-
         public MenuScreen() :
             base(SystemScreen.MenuScreen.ToString())
         {
-            this.BackgroundColor = Color.Black;            
+            this.BackgroundColor = new Color(0, 0, 0, 0.8f);
         }
 
+        /// <summary>
+        /// Allows the screen to perform any initialization logic before starting.
+        /// Use it to load any non-graphical content
+        /// </summary>
+        public override void Initialize()
+        {
+        }
+
+        /// <summary>
+        /// LoadContent is called once per instance of screen and is used to 
+        /// load all of the graphical content
+        /// </summary>
         public override bool LoadContent()
         {
-            Color[] menuColor = new Color[ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height];
-            for (int i = 0; i < ScreenManager.GraphicsDevice.Viewport.Width * ScreenManager.GraphicsDevice.Viewport.Height; i++)
-            {
-                menuColor[i] = new Color(0, 0, 0, 0.8f);
-            }
-            
-            this.menuBack = new Texture2D(ScreenManager.GraphicsDevice, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
-            this.menuBack.SetData(menuColor);
-
             return base.LoadContent();
         }
 
+        /// <summary>
+        /// UnloadContent is called once per instance of screen and is used to 
+        /// unload all of the graphical content
+        /// </summary>
         public override void UnloadContent()
         {
-            this.menuBack.Dispose();
-            this.menuBack = null;
-
             base.UnloadContent();
         }
 
+        public void StartExtras(object sender, EventArgs e)
+        {
+            ScreenManager.AddScreen(SystemScreen.ExtrasScreen);
+        }
+
+        public void StartOptions(object sender, EventArgs e)
+        {
+            ScreenManager.AddScreen(SystemScreen.OptionsScreen);
+        }
+
+        public void StartPhysicist(object sender, EventArgs e)
+        {
+            using (System.Windows.Forms.OpenFileDialog selectMap = new System.Windows.Forms.OpenFileDialog())
+            {
+                selectMap.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"Content\Levels";
+                selectMap.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+                selectMap.FilterIndex = 1;
+                selectMap.RestoreDirectory = true;
+
+                if (selectMap.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    ScreenManager.AddScreen(MenuScreen.MakePhysicistScreen(selectMap.FileName));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Allows the screen to run updating logic like checking user inputs,
+        /// changing item properties or playing music
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
             var state = KeyboardController.GetState();
@@ -44,41 +82,19 @@
             {
                 this.PopScreen();
             }
-            else if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
-            {
-                using (System.Windows.Forms.OpenFileDialog selectMap = new System.Windows.Forms.OpenFileDialog())
-                {
-                    selectMap.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"Content\Levels";
-                    selectMap.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
-                    selectMap.FilterIndex = 1;
-                    selectMap.RestoreDirectory = true;
-
-                    if (selectMap.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        ScreenManager.AddScreen(MenuScreen.MakePhysicistScreen(selectMap.FileName));
-                    }
-                }
-            }
 
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Called every time the screen is to re-draw itself
+        /// </summary>
+        /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
         public override void Draw(ISpritebatch sb)
         {
             if (sb != null)
             {
                 base.Draw(sb);
-                sb.Draw(this.menuBack, Vector2.Zero, Color.White);
-                sb.DrawString(
-                                ContentController.Instance.GetContent<SpriteFont>("MenuFont"),
-                                "Menu Screen: \n\n Press enter to begin game \n\n Esc to Quit",
-                                new Vector2(100, 50),
-                                Color.White,
-                                0f,
-                                Vector2.Zero,
-                                1f,
-                                SpriteEffects.None,
-                                1f);
             }
         }
 

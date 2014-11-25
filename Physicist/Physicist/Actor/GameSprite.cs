@@ -225,7 +225,7 @@
                 this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
 
                 this.frameLength = element.GetAttribute("frameLength", 0.2f);
-                this.depth = element.GetAttribute("depth", 0f);
+                this.depth = element.GetAttribute("depth", 0.9f);
 
                 // Get the name
                 this.SpriteName = element.GetAttribute("spriteName", string.Empty);
