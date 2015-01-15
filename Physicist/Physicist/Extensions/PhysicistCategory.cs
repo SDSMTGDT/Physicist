@@ -8,6 +8,14 @@
 
     public static class PhysicistCategory
     {
+        public static Category AllIgnoreFields
+        {
+            get
+            {
+                return PhysicistCategory.All ^ PhysicistCategory.Field;
+            }
+        }
+
         public static Category Player
         {
             get

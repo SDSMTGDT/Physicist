@@ -26,7 +26,7 @@
         private int markedJumpMilliseconds;
         private ProximityTrigger headButton = null;
         private ProximityTrigger footButton = null;
-        private string spriteStateString = "Idle";
+        private string spriteState = "Idle";
 
         public Player()
         {
@@ -65,6 +65,20 @@
 
         public Vector2 MovementVelocity { get; set; }
 
+        private string SpriteState
+        {
+            set
+            {
+                this.spriteState = value;
+
+                // update the animations
+                foreach (var sprite in this.Sprites.Values)
+                {
+                    sprite.CurrentAnimationString = this.spriteState;
+                }
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (gameTime != null)
@@ -73,20 +87,16 @@
                 this.markedJumpMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             }
 
+            // rotate the body and move the sprite so it is drawn in the up direction
+            this.Rotation = -this.Screen.ScreenRotation;
+
             var state = KeyboardController.GetState();
-            this.spriteStateString = "Idle";
 
             var dp = this.GetMovementSpeed(state);
             this.Body.LinearVelocity += dp;
 
             this.rotating = this.GetRotation(state);
             this.GetJump(state);
-
-            // update the animations
-            foreach (var sprite in this.Sprites.Values)
-            {
-                sprite.CurrentAnimationString = this.spriteStateString;
-            }
 
             if (this.rotating)
             {
@@ -109,7 +119,7 @@
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
-                
+
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();
@@ -198,7 +208,7 @@
             if (state.IsKeyDown(KeyboardController.DownKey))
             {
                 dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                this.spriteStateString = "Down";
+                this.SpriteState = "Down";
             }
             else if (state.IsKeyDown(KeyboardController.LeftKey))
             {
@@ -209,7 +219,7 @@
                 }
 
                 dp += speedMod;
-                this.spriteStateString = "Left";
+                this.SpriteState = "Left";
             }
             else if (state.IsKeyDown(KeyboardController.RightKey))
             {
@@ -221,18 +231,23 @@
 
                 dp += speedMod;
 
-                this.spriteStateString = "Right";
+                this.SpriteState = "Right";
             }
             else if (this.footButton.IsActive)
             {
                 // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
                 Vector2 newVelocity = this.Body.LinearVelocity;
-             
+
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
                 newVelocity.X /= this.groundDampening;
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-             
+
                 this.Body.LinearVelocity = newVelocity;
+                this.SpriteState = "Idle";
+            }
+            else
+            {
+                this.SpriteState = "Idle";
             }
 
             return dp;
@@ -262,8 +277,8 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
 
-                this.Body.CollidesWith = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
-                this.Body.CollisionCategories = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollidesWith = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollisionCategories = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
             }
         }
     }

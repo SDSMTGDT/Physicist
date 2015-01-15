@@ -109,7 +109,7 @@
       <xs:element name="Backgrounds" type="BackgroundList" minOccurs="0"/>
       <xs:element name="Foregrounds">
         <xs:complexType>
-          <xs:choice maxOccurs="unbounded">
+          <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element ref="MapObject"/>
             <xs:element ref="FieldContainer"/>
           </xs:choice>

@@ -6,7 +6,7 @@
     using Physicist.Actors;
     using Physicist.Enums;
     
-    public interface IActor : IPosition, IName, IUpdate, IDraw, IDamage
+    public interface IActor : IPosition, IName, IUpdate, IDraw
     {
         bool IsEnabled { get; set; }
 
