@@ -46,7 +46,8 @@
                                 new Vector2(this.Width, 0) 
                             };
 
-            BodyFactory.CreateLoopShape(world, mapBounds.ToSimUnits()).Friction = 1f;
+            var body = BodyFactory.CreateLoopShape(world, mapBounds.ToSimUnits());
+            body.UserData = this;
         }
 
         public int Width { get; private set; }

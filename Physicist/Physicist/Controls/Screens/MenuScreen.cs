@@ -8,6 +8,7 @@
     public class MenuScreen : GameScreen
     {
         private Texture2D menuBack;
+        private SpriteFont menuFont;
 
         public MenuScreen() :
             base(SystemScreen.MenuScreen.ToString())
@@ -25,6 +26,8 @@
             
             this.menuBack = new Texture2D(ScreenManager.GraphicsDevice, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height);
             this.menuBack.SetData(menuColor);
+
+            this.menuFont = ContentController.Instance.GetContent<SpriteFont>("MenuFont");
 
             return base.LoadContent();
         }
@@ -70,7 +73,7 @@
                 base.Draw(sb);
                 sb.Draw(this.menuBack, Vector2.Zero, Color.White);
                 sb.DrawString(
-                                ContentController.Instance.GetContent<SpriteFont>("MenuFont"),
+                                this.menuFont,
                                 "Menu Screen: \n\n Press enter to begin game \n\n Esc to Quit",
                                 new Vector2(100, 50),
                                 Color.White,

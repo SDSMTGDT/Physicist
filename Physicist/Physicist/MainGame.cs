@@ -50,6 +50,8 @@
         protected override void Initialize()
         {
             ContentController.Instance.Initialize(this.Content, "Content");
+            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "Pericles6");
+
             MainGame.GraphicsDev = this.GraphicsDevice;
             MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
@@ -66,7 +68,6 @@
         /// </summary>
         protected override void LoadContent()
         {
-            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "Pericles6");
         }
 
         /// <summary>

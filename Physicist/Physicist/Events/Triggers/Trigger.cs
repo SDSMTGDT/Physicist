@@ -30,6 +30,8 @@
             }
         }
 
+        public ActivationData? ActivationData { get; protected set; }
+
         public TriggerStyle Style { get; protected set; }
 
         public bool IsInitialized { get; protected set; }

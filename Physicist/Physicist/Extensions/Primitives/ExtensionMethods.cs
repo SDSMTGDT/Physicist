@@ -16,6 +16,21 @@
 
     public static class ExtensionMethods
     {
+        public static float Angle(this Vector2 vector, Vector2 value)
+        {
+            return vector.Length() == 0 || value.Length() == 0 ? 0 : (float)Math.Acos(vector.Dot(value) / (vector.Length() * value.Length()));
+        }
+
+        public static float Cross(this Vector2 vector, Vector2 value)
+        {
+            return (vector.X * value.Y) - (vector.Y * value.X); 
+        }
+
+        public static float Dot(this Vector2 vector, Vector2 value)
+        {
+            return (vector.X * value.X) + (vector.Y * value.Y);
+        }
+
         public static void TryAddNullableAttributeToXml<T>(this XContainer element, string attributeName, T? field) where T : struct
         {            
             if (element != null && !string.IsNullOrEmpty(attributeName) && field.HasValue)

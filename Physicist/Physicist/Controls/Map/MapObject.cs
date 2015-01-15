@@ -13,6 +13,7 @@
     {
         private List<Tuple<Texture2D, Vector2>> textures = new List<Tuple<Texture2D, Vector2>>();
         private bool fill = false;
+        private Body mapBody = null;
 
         public MapObject()
         {
@@ -29,7 +30,22 @@
 
         public string TextureReference { get; private set; }
 
-        public Body MapBody { get; private set; }
+        public Body MapBody 
+        {
+            get
+            {
+                return this.mapBody;
+            }
+
+            private set
+            {
+                this.mapBody = value;
+                if (value != null)
+                {
+                    this.mapBody.UserData = this;
+                }
+            }
+        }
 
         public BodyInfo MapBodyInfo { get; private set; }
 

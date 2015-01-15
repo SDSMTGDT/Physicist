@@ -34,7 +34,7 @@
 
             this.SensorBody = BodyFactory.CreateCircle(this.World, sensorRadius, 1f, position);
             this.IsEnabled = true;
-            this.IsContinuous = false;
+            this.IsContinuous = true;
         }
 
         public ProximityTrigger(float sensorWidth, float sensorHeight, Vector2 position, World world)
@@ -47,7 +47,8 @@
             this.SensorBody = BodyFactory.CreateRectangle(this.World, sensorWidth, sensorHeight, 1f, position);
             this.CreateSensors(this.SensorBody.FixtureList[0]);
             this.IsEnabled = true;
-            this.IsContinuous = false;
+            this.IsContinuous = true;
+            this.IsSensor = true;
         }
 
         public ProximityTrigger(Body sensorBody, Fixture sensorTemplate, World world)
@@ -60,7 +61,8 @@
             this.sensorBody = sensorBody;
             this.CreateSensors(sensorTemplate);
             this.IsEnabled = true;
-            this.IsContinuous = false;
+            this.IsContinuous = true;
+            this.IsSensor = true;
         }
 
         public Body SensorBody
@@ -100,6 +102,20 @@
             }
         }
 
+        public bool IsSensor
+        {
+            get
+            {
+                return this.collisionFixture.IsSensor;
+            }
+
+            set
+            {
+                this.collisionFixture.IsSensor = value;
+                this.separationFixture.IsSensor = value;
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -133,7 +149,8 @@
                                             1f,
                                             new Vector2(position.X, this.Map.Height - position.Y).ToSimUnits());
 
-                    tempBody.IsSensor = true;
+                    // tempBody.IsSensor = true;
+                    tempBody.FixtureList.ForEach(fx => fx.UserData = "Sensor");
                     
                     if (this.sensorBody == null)
                     {
@@ -152,7 +169,8 @@
                 }
 
                 this.CreateSensors(sensorTemplate);
-                this.IsContinuous = element.GetAttribute("isContinuous", false);
+                this.IsContinuous = element.GetAttribute("isContinuous", true);
+                this.IsSensor = element.GetAttribute("isSensor", false);
             }
         }
 
@@ -178,14 +196,22 @@
             return element;
         }
 
+        public void RestoreCollisionWith(Fixture fixture)
+        {
+            this.collisionFixture.RestoreCollisionWith(fixture);
+            this.separationFixture.RestoreCollisionWith(fixture);
+        }
+
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            this.ActivationData = new ActivationData(contact, ActivationType.Collision.ToString());
             this.ActivateWithStyle();
             return this.IsEnabled;
         }
 
         protected virtual void OnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
+            this.ActivationData = null;
             this.DeactivateWithStyle();
         }
 
@@ -204,11 +230,15 @@
             this.separationFixture = this.collisionFixture.CloneOnto(this.sensorBody);
 
             this.collisionFixture.OnCollision += this.OnCollision;
-            this.collisionFixture.IsSensor = true;
+
+            // this.collisionFixture.IsSensor = true;
+            this.collisionFixture.CollidesWith = PhysicistCategory.AllIgnoreFields;
 
             this.separationFixture.OnSeparation += this.OnSeparation;
-            this.separationFixture.IsSensor = true;
+
+            // this.separationFixture.IsSensor = true;
             this.separationFixture.IgnoreCCDWith = PhysicistCategory.All;
+            this.separationFixture.CollidesWith = PhysicistCategory.AllIgnoreFields;
 
             foreach (var fixture in this.sensorBody.FixtureList)
             {

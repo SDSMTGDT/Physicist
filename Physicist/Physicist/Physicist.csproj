@@ -92,11 +92,13 @@
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Enums\ActivationType.cs" />
     <Compile Include="Enums\StandardBehavior.cs" />
     <Compile Include="Enums\KeyState.cs" />
     <Compile Include="Enums\PrimativeTypes.cs" />
     <Compile Include="Enums\TriggerSetOperation.cs" />
     <Compile Include="Events\Modifiers\PrimitivePropertyModifier.cs" />
+    <Compile Include="Events\Triggers\ActivationData.cs" />
     <Compile Include="Events\Triggers\KeyPressTrigger.cs" />
     <Compile Include="Events\Triggers\TriggerSet.cs" />
     <Compile Include="Extensions\PhysicistCategory.cs" />
@@ -131,8 +133,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Levels\EnemyInteractionTests.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Levels\EnemyTests.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Textures\BlueField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -231,7 +238,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Content\Pericles6.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

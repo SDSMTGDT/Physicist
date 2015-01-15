@@ -87,6 +87,9 @@
                 this.markedJumpMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             }
 
+            // rotate the body and move the sprite so it is drawn in the up direction
+            this.Rotation =  -this.Screen.ScreenRotation;
+
             var state = KeyboardController.GetState();
 
             var dp = this.GetMovementSpeed(state);
@@ -274,8 +277,8 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
 
-                this.Body.CollidesWith = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
-                this.Body.CollisionCategories = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollidesWith = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollisionCategories = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
             }
         }
     }

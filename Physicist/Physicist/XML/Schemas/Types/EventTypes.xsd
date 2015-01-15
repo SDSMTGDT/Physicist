@@ -264,8 +264,13 @@
           <xs:annotation>
             <xs:documentation>[Optional] Determines continuous collision or not, default is true</xs:documentation>
           </xs:annotation>
-        </xs:attribute>        
-      </xs:extension>     
+        </xs:attribute>
+        <xs:attribute name="isSensor" type="xs:boolean" default="true">
+          <xs:annotation>
+            <xs:documentation>[Optional] Determines collision type, default is true</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>    
     </xs:complexContent>    
   </xs:complexType>
 

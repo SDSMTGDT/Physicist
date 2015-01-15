@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Enums;
     using Physicist.Extensions;
 
-    public class NPC : Actor
+    public abstract class NPC : Actor
     {
-        private string behavior = "Idle";
+        private string behavior = "Normal";
+        private Dictionary<string, bool> overrides;
 
         protected NPC()
         {
@@ -27,6 +29,14 @@
             this.UpdateMethods.Add(StandardBehavior.Idle.ToString(), new UpdateDel(this.IdleUpdate));
             this.UpdateMethods.Add(StandardBehavior.Normal.ToString(), new UpdateDel(this.NormalUpdate));
             this.UpdateMethods.Add(StandardBehavior.Submissive.ToString(), new UpdateDel(this.SubmissiveUpdate));
+
+            this.overrides = new Dictionary<string, bool>();
+            var type = this.GetType();
+            foreach (var pair in this.UpdateMethods)
+            {
+                var method = type.GetMethod(pair.Value.Method.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                this.overrides.Add(pair.Key, method != null || method.DeclaringType != typeof(NPC));
+            }
         }
 
         protected delegate void UpdateDel(GameTime gameTime);
@@ -92,6 +102,14 @@
                 this.UpdateMethods.Add(StandardBehavior.Normal.ToString(), new UpdateDel(this.NormalUpdate));
                 this.UpdateMethods.Add(StandardBehavior.Submissive.ToString(), new UpdateDel(this.SubmissiveUpdate));
 
+                this.overrides = new Dictionary<string, bool>();
+                var type = this.GetType();
+                foreach (var pair in this.UpdateMethods)
+                {
+                    var method = type.GetMethod(pair.Value.Method.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                    this.overrides.Add(pair.Key, method != null && method.DeclaringType != typeof(NPC));
+                }
+
                 var behav = element.GetAttribute("behavior", StandardBehavior.Normal.ToString());
 
                 if (this.UpdateMethods.ContainsKey(behav))
@@ -107,36 +125,54 @@
             }
         }
 
-        protected virtual void NormalUpdate(GameTime gameTime)
-        {
-        }
+        protected abstract void NormalUpdate(GameTime gameTime);
 
         protected virtual void IdleUpdate(GameTime gameTime)
         {
+            if (!this.overrides[StandardBehavior.Idle.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
 
         protected virtual void AggressiveUpdate(GameTime gameTime)
         {
+            if (!this.overrides[StandardBehavior.Aggressive.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
 
         protected virtual void SubmissiveUpdate(GameTime gameTime)
         {
+            if (!this.overrides[StandardBehavior.Submissive.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
 
         protected virtual void FearfulUpdate(GameTime gameTime)
         {
+            if (!this.overrides[StandardBehavior.Fearful.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
 
         protected virtual void FunnyUpdate(GameTime gameTime)
         {
+            if (!this.overrides[StandardBehavior.Funny.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
 
         protected virtual void CrazyUpdate(GameTime gameTime)
         {
-        }
-
-        protected virtual void VolatileUpdate(GameTime gameTime)
-        {
+            if (!this.overrides[StandardBehavior.Crazy.ToString()])
+            {
+                this.NormalUpdate(gameTime);
+            }
         }
     }
 }

@@ -4,13 +4,13 @@
     using Physicist.Controls;
     using Physicist.Extensions;
 
-    public class Enemy : NPC, IDamage
+    public abstract class Enemy : NPC, IDamage
     {
-        public Enemy()
+        protected Enemy()
         {
         }
 
-        public Enemy(string name)
+        protected Enemy(string name)
             : base(name)
         {
         }
@@ -36,7 +36,7 @@
                 this.MaxSpeed = element.GetAttribute("maxSpeed", 10);
                 base.XmlDeserialize(element.Element("NPC"));
 
-                this.Body.CollidesWith = PhysicistCategory.All ^ PhysicistCategory.Field;
+                this.Body.CollidesWith = PhysicistCategory.AllIgnoreFields;
                 this.Body.CollisionCategories = PhysicistCategory.Enemy1;
             }
         }

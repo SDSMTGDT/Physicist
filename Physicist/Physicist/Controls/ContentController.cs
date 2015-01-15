@@ -104,7 +104,7 @@
                     catch (ArgumentException)
                     {
                         // Don't throw if the assets are the same
-                        if (this.media[assetFormat][assetName].Location != assetPath)
+                        if (string.Compare(this.media[assetFormat][assetName].Location, assetPath, StringComparison.CurrentCultureIgnoreCase) != 0)
                         {
                             throw;
                         }
@@ -164,9 +164,13 @@
             if (this.IsInitialized)
             {
                 MediaFormat assetFormat;
-                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) & this.media.ContainsKey(assetFormat) && this.media[assetFormat].Contains(assetName))
+                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) && this.media.ContainsKey(assetFormat) && this.media[assetFormat].Contains(assetName))
                 {
                     asset = this.media[assetFormat][assetName].Asset as T;
+                }
+                else
+                {
+                    Console.WriteLine("Failed to Load Content: " + assetName);
                 }
             }
 

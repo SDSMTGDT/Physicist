@@ -10,25 +10,16 @@
     <Texture2D name="Slug" location="Textures/Slug"/>
     <Texture2D name="Hemp" location="Materials/Hemp"/>
     <Texture2D name="BlueField" location="Textures/BlueField"/>
+    <Texture2D name="Mario" location="Textures/NOTSTOLEN"/>
   </Media>
   <LevelObjects>
     <Foregrounds>
       <Rectangle width="10" height="60" fill="true" textureRef="Hemp">
         <Position x="100" y="30"/>
       </Rectangle>
-      <field:AccelerationField name="gfield1">
-        <BodyInfo>
-          <Rectangle width="40" height="75" fill="true" textureRef="BlueField">
-            <Position x="300" y="36"/>
-          </Rectangle>
-        </BodyInfo>
-        <Field>
-          <FieldVector x="0" y="-100"/>
-        </Field>
-      </field:AccelerationField>
     </Foregrounds>
     <Actors>
-      <enemy:Slug followDistance="false">
+      <enemy:Slug startDirection="Left">
         <Enemy maxSpeed="30">
           <NPC>
             <Actor name="Slug1">
@@ -52,6 +43,9 @@
           </NPC>
         </Enemy>
       </enemy:Slug>
+      <system:Mario textureRef="Mario">
+        <system:Position x="200" y="200"/>
+      </system:Mario>
     </Actors>
   </LevelObjects>  
 </Map>
