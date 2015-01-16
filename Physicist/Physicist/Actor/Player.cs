@@ -240,7 +240,7 @@
 
         private void CreateButtons()
         {
-            this.Body.CollisionCategories = PhysicistCategory.Player;
+            this.Body.CollisionCategories = PhysicistCategory.Player1;
             AABB aabb;
             this.Body.FixtureList[0].GetAABB(out aabb, 0);
 
@@ -262,8 +262,8 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
 
-                this.Body.CollidesWith = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
-                this.Body.CollisionCategories = PhysicistCategory.All ^ PhysicistCategory.Field ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollidesWith = PhysicistCategory.Physical;
+                this.Body.CollisionCategories = PhysicistCategory.Physical;
             }
         }
     }

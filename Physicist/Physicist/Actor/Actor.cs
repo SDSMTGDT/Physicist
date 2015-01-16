@@ -129,7 +129,7 @@
                 {
                     this.VisibleState = Visibility.Hidden;
                     this.IsEnabled = false;
-                    this.body.CollidesWith = Category.None;
+                    this.body.CollidesWith = PhysicistCategory.None;
                 }
             }
         }

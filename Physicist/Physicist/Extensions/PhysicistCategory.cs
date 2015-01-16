@@ -8,7 +8,7 @@
 
     public static class PhysicistCategory
     {
-        public static Category Player
+        public static Category Player1
         {
             get
             {
@@ -173,6 +173,78 @@
             get
             {
                 return Category.All;
+            }
+        }
+
+        public static Category Player
+        {
+            get
+            {
+                return Player1 | Player2;
+            }
+        }
+
+        public static Category Map
+        {
+            get
+            {
+                return Map1 | Map2;
+            }
+        }
+
+        public static Category Environment
+        {
+            get
+            {
+                return Environment1 | Environment2 | Environment3;
+            }
+        }
+
+        public static Category Item
+        {
+            get
+            {
+                return Item1 | Item2 | Item3;
+            }
+        }
+
+        public static Category NPC
+        {
+            get
+            {
+                return NPC1 | NPC2 | NPC3;
+            }
+        }
+
+        public static Category Enemy
+        {
+            get
+            {
+                return Enemy1 | Enemy2 | Enemy3;
+            }
+        }
+
+        public static Category Dynamic
+        {
+            get
+            {
+                return Dynamic1 | Dynamic2 | Dynamic3;
+            }
+        }
+
+        public static Category Physical
+        {
+            get
+            {
+                return All ^ Field ^ Environment1 ^ Environment2 ^ Environment3;
+            }
+        }
+
+        public static Category None
+        {
+            get
+            {
+                return Category.None;
             }
         }
     }
