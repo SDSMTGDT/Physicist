@@ -49,7 +49,7 @@
         </Actor>
       </actor:Player>
 
-      <actor:Actor name="EventTest" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+      <actor:Actor class="Actor" name="EventTest" health="10" rotation="0" isEnabled="true" visibleState="Visible">
         <MovementSpeed x="100" y="100"/>
         <Sprites>
           <GameSprite spriteName="ModifyTest" textureRef="ModTest" frameLength="100" depth="1">
