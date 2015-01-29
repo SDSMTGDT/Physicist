@@ -8,6 +8,7 @@
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
@@ -26,7 +27,8 @@
         private int markedJumpMilliseconds;
         private ProximityTrigger headButton = null;
         private ProximityTrigger footButton = null;
-        private string spriteStateString = "Idle";
+        private string spriteState = "Idle";
+        private string rotateSound;
 
         public Player()
         {
@@ -38,6 +40,7 @@
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
             this.MovementSpeed = new Vector2(5, 5);
+            this.Listener = new AudioListener();
         }
 
         public Player(string name) :
@@ -51,7 +54,10 @@
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
             this.MovementSpeed = new Vector2(5, 5);
+            this.Listener = new AudioListener();
         }
+
+        public AudioListener Listener { get; set; }
 
         public float RotationSpeed { get; set; }
 
@@ -65,6 +71,20 @@
 
         public Vector2 MovementVelocity { get; set; }
 
+        private string SpriteState
+        {
+            set
+            {
+                this.spriteState = value;
+
+                // update the animations
+                foreach (var sprite in this.Sprites.Values)
+                {
+                    sprite.CurrentAnimationString = this.spriteState;
+                }
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (gameTime != null)
@@ -73,8 +93,10 @@
                 this.markedJumpMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             }
 
+            // rotate the body and move the sprite so it is drawn in the up direction
+            this.Rotation = -this.Screen.ScreenRotation;
+
             var state = KeyboardController.GetState();
-            this.spriteStateString = "Idle";
 
             var dp = this.GetMovementSpeed(state);
             this.Body.LinearVelocity += dp;
@@ -82,16 +104,28 @@
             this.rotating = this.GetRotation(state);
             this.GetJump(state);
 
-            // update the animations
-            foreach (var sprite in this.Sprites.Values)
-            {
-                sprite.CurrentAnimationString = this.spriteStateString;
-            }
-
+            // deal with the rotating sound pausing/playing
             if (this.rotating)
             {
                 this.Body.GravityScale = 0;
+                if (!this.PlayingSounds.ContainsKey(this.rotateSound))
+                {
+                    this.PlaySound(this.rotateSound, false, true, 1.0f, 0.0f, 0.0f);
+                }
+                else
+                {
+                    this.ResumeSound(this.rotateSound);
+                }
             }
+            else if (this.PlayingSounds.ContainsKey(this.rotateSound))
+            {
+                if (this.SoundIsPlaying(this.rotateSound))
+                {
+                    this.PauseSound(this.rotateSound);
+                }
+            }
+
+            this.Listener.Position = new Vector3(this.Position.X, this.Position.Y, 0);
 
             base.Update(gameTime);
         }
@@ -109,7 +143,17 @@
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
-                
+
+                XAttribute rotateSoundAttribute = element.Attribute("rotateSound");
+                if (rotateSoundAttribute != null && rotateSoundAttribute.Value != null)
+                {
+                    this.rotateSound = rotateSoundAttribute.Value;
+                }
+                else
+                {
+                    this.rotateSound = string.Empty;
+                }
+
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();
@@ -195,12 +239,7 @@
         private Vector2 GetMovementSpeed(KeyboardDebouncer state)
         {
             var dp = Vector2.Zero;
-            if (state.IsKeyDown(KeyboardController.DownKey))
-            {
-                dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                this.spriteStateString = "Down";
-            }
-            else if (state.IsKeyDown(KeyboardController.LeftKey))
+            if (state.IsKeyDown(KeyboardController.LeftKey))
             {
                 var speedMod = Vector2.Transform(new Vector2(-1 * this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 if (!this.footButton.IsActive)
@@ -209,7 +248,7 @@
                 }
 
                 dp += speedMod;
-                this.spriteStateString = "Left";
+                this.SpriteState = "Left";
             }
             else if (state.IsKeyDown(KeyboardController.RightKey))
             {
@@ -221,18 +260,23 @@
 
                 dp += speedMod;
 
-                this.spriteStateString = "Right";
+                this.SpriteState = "Right";
             }
             else if (this.footButton.IsActive)
             {
                 // Dampen the horizontal velocity to simulate the player stopping itself from sliding around
                 Vector2 newVelocity = this.Body.LinearVelocity;
-             
+
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(this.Screen.ScreenRotation));
                 newVelocity.X /= this.groundDampening;
                 newVelocity = Vector2.Transform(newVelocity, Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-             
+
                 this.Body.LinearVelocity = newVelocity;
+                this.SpriteState = "Idle";
+            }
+            else
+            {
+                this.SpriteState = "Idle";
             }
 
             return dp;

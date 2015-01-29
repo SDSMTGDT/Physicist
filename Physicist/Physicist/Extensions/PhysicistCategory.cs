@@ -240,6 +240,14 @@
             }
         }
 
+        public static Category AllIgnoreFields
+        {
+            get
+            {
+                return PhysicistCategory.All ^ PhysicistCategory.Field;
+            }
+        }
+
         public static Category None
         {
             get

@@ -41,7 +41,7 @@
   </xsl:template>
 
   <xsl:template match="physicist:Actors/system:Mario">
-    <Player class="Player">
+    <Player class="Player" rotateSound ="sabredance">
       <xsl:call-template name="Actor_Template">     
         <xsl:with-param name="BodyInfo">
           <BodyInfo>
@@ -50,9 +50,9 @@
             </Rectangle>
           </BodyInfo>
         </xsl:with-param>
-        
+                
         <xsl:with-param name="GameSprites">
-          <GameSprite spriteName="mario" textureRef="{@textureRef}" frameLength="0.2" depth="0">
+          <GameSprite spriteName="mario" textureRef="{@textureRef}" frameLength="0.2" depth="1">
             <Offset x="0" y="0"/>
             <FrameSize width="19" height="40"/>
             <Animations>

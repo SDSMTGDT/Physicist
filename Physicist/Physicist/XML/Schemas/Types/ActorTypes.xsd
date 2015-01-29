@@ -169,6 +169,11 @@
       <xs:element name="Actor" type="mstns:Actor"/>
     </xs:all>
     <xs:attribute name="class" type="xs:string" default="Player"/>
+    <xs:attribute name="rotateSound" type="xs:string" default="">
+      <xs:annotation>
+        <xs:documentation>[Optional] Sound made when rotating gravity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
             
   <xs:complexType name="ActorList">

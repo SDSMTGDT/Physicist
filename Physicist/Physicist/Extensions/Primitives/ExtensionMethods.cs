@@ -11,11 +11,69 @@
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
+    using Physicist.Controls.GUIControls;
     using Physicist.Enums;
 
     public static class ExtensionMethods
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "No new instances are created")]
+        public static bool TrySet<T>(this NotifyProperty notify, ref T value, T newValue)
+        {
+            var change = false;
+            if (notify != null)
+            {
+                if (!value.Equals(newValue))
+                {
+                    value = newValue;
+                    change = true;
+                }
+            }
+
+            return change;
+        }
+
+        public static Color Invert(this Color color)
+        {
+            return new Color(255 - color.R, 255 - color.G, 255 - color.B, color.A);
+        }
+
+        public static Color Brighten(this Color color, float percent)
+        {
+            percent = percent < 0 ? 0 : percent;
+            int r = (int)MathHelper.Clamp(color.R * (1 + (percent / 100f)), 0, 255f);
+            int g = (int)MathHelper.Clamp(color.G * (1 + (percent / 100f)), 0, 255f);
+            int b = (int)MathHelper.Clamp(color.B * (1 + (percent / 100f)), 0, 255f);
+
+            return new Color(r, g, b, color.A);
+        }
+
+        public static Color Darken(this Color color, float percent)
+        {
+            percent = percent < 0 ? 0 : percent;
+            int r = (int)MathHelper.Clamp(color.R * (1 - (percent / 100f)), 0, 255f);
+            int g = (int)MathHelper.Clamp(color.G * (1 - (percent / 100f)), 0, 255f);
+            int b = (int)MathHelper.Clamp(color.B * (1 - (percent / 100f)), 0, 255f);
+
+            return new Color(r, g, b, color.A);
+        }
+
+        public static bool IsAlpha(this Keys key)
+        {
+            return (int)key >= 65 && (int)key <= 90;
+        }
+
+        public static Point ToPoint(this Vector2 vector)
+        {
+            return new Point((int)vector.X, (int)vector.Y);
+        }
+
+        public static Vector2 ToVector(this Point point)
+        {
+            return new Vector2(point.X, point.Y);
+        }
+
         public static void TryAddNullableAttributeToXml<T>(this XContainer element, string attributeName, T? field) where T : struct
         {            
             if (element != null && !string.IsNullOrEmpty(attributeName) && field.HasValue)

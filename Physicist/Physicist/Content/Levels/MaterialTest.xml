@@ -11,6 +11,7 @@
     <Texture2D name="Hemp" location="Materials/hemp"/>
     <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
     <Texture2D name="LoopShape" location="Textures/LoopShape"/>
+    <SoundEffect name="sabredance" location="Sounds/sabredance"/>
   </Media>
 
   <LevelObjects>

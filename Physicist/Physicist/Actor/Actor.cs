@@ -7,6 +7,7 @@
     using FarseerPhysics;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
@@ -16,6 +17,8 @@
     public class Actor : PhysicistGameScreenItem, IActor
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
+        private Dictionary<string, Guid> playingSounds = new Dictionary<string, Guid>();
+        private AudioEmitter audioEmitter = new AudioEmitter();
         private Body body;
         private BodyInfo bodyInfo;
         private int health;
@@ -26,21 +29,18 @@
 
         public Actor(string name)
         {
-            this.RotatesWithWorld = false;
+            this.RotatesWithWorld = true;
             this.PathManager = new PathManager(this);
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
             this.CanBeDamaged = true;
             this.Health = 1;
             this.Name = name;
-            this.AttackDamage = 0;
         }
 
         public string Name { get; private set; }
 
         public bool CanBeDamaged { get; set; }
-
-        public int AttackDamage { get; set; }
 
         // Farseer Structures
         public Body Body
@@ -157,6 +157,14 @@
 
         protected bool RotatesWithWorld { get; set; }
 
+        protected Dictionary<string, Guid> PlayingSounds
+        {
+            get
+            {
+                return this.playingSounds;
+            }
+        }
+
         public virtual void Draw(ISpritebatch sb)
         {
             if (this.IsEnabled)
@@ -177,11 +185,11 @@
                         }
 
                         // if the actor does not rotate with the world, keep it upright
-                        float drawRotation = this.RotatesWithWorld ? this.Rotation : -1 * this.Screen.ScreenRotation;
+                        float drawRotation = this.RotatesWithWorld ? this.Rotation + (-1 * this.Screen.ScreenRotation) : this.Rotation;
 
                         sb.Draw(
                             sprite.SpriteSheet,
-                            this.Position + sprite.Offset - this.bodyInfo.ShapeOffset,
+                            this.Position - Vector2.Transform(this.bodyInfo.ShapeOffset, Matrix.CreateRotationZ(drawRotation)) + sprite.Offset,
                             sprite.CurrentSprite,
                             Color.White,
                             drawRotation,
@@ -212,8 +220,6 @@
                     sprite.Update(gameTime);
                 }
 
-                this.FixOffsetForRotation();
-
                 this.PathManager.Update(gameTime);
             }
         }
@@ -231,7 +237,6 @@
                 new XAttribute("isEnabled", this.IsEnabled),
                 new XAttribute("visibleState", this.VisibleState.ToString()),
                 new XAttribute("canBeDamaged", this.CanBeDamaged),
-                new XAttribute("attackDamage", this.AttackDamage),
                 ExtensionMethods.XmlSerialize(this.MovementSpeed, "MovementSpeed"),
                 new XElement("Sprites", this.sprites.Values.Select(sprite => sprite.XmlSerialize()).ToArray()),
                 new XElement("BodyInfo", this.bodyInfo.XmlSerialize()));
@@ -283,40 +288,41 @@
                 this.VisibleState = element.GetAttribute("visibleState", Visibility.Visible);
                 this.RotatesWithWorld = element.GetAttribute("rotatesWithWorld", false);
                 this.CanBeDamaged = element.GetAttribute("canBeDamaged", true);
-                this.AttackDamage = element.GetAttribute("attackDamage", 0);
             }
         }
 
-        protected void FixOffsetForRotation()
+        public void StopSound(string name)
         {
-            // rotate the body and move the sprite so it is drawn in the correct position
-            this.Body.Rotation = (float)(2 * Math.PI) - this.Screen.ScreenRotation;
-
-            // A temporary rotational fix.  Need to change origin of rotation in actuality:
-            var rotationSpriteOffset = new Vector2();
-            foreach (var sprite in this.Sprites.Values)
+            if (this.PlayingSounds.ContainsKey(name))
             {
-                // the offset calculation
-                rotationSpriteOffset.X = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Width) - (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                rotationSpriteOffset.Y = (float)(Math.Sin(Math.PI - (this.Screen.ScreenRotation / 2)) * sprite.CurrentSprite.Height);
-
-                // bizzare x offset of 3
-                rotationSpriteOffset.X += (float)(Math.Abs(Math.Sin(this.Screen.ScreenRotation)) * (-3));
-
-                // weird -width y offset at 3 pi / 2
-                if (this.Screen.ScreenRotation > Math.PI)
-                {
-                    rotationSpriteOffset.Y += (float)(Math.Sin(this.Screen.ScreenRotation) * sprite.CurrentSprite.Width);
-                }
-
-                // weird x offset of 2 at pi / 2
-                if (this.Screen.ScreenRotation < Math.PI)
-                {
-                    rotationSpriteOffset.X += (float)(Math.Sin(this.Screen.ScreenRotation) * -2);
-                }
-
-                sprite.Offset = rotationSpriteOffset;
+                SoundController.StopSound(this.PlayingSounds[name]);
             }
+        }
+
+        public void PauseSound(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                SoundController.PauseSound(this.PlayingSounds[name]);
+            }
+        }
+
+        public void ResumeSound(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                SoundController.ResumeSound(this.PlayingSounds[name]);
+            }
+        }
+
+        public bool SoundIsPlaying(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                return SoundController.SoundIsPlaying(this.PlayingSounds[name]);
+            }
+
+            return false;
         }
 
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -335,6 +341,80 @@
             }
 
             return this.IsEnabled;
+        }
+
+        protected void PlaySound(string name)
+        {
+            List<string> removelist = new List<string>();
+
+            // check for every Guid in the sound controller.
+            for (int i = 0; i < this.PlayingSounds.Count; i++)
+            {
+                if (!SoundController.ContainsInstance(this.PlayingSounds.ElementAt(i).Value))
+                {
+                    // add to a removelist
+                    removelist.Add(this.PlayingSounds.ElementAt(i).Key);
+                }
+            }
+
+            // remove everything in the removelist
+            foreach (string s in removelist)
+            {
+                this.PlayingSounds.Remove(s);
+            }
+
+            Guid newGuid;
+            newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter);
+
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                this.PlayingSounds[name] = newGuid;
+            }
+            else
+            {
+                this.PlayingSounds.Add(name, newGuid);
+            }
+        }
+
+        protected void PlaySound(string name, bool localized, bool looping, float volume, float pitch, float pan)
+        {
+            List<string> removelist = new List<string>();
+
+            // check for every Guid in the sound controller.
+            for (int i = 0; i < this.PlayingSounds.Count; i++)
+            {
+                if (!SoundController.ContainsInstance(this.PlayingSounds.ElementAt(i).Value))
+                {
+                    // add to a removelist
+                    removelist.Add(this.PlayingSounds.ElementAt(i).Key);
+                }
+            }
+
+            // remove everything in the removelist
+            foreach (string s in removelist)
+            {
+                this.PlayingSounds.Remove(s);
+            }
+
+            Guid newGuid;
+
+            if (localized)
+            {
+                newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter, looping, volume, pitch, pan);
+            }
+            else
+            {
+                newGuid = SoundController.PlaySound(name, looping, volume, pitch, pan);
+            }
+
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                this.PlayingSounds[name] = newGuid;
+            }
+            else
+            {
+                this.PlayingSounds.Add(name, newGuid);
+            }
         }
     }
 }

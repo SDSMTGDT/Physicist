@@ -1,6 +1,7 @@
 ﻿namespace Physicist.Controls
 {
     using System.Collections.Generic;
+    using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
     using Physicist.Enums;
@@ -106,8 +107,15 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Consistent from XNA framework structure")]
         public static KeyboardDebouncer GetState()
         {
-            KeyboardController.keyDebouncer.UpdateKeys();
             return KeyboardController.keyDebouncer;
+        }
+
+        public static void Update(GameTime gameTime)
+        {
+            if (gameTime != null)
+            {
+                KeyboardController.keyDebouncer.UpdateKeys();
+            }
         }
     }
 }
