@@ -102,6 +102,7 @@
             ScreenManager.Update(gameTime);
             KeyboardController.Update(gameTime);
             MouseController.Update(gameTime);
+            SoundController.Update();
             base.Update(gameTime);
         }
 

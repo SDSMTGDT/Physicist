@@ -98,6 +98,7 @@
                 {
                     this.Camera.Following = this.map.Players.ElementAt(0);
                     SoundController.Map = this.map;
+                    SoundController.Listener = Map.Players.ElementAt(0).Listener;
                 }
             }
 
@@ -153,7 +154,6 @@
                 this.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
                 this.map.Update(gameTime);
-                SoundController.Update();
                 this.Camera.Rotation = this.ScreenRotation;
                 this.Camera.CenterOnFollowing();
             }

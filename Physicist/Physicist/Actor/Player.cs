@@ -142,18 +142,8 @@
         {
             if (element != null)
             {
+                this.rotateSound = element.GetAttribute("rotateSoundRef", string.Empty);
                 base.XmlDeserialize(element.Element("Actor"));
-
-                XAttribute rotateSoundAttribute = element.Attribute("rotateSound");
-                if (rotateSoundAttribute != null && rotateSoundAttribute.Value != null)
-                {
-                    this.rotateSound = rotateSoundAttribute.Value;
-                }
-                else
-                {
-                    this.rotateSound = string.Empty;
-                }
-
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();

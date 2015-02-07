@@ -41,7 +41,7 @@
   </xsl:template>
 
   <xsl:template match="physicist:Actors/system:Mario">
-    <Player class="Player" rotateSound ="sabredance">
+    <Player class="Player" rotateSoundRef ="{@rotateSoundRef}">
       <xsl:call-template name="Actor_Template">     
         <xsl:with-param name="BodyInfo">
           <BodyInfo>

@@ -291,7 +291,7 @@
             }
         }
 
-        public void StopSound(string name)
+        protected void StopSound(string name)
         {
             if (this.PlayingSounds.ContainsKey(name))
             {
@@ -299,7 +299,7 @@
             }
         }
 
-        public void PauseSound(string name)
+        protected void PauseSound(string name)
         {
             if (this.PlayingSounds.ContainsKey(name))
             {
@@ -307,7 +307,7 @@
             }
         }
 
-        public void ResumeSound(string name)
+        protected void ResumeSound(string name)
         {
             if (this.PlayingSounds.ContainsKey(name))
             {
@@ -315,7 +315,7 @@
             }
         }
 
-        public bool SoundIsPlaying(string name)
+        protected bool SoundIsPlaying(string name)
         {
             if (this.PlayingSounds.ContainsKey(name))
             {
@@ -345,75 +345,42 @@
 
         protected void PlaySound(string name)
         {
-            List<string> removelist = new List<string>();
-
-            // check for every Guid in the sound controller.
-            for (int i = 0; i < this.PlayingSounds.Count; i++)
-            {
-                if (!SoundController.ContainsInstance(this.PlayingSounds.ElementAt(i).Value))
-                {
-                    // add to a removelist
-                    removelist.Add(this.PlayingSounds.ElementAt(i).Key);
-                }
-            }
-
-            // remove everything in the removelist
-            foreach (string s in removelist)
-            {
-                this.PlayingSounds.Remove(s);
-            }
-
-            Guid newGuid;
-            newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter);
-
-            if (this.PlayingSounds.ContainsKey(name))
-            {
-                this.PlayingSounds[name] = newGuid;
-            }
-            else
-            {
-                this.PlayingSounds.Add(name, newGuid);
-            }
+            this.PlaySound(name, true, false, 1.0f, 0.0f, 0.0f);
         }
 
         protected void PlaySound(string name, bool localized, bool looping, float volume, float pitch, float pan)
         {
-            List<string> removelist = new List<string>();
-
-            // check for every Guid in the sound controller.
-            for (int i = 0; i < this.PlayingSounds.Count; i++)
+            if (name != string.Empty)
             {
-                if (!SoundController.ContainsInstance(this.PlayingSounds.ElementAt(i).Value))
+                // check for every Guid in the sound controller.
+                for (int i = this.PlayingSounds.Count - 1; i >= 0; i--)
                 {
-                    // add to a removelist
-                    removelist.Add(this.PlayingSounds.ElementAt(i).Key);
+                    var sound = this.PlayingSounds.ElementAt(i);
+                    if (!SoundController.ContainsInstance(sound.Value))
+                    {
+                        this.PlayingSounds.Remove(sound.Key);
+                    }
                 }
-            }
 
-            // remove everything in the removelist
-            foreach (string s in removelist)
-            {
-                this.PlayingSounds.Remove(s);
-            }
+                Guid newGuid;
 
-            Guid newGuid;
+                if (localized)
+                {
+                    newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter, looping, volume, pitch, pan);
+                }
+                else
+                {
+                    newGuid = SoundController.PlaySound(name, looping, volume, pitch, pan);
+                }
 
-            if (localized)
-            {
-                newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter, looping, volume, pitch, pan);
-            }
-            else
-            {
-                newGuid = SoundController.PlaySound(name, looping, volume, pitch, pan);
-            }
-
-            if (this.PlayingSounds.ContainsKey(name))
-            {
-                this.PlayingSounds[name] = newGuid;
-            }
-            else
-            {
-                this.PlayingSounds.Add(name, newGuid);
+                if (this.PlayingSounds.ContainsKey(name))
+                {
+                    this.PlayingSounds[name] = newGuid;
+                }
+                else
+                {
+                    this.PlayingSounds.Add(name, newGuid);
+                }
             }
         }
     }

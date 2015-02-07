@@ -10,40 +10,20 @@
 
     public static class SoundController
     {
-        private static AudioListener listener;
         private static Dictionary<Guid, SoundEffectInstance> instances = new Dictionary<Guid, SoundEffectInstance>();
+
+        public static AudioListener Listener { get; set; }
 
         public static Map Map { get; set; }
 
         public static Guid PlaySound(string name)
         {
-            SoundEffect effect = ContentController.Instance.GetContent<SoundEffect>(name);
-            if (effect == null)
-            {
-                throw new PhysicistSoundControllerException("Missing sound content: " + name);
-            }
-
-            SoundEffectInstance instance = effect.CreateInstance();
-
-            if (SoundController.instances == null)
-            {
-                SoundController.instances = new Dictionary<Guid, SoundEffectInstance>();
-            }
-            
-            Guid id = Guid.NewGuid();
-            id = Guid.NewGuid();
-            SoundController.instances.Add(id, instance);
-            instance.Play();
-            return id;
+            return SoundController.PlaySound(name, false, 1.0f, 0.0f, 0.0f);
         }
 
         public static Guid PlaySound(string name, bool looping, float volume, float pitch, float pan)
         {
             SoundEffect effect = ContentController.Instance.GetContent<SoundEffect>(name);
-            if (effect == null)
-            {
-                throw new PhysicistSoundControllerException("Missing sound content: " + name);
-            }
 
             SoundEffectInstance instance = effect.CreateInstance();
             
@@ -66,23 +46,7 @@
 
         public static Guid PlayLocalizedSound(string name, AudioEmitter emitter)
         {
-            SoundEffect effect = ContentController.Instance.GetContent<SoundEffect>(name);
-            SoundEffectInstance instance = effect.CreateInstance();
-
-            if (emitter != null)
-            {
-                instance.Apply3D(SoundController.listener, emitter);
-            }
-
-            if (SoundController.instances == null)
-            {
-                SoundController.instances = new Dictionary<Guid, SoundEffectInstance>();
-            }
-
-            Guid id = new Guid();
-            SoundController.instances.Add(id, instance);
-            instance.Play();
-            return id;
+            return SoundController.PlayLocalizedSound(name, emitter, false, 1.0f, 0.0f, 0.0f);
         }
 
         public static Guid PlayLocalizedSound(string name, AudioEmitter emitter, bool looping, float volume, float pitch, float pan)
@@ -97,7 +61,7 @@
 
             if (emitter != null)
             {
-                instance.Apply3D(SoundController.listener, emitter);
+                instance.Apply3D(SoundController.Listener, emitter);
             }
 
             if (SoundController.instances == null)
@@ -151,13 +115,15 @@
 
         public static bool SoundIsPlaying(Guid id)
         {
+            bool isplaying = false;
+
             if (SoundController.instances.ContainsKey(id))
             {
                 SoundEffectInstance instance = SoundController.instances[id];
-                return instance.State == SoundState.Playing;
+                isplaying = instance.State == SoundState.Playing;
             }
 
-            return false;
+            return isplaying;
         }
 
         public static void Update()
@@ -171,21 +137,18 @@
                     SoundController.instances.Remove(entry.Key);
                 }
             }
-
-            if (Map.Players.Count() > 0 && Map.Players.ElementAt(0) != null)
-            {
-                SoundController.listener = Map.Players.ElementAt(0).Listener;
-            }
         }
 
         public static bool ContainsInstance(Guid id)
         {
+            bool contains = false;
+
             if (SoundController.instances.ContainsKey(id))
             {
-                return true;
+                contains = true;
             }
 
-            return false;
+            return contains;
         }
     }
 }

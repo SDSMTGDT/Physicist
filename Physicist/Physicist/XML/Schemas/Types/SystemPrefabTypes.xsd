@@ -22,4 +22,16 @@
     
   </xs:complexType>
 
+  <xs:complexType name="PlayerPrefabType">
+    <xs:complexContent>
+      <xs:extension base="ActorPrefabType">
+        <xs:attribute name="rotateSoundRef" type="xs:string" default="">
+          <xs:annotation>
+            <xs:documentation>[Optional] default is an empty string</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>
