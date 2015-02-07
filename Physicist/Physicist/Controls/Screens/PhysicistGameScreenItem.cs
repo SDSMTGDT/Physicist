@@ -3,7 +3,7 @@
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
 
-    public abstract class PhysicistGameScreenItem : IPhysicistGameScreenItem, IXmlSerializable
+    public abstract class PhysicistGameScreenItem : IPhysicistGameScreenItem
     {
         private PhysicistGameScreen screen;
 

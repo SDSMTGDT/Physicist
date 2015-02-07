@@ -62,7 +62,7 @@
                 }
             }
         }
-
+       
         // 2space variables
         public Vector2 Position
         {

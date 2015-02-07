@@ -50,7 +50,12 @@
       <xs:annotation>
         <xs:documentation>[Optional] default is 'Right'</xs:documentation>
       </xs:annotation>
-    </xs:attribute>       
+    </xs:attribute>
+    <xs:attribute name="stickToWalls" type="xs:boolean" default="false">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is false</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
 </xs:schema>

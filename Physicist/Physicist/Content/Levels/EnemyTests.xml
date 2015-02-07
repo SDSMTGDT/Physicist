@@ -16,7 +16,13 @@
       <Rectangle width="10" height="60" fill="true" textureRef="Hemp">
         <Position x="100" y="30"/>
       </Rectangle>
-      <field:AccelerationField name="gfield1">
+      <Rectangle width="10" height="60" fill="true" textureRef="Hemp">
+        <Position x="300" y="30"/>
+      </Rectangle>
+      <Rectangle width="200" height="10" fill="true" textureRef="Hemp">
+        <Position x="200" y="70"/>
+      </Rectangle>
+      <!--<field:AccelerationField name="gfield1">
         <BodyInfo>
           <Rectangle width="40" height="75" fill="true" textureRef="BlueField">
             <Position x="300" y="36"/>
@@ -25,16 +31,16 @@
         <Field>
           <FieldVector x="0" y="-100"/>
         </Field>
-      </field:AccelerationField>
+      </field:AccelerationField>-->
     </Foregrounds>
     <Actors>
-      <enemy:Slug followDistance="false">
-        <Enemy maxSpeed="30">
+      <enemy:Slug followDistance="false" stickToWalls="true">
+        <Enemy maxSpeed="10">
           <NPC>
             <Actor name="Slug1">
               <BodyInfo>
                 <Rectangle bodyType="Dynamic" width="28" height="19">
-                  <Position x="200" y="50"/>
+                  <Position x="200" y="30"/>
                 </Rectangle>
               </BodyInfo>
               <Sprites>
