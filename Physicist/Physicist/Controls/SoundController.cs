@@ -141,14 +141,7 @@
 
         public static bool ContainsInstance(Guid id)
         {
-            bool contains = false;
-
-            if (SoundController.instances.ContainsKey(id))
-            {
-                contains = true;
-            }
-
-            return contains;
+            return SoundController.instances.ContainsKey(id);
         }
     }
 }

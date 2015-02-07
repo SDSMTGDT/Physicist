@@ -98,7 +98,7 @@
                 {
                     this.Camera.Following = this.map.Players.ElementAt(0);
                     SoundController.Map = this.map;
-                    SoundController.Listener = Map.Players.ElementAt(0).Listener;
+                    SoundController.Listener = this.map.Players.ElementAt(0).Listener;
                 }
             }
 
