@@ -93,10 +93,12 @@
                     this.debugView.LoadContent(this.GraphicsDevice, MainGame.ContentManager);
                     this.debugViewMatrix = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(this.map.Width), ConvertUnits.ToSimUnits(this.map.Height), 0f, 0f, .01f);
                 }
-
+                
                 if (this.map.Players.Count() > 0)
                 {
                     this.Camera.Following = this.map.Players.ElementAt(0);
+                    SoundController.Map = this.map;
+                    SoundController.Listener = this.map.Players.ElementAt(0).Listener;
                 }
             }
 
@@ -151,7 +153,6 @@
 
                 this.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
-                // TODO: Add your update logic here
                 this.map.Update(gameTime);
                 this.Camera.Rotation = this.ScreenRotation;
                 this.Camera.CenterOnFollowing();

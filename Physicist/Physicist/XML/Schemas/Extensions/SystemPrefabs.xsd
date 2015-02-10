@@ -8,6 +8,6 @@
 >
   <xs:include schemaLocation="../Types/SystemPrefabTypes.xsd"/>
 
-  <xs:element name="Mario" type="ActorPrefabType"/>
+  <xs:element name="Mario" type="PlayerPrefabType"/>
   
 </xs:schema>

@@ -7,20 +7,7 @@
     public static class MouseController
     {
         private static MouseDebouncer mouseDebouncer = new MouseDebouncer();
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", Justification = "Extension of Monogame")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Extension of Monogame")]
-        public static bool GetCursorPos(out Mouse.POINT point)
-        {
-            return Mouse.GetCursorPos(out point);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Extension of Monogame")]
-        public static bool SetCursorPos(int x, int y)
-        {
-            return Mouse.SetCursorPos(x, y);
-        }
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Extension of Monogame")]
         public static void SetPosition(int x, int y)
         {

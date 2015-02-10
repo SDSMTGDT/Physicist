@@ -7,6 +7,7 @@
     using FarseerPhysics;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
@@ -16,6 +17,8 @@
     public class Actor : PhysicistGameScreenItem, IActor
     {
         private Dictionary<string, GameSprite> sprites = new Dictionary<string, GameSprite>();
+        private Dictionary<string, Guid> playingSounds = new Dictionary<string, Guid>();
+        private AudioEmitter audioEmitter = new AudioEmitter();
         private Body body;
         private BodyInfo bodyInfo;
         private int health;
@@ -126,7 +129,7 @@
                 {
                     this.VisibleState = Visibility.Hidden;
                     this.IsEnabled = false;
-                    this.body.CollidesWith = Category.None;
+                    this.body.CollidesWith = PhysicistCategory.None;
                 }
             }
         }
@@ -153,6 +156,14 @@
         public Visibility VisibleState { get; set; }
 
         protected bool RotatesWithWorld { get; set; }
+
+        protected Dictionary<string, Guid> PlayingSounds
+        {
+            get
+            {
+                return this.playingSounds;
+            }
+        }
 
         public virtual void Draw(ISpritebatch sb)
         {
@@ -280,6 +291,40 @@
             }
         }
 
+        protected void StopSound(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                SoundController.StopSound(this.PlayingSounds[name]);
+            }
+        }
+
+        protected void PauseSound(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                SoundController.PauseSound(this.PlayingSounds[name]);
+            }
+        }
+
+        protected void ResumeSound(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                SoundController.ResumeSound(this.PlayingSounds[name]);
+            }
+        }
+
+        protected bool SoundIsPlaying(string name)
+        {
+            if (this.PlayingSounds.ContainsKey(name))
+            {
+                return SoundController.SoundIsPlaying(this.PlayingSounds[name]);
+            }
+
+            return false;
+        }
+
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             if (this.IsEnabled && this.CanBeDamaged && fixtureB != null)
@@ -296,6 +341,47 @@
             }
 
             return this.IsEnabled;
+        }
+
+        protected void PlaySound(string name)
+        {
+            this.PlaySound(name, true, false, 1.0f, 0.0f, 0.0f);
+        }
+
+        protected void PlaySound(string name, bool localized, bool looping, float volume, float pitch, float pan)
+        {
+            if (name != string.Empty)
+            {
+                // check for every Guid in the sound controller.
+                for (int i = this.PlayingSounds.Count - 1; i >= 0; i--)
+                {
+                    var sound = this.PlayingSounds.ElementAt(i);
+                    if (!SoundController.ContainsInstance(sound.Value))
+                    {
+                        this.PlayingSounds.Remove(sound.Key);
+                    }
+                }
+
+                Guid newGuid;
+
+                if (localized)
+                {
+                    newGuid = SoundController.PlayLocalizedSound(name, this.audioEmitter, looping, volume, pitch, pan);
+                }
+                else
+                {
+                    newGuid = SoundController.PlaySound(name, looping, volume, pitch, pan);
+                }
+
+                if (this.PlayingSounds.ContainsKey(name))
+                {
+                    this.PlayingSounds[name] = newGuid;
+                }
+                else
+                {
+                    this.PlayingSounds.Add(name, newGuid);
+                }
+            }
         }
     }
 }

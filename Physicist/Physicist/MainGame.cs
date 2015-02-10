@@ -54,6 +54,7 @@
             MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
+            this.IsMouseVisible = true;
            
             base.Initialize();
         }
@@ -101,6 +102,7 @@
             ScreenManager.Update(gameTime);
             KeyboardController.Update(gameTime);
             MouseController.Update(gameTime);
+            SoundController.Update();
             base.Update(gameTime);
         }
 

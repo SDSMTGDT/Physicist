@@ -95,7 +95,7 @@
                 }
                 else
                 {
-                    this.collisionFixture.IgnoreCCDWith = Category.None;
+                    this.collisionFixture.IgnoreCCDWith = PhysicistCategory.None;
                 }
             }
         }
