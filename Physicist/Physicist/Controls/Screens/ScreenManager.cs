@@ -58,6 +58,8 @@
 
             systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.MenuScreen));
             systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.PauseScreen));
+            systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.OptionsScreen));
+            systemScreens.Add(ScreenManager.AddSystemScreen(SystemScreen.ExtrasScreen));
 
             ScreenManager.CurrentScreen = ScreenManager.systemScreens[SystemScreen.MenuScreen];
         }
@@ -78,7 +80,7 @@
                         null, 
                         ScreenManager.systemScreens[SystemScreen.MenuScreen].Camera.Transform);
 
-                    ScreenManager.systemScreens[SystemScreen.MenuScreen].Draw(sb);
+                    ScreenManager.systemScreens[SystemScreen.MenuScreen].DrawScreen(sb);
                     sb.End();
                 }
                 else
@@ -106,7 +108,7 @@
                                 null,
                                 screen.Camera.Transform);
 
-                            screen.Draw(sb);
+                            screen.DrawScreen(sb);
                             sb.End();
                         }
                     }
@@ -124,18 +126,21 @@
                 var screen = ScreenManager.activeScreens[i];
                 if (screen.IsActive)
                 {
-                    screen.Update(gameTime);
+                    screen.UpdateScreen(gameTime);
                 }
             }
 
-            ScreenManager.CurrentScreen.Update(gameTime);
+            ScreenManager.CurrentScreen.UpdateScreen(gameTime);
         }
 
         public static void UnloadContent()
         {
             foreach (var screen in ScreenManager.activeScreens)
             {
-                screen.Dispose();                
+                if (!ScreenManager.systemScreens.Contains(screen))
+                {
+                    screen.Dispose();
+                }
             }
 
             foreach (var screen in ScreenManager.systemScreens)
@@ -156,6 +161,18 @@
                     ScreenManager.popupCount++;
                     ScreenManager.modalCount++;
                     break;
+
+                case SystemScreen.OptionsScreen:
+                    ScreenManager.activeScreens.Add(ScreenManager.systemScreens[SystemScreen.OptionsScreen]);
+                    ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.OptionsScreen];
+                    ScreenManager.modalCount++;
+                    break;
+
+                case SystemScreen.ExtrasScreen:
+                    ScreenManager.activeScreens.Add(ScreenManager.systemScreens[SystemScreen.ExtrasScreen]);
+                    ScreenManager.currentScreen = ScreenManager.systemScreens[SystemScreen.ExtrasScreen];
+                    ScreenManager.modalCount++;
+                    break;
             }
         }
 
@@ -163,8 +180,8 @@
         {
             if (ScreenManager.IsInitialized && screen != null && !ScreenManager.activeScreens.Contains(screen))
             {
-                screen.Initialize(ScreenManager.GraphicsDevice);
-                if (screen.LoadContent())
+                screen.InitializeScreen(ScreenManager.GraphicsDevice);
+                if (screen.LoadScreenContent())
                 {
                     if (screen.IsPopup)
                     {
@@ -253,12 +270,23 @@
                     case SystemScreen.PauseScreen:
                         tempScreen = new PauseScreen();
                         break;
+
+                    case SystemScreen.OptionsScreen:
+                        tempScreen = new OptionsScreen();
+                        break;
+
+                    case SystemScreen.ExtrasScreen:
+                        tempScreen = new ExtrasScreen();
+                        break;
                 }
 
-                tempScreen.Initialize(ScreenManager.GraphicsDevice);
-                tempScreen.LoadContent();
+                tempScreen.InitializeScreen(ScreenManager.GraphicsDevice);
+                tempScreen.LoadScreenContent();
                 systemScreen = tempScreen;
                 tempScreen = null;
+            }
+            catch (NullReferenceException)
+            {
             }
             finally
             {

@@ -4,5 +4,7 @@
     {
         PauseScreen,
         MenuScreen,
+        OptionsScreen,
+        ExtrasScreen,
     }
 }

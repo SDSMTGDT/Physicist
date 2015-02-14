@@ -796,7 +796,7 @@ namespace FarseerPhysics.DebugView
             _device = device;
             _batch = new SpriteBatch(_device);
             _primitiveBatch = new PrimitiveBatch(_device, 1000);
-            _font = content.Load<SpriteFont>("Fonts\\DebugFont");
+            _font = content.Load<SpriteFont>("System\\Fonts\\DebugFont");
             _stringData = new List<StringData>();
 
             _localProjection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, 0f, 1f);

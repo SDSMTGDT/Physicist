@@ -12,10 +12,12 @@
       <Word>Sim</Word>
       <Word>Pathing</Word>
       <Word>Triggerable</Word>
+      <Word>gui</Word>
     </Recognized>
   </Words>
   <Acronyms>
     <CasingExceptions>
+      <Acronym>GUI</Acronym>
       <Acronym>dt</Acronym>
       <Acronym>NPC</Acronym>
       <Acronym>FCC</Acronym>
@@ -24,7 +26,7 @@
       <Acronym>int</Acronym>
       <Acronym>char</Acronym>
       <Acronym>bool</Acronym>
-      <Acronym>string</Acronym> 
+      <Acronym>string</Acronym>
     </CasingExceptions>
   </Acronyms>
 </Dictionary>

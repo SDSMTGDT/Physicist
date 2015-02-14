@@ -8,15 +8,14 @@
     using Physicist.Enums;
 
     /// <summary>
-    /// PauseScreen is the 'main' screen for this section of
+    /// OptionsScreen is the 'main' screen for this section of
     /// your game. It is used to host content and update components.
     /// </summary>
-    public partial class PauseScreen : GameScreen
+    public partial class OptionsScreen : GameScreen
     {
-        public PauseScreen() :
-            base(SystemScreen.PauseScreen.ToString())
+        public OptionsScreen() :
+            base(SystemScreen.OptionsScreen.ToString())
         {
-            this.IsPopup = true;
             this.BackgroundColor = new Color(0, 0, 0, 0.8f);
         }
 
@@ -54,13 +53,16 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
-            var state = KeyboardController.GetState();
-
-            if (state.IsKeyDown(Keys.Escape, true))
+            if (gameTime != null)
             {
-                this.PopScreen();
+                var ks = KeyboardController.GetState();
+
+                if (ks.IsKeyDown(Keys.Escape, true))
+                {
+                    this.PopScreen();
+                }
+
+                base.Update(gameTime);
             }
         }
 

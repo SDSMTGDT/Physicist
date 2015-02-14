@@ -56,8 +56,6 @@
             MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
-            ScreenManager.Initialize(this.GraphicsDevice);
-            ScreenManager.Quit += this.RequestQuit;
            
             base.Initialize();
         }
@@ -68,6 +66,21 @@
         /// </summary>
         protected override void LoadContent()
         {
+            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "System\\Fonts\\Pericles6");
+            ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "System\\Textures\\ContentLoadError");
+            ContentController.Instance.LoadContent<SpriteFont>("DebugFount", "System\\Fonts\\DebugFont");
+        }
+
+        /// <summary>
+        /// Called before first update loop place to initialized components
+        /// dependant upon content
+        /// </summary>
+        protected override void BeginRun()
+        {
+            ScreenManager.Initialize(this.GraphicsDevice);
+            ScreenManager.Quit += this.RequestQuit;
+
+            base.BeginRun();
         }
 
         /// <summary>
@@ -87,37 +100,9 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-/*      if (gameTime != null)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                {
-                    this.Exit();
-                }
-
-                MainGame.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
-
-                foreach (var actor in MainGame.actors)
-                {
-                    Player player = actor as Player;
-                    player.PlayerCamera = this.camera;
-                    if (player != null)
-                    {
-                        this.camera.Following = player;
-                        player.RotateWorld(.001f);
-                        player.Update(gameTime, Keyboard.GetState());
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
-                }
-
-                // TODO: Add your update logic here
-                this.camera.CenterOnFollowing();
-                MainGame.map.Update(gameTime);
-            }
-*/
             ScreenManager.Update(gameTime);
+            KeyboardController.Update(gameTime);
+            MouseController.Update(gameTime);
             base.Update(gameTime);
         }
 

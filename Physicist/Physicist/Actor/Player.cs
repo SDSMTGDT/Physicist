@@ -88,7 +88,7 @@
             }
 
             // rotate the body and move the sprite so it is drawn in the up direction
-            this.Rotation =  -this.Screen.ScreenRotation;
+            this.Rotation = -this.Screen.ScreenRotation;
 
             var state = KeyboardController.GetState();
 
@@ -119,7 +119,7 @@
             if (element != null)
             {
                 base.XmlDeserialize(element.Element("Actor"));
-                
+
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();

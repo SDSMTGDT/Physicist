@@ -12,7 +12,11 @@
     using Microsoft.Xna.Framework.Input;
     using Physicist.Actors;
 
-    public class PhysicistGameScreen : GameScreen, IPhysicistGameScreen
+    /// <summary>
+    /// PhysicistGameScreen is the 'main' screen for this section of
+    /// your game. It is used to host content and update components.
+    /// </summary>
+    public partial class PhysicistGameScreen : GameScreen, IPhysicistGameScreen
     {
         private World world;
         private Map map;
@@ -28,7 +32,7 @@
         public PhysicistGameScreen(string name, string mapPath) :
             base(name)
         {
-            this.gravityScalar = 3.0f;
+            this.gravityScalar = 5.0f;
             this.mapPath = mapPath;
         }
 
@@ -50,22 +54,31 @@
             }
         }
 
-        public override void Initialize(GraphicsDevice graphicsDevice)
+        /// <summary>
+        /// Allows the screen to perform any initialization logic before starting.
+        /// Use it to load any non-graphical content
+        /// </summary>
+        public override void Initialize()
         {
-            base.Initialize(graphicsDevice);
+            base.Initialize();
+
             this.maps = new List<string>() { this.mapPath };
 
             ConvertUnits.SetDisplayUnitToSimUnitRatio(2f);
             FarseerPhysics.Settings.MaxPolygonVertices = 32;
         }
 
+        /// <summary>
+        /// LoadContent is called once per instance of screen and is used to 
+        /// load all of the graphical content
+        /// </summary>
         public override bool LoadContent()
         {
             bool success = base.LoadContent();
             if (success)
             {
-                ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "ContentLoadError");
                 this.world = new World(new Vector2(0f, 9.81f * this.gravityScalar));
+
                 this.map = MapLoader.Initialize(this.maps[0], this);
                 if (this.map == null || !MapLoader.LoadCurrentMap())
                 {
@@ -90,6 +103,21 @@
             return success;
         }
 
+        /// <summary>
+        /// UnloadContent is called once per instance of screen and is used to 
+        /// unload all of the graphical content
+        /// </summary>
+        public override void UnloadContent()
+        {
+            this.map.UnloadMedia();
+            base.UnloadContent();
+        }
+
+        /// <summary>
+        /// Allows the screen to run updating logic like checking user inputs,
+        /// changing item properties or playing music
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
             if (gameTime != null)
@@ -132,6 +160,10 @@
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Called every time the screen is to re-draw itself
+        /// </summary>
+        /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
         public override void Draw(ISpritebatch sb)
         {
             if (this.showDebugView)
@@ -144,12 +176,6 @@
             }
 
             base.Draw(sb);
-        }
-
-        public override void UnloadContent()
-        {
-            this.map.UnloadMedia();
-            base.UnloadContent();
         }
 
         public void SetWorldRotation(float theta)

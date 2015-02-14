@@ -52,7 +52,7 @@
         </xsl:with-param>
         
         <xsl:with-param name="GameSprites">
-          <GameSprite spriteName="mario" textureRef="{@textureRef}" frameLength="0.2" depth="0">
+          <GameSprite spriteName="mario" textureRef="{@textureRef}" frameLength="0.2" depth="1">
             <Offset x="0" y="0"/>
             <FrameSize width="19" height="40"/>
             <Animations>

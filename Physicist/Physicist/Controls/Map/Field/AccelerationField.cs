@@ -25,7 +25,7 @@
                 Vector2 d = this.Singularity ? (controllerBody.Position - worldBody.Position) : this.FieldVector.UnitVector();
 
                 // Force applied at given magnitude in direction d, removing the world gravity
-                f = ((d * this.FieldVector.Length()) - World.Gravity) * worldBody.Mass;
+                f = ((d * this.FieldVector.Length()) - (this.World.Gravity * worldBody.GravityScale)) * worldBody.Mass;
 
                 worldBody.ApplyForce(ref f);
             }

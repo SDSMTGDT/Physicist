@@ -26,7 +26,7 @@
 
         public Actor(string name)
         {
-            this.RotatesWithWorld = false;
+            this.RotatesWithWorld = true;
             this.PathManager = new PathManager(this);
             this.VisibleState = Visibility.Visible;
             this.IsEnabled = true;
@@ -178,7 +178,7 @@
 
                         sb.Draw(
                             sprite.SpriteSheet,
-                            this.Position - Vector2.Transform(this.bodyInfo.ShapeOffset, Matrix.CreateRotationZ(drawRotation)),
+                            this.Position - Vector2.Transform(this.bodyInfo.ShapeOffset, Matrix.CreateRotationZ(drawRotation)) + sprite.Offset,
                             sprite.CurrentSprite,
                             Color.White,
                             drawRotation,
