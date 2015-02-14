@@ -8,6 +8,7 @@
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Physicist.Controls;
@@ -27,6 +28,7 @@
         private ProximityTrigger headButton = null;
         private ProximityTrigger footButton = null;
         private string spriteState = "Idle";
+        private string rotateSound;
 
         public Player()
         {
@@ -38,6 +40,7 @@
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
             this.MovementSpeed = new Vector2(5, 5);
+            this.Listener = new AudioListener();
         }
 
         public Player(string name) :
@@ -51,7 +54,10 @@
             this.RotationSpeed = .02f;
             this.MaxSpeed = 100f;
             this.MovementSpeed = new Vector2(5, 5);
+            this.Listener = new AudioListener();
         }
+
+        public AudioListener Listener { get; set; }
 
         public float RotationSpeed { get; set; }
 
@@ -98,10 +104,28 @@
             this.rotating = this.GetRotation(state);
             this.GetJump(state);
 
+            // deal with the rotating sound pausing/playing
             if (this.rotating)
             {
                 this.Body.GravityScale = 0;
+                if (!this.PlayingSounds.ContainsKey(this.rotateSound))
+                {
+                    this.PlaySound(this.rotateSound, false, true, 1.0f, 0.0f, 0.0f);
+                }
+                else
+                {
+                    this.ResumeSound(this.rotateSound);
+                }
             }
+            else if (this.PlayingSounds.ContainsKey(this.rotateSound))
+            {
+                if (this.SoundIsPlaying(this.rotateSound))
+                {
+                    this.PauseSound(this.rotateSound);
+                }
+            }
+
+            this.Listener.Position = new Vector3(this.Position.X, this.Position.Y, 0);
 
             base.Update(gameTime);
         }
@@ -118,8 +142,8 @@
         {
             if (element != null)
             {
+                this.rotateSound = element.GetAttribute("rotateSoundRef", string.Empty);
                 base.XmlDeserialize(element.Element("Actor"));
-
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
                 this.CreateButtons();
@@ -205,12 +229,7 @@
         private Vector2 GetMovementSpeed(KeyboardDebouncer state)
         {
             var dp = Vector2.Zero;
-            if (state.IsKeyDown(KeyboardController.DownKey))
-            {
-                dp += Vector2.Transform(new Vector2(0, this.MovementSpeed.Y), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
-                this.SpriteState = "Down";
-            }
-            else if (state.IsKeyDown(KeyboardController.LeftKey))
+            if (state.IsKeyDown(KeyboardController.LeftKey))
             {
                 var speedMod = Vector2.Transform(new Vector2(-1 * this.MovementSpeed.X, 0), Matrix.CreateRotationZ(-1 * this.Screen.ScreenRotation));
                 if (!this.footButton.IsActive)
@@ -255,7 +274,7 @@
 
         private void CreateButtons()
         {
-            this.Body.CollisionCategories = PhysicistCategory.Player;
+            this.Body.CollisionCategories = PhysicistCategory.Player1;
             AABB aabb;
             this.Body.FixtureList[0].GetAABB(out aabb, 0);
 
@@ -277,8 +296,8 @@
                 this.Body.BodyType = BodyType.Dynamic;
                 this.Body.FixedRotation = true;
 
-                this.Body.CollidesWith = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
-                this.Body.CollisionCategories = PhysicistCategory.AllIgnoreFields ^ PhysicistCategory.Environment1 ^ PhysicistCategory.Environment2 ^ PhysicistCategory.Environment3;
+                this.Body.CollidesWith = PhysicistCategory.Physical;
+                this.Body.CollisionCategories = PhysicistCategory.Physical;
             }
         }
     }

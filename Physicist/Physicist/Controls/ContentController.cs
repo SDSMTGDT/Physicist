@@ -174,6 +174,11 @@
                 }
             }
 
+            if (asset == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
             return asset;
         }
 

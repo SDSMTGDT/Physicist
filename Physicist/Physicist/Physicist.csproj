@@ -129,6 +129,7 @@
     <Compile Include="Controls\ParticleEngine.cs" />
     <Compile Include="Enums\ActivationType.cs" />
     <Compile Include="Enums\StandardBehavior.cs" />
+    <Compile Include="Controls\SoundController.cs" />
     <Compile Include="Enums\KeyState.cs" />
     <Compile Include="Enums\PrimativeTypes.cs" />
     <Compile Include="Enums\TriggerSetOperation.cs" />
@@ -175,6 +176,15 @@
     <Content Include="Content\Levels\EnemyTests.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    <Content Include="Content\Levels\SoundTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\sabredance.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\thud.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\BlueField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -237,6 +247,7 @@
     </Content>
     <Content Include="XML\Templates\ActorTemplates.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Reference Include="FarseerPhysics MonoGame">
       <HintPath>$(ProjectDir)Tools\FarseerPhysics\FarseerPhysics MonoGame.dll</HintPath>
