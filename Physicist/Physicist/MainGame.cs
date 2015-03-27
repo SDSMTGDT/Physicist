@@ -20,13 +20,15 @@
     /// </summary>
     public class MainGame : Game
     {
-        private GraphicsDeviceManager graphics;
+        private static GraphicsDeviceManager graphics;
+        private static GameWindow window;
         private FCCSpritebatch spriteBatch;
 
         public MainGame()
             : base()
         {
-            this.graphics = new GraphicsDeviceManager(this);
+            MainGame.graphics = new GraphicsDeviceManager(this);
+            MainGame.window = this.Window;
         }
 
         public static GraphicsDevice GraphicsDev 
@@ -41,6 +43,26 @@
             private set;
         }
 
+        public static void SetWindowBounds(Rectangle bounds)
+        {
+            OpenTK.GameWindow win = null;
+            var type = typeof(OpenTKGameWindow);
+            System.Reflection.FieldInfo field = type.GetField("window", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                win = field.GetValue(MainGame.window) as OpenTK.GameWindow;
+            }
+
+            if (win != null)
+            {
+                win.Y = bounds.Y;
+                win.X = bounds.X;
+                MainGame.graphics.PreferredBackBufferHeight = bounds.Height;
+                MainGame.graphics.PreferredBackBufferWidth = bounds.Width;
+                MainGame.graphics.ApplyChanges();
+            }
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -49,15 +71,16 @@
         /// </summary>
         protected override void Initialize()
         {
+            FarseerPhysics.Settings.UseFPECollisionCategories = true;
+            //FarseerPhysics.Settings.DefaultFixtureCollisionCategories = PhysicistCategory.All;
+            MainGame.SetWindowBounds(new Rectangle(400, 10, 800, 480));
             ContentController.Instance.Initialize(this.Content, "Content");
-            ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "Pericles6");
-
             MainGame.GraphicsDev = this.GraphicsDevice;
             MainGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             this.IsMouseVisible = true;
-           
+
             base.Initialize();
         }
 

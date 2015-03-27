@@ -67,7 +67,7 @@
                     if (this.ContainedField != null)
                     {
                         this.ContainedField.XmlDeserialize(element);
-                        this.ContainedField.FieldBody = this.MapBody;
+                        this.ContainedField.Body = this.Body;
                     }
                 }
             }

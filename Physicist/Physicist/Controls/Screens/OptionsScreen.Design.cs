@@ -61,6 +61,11 @@
             this.AddGUIElement(new Label(this) { Bounds = new Rectangle(275, 150, 50, 25), Text = "Rotate CCW Key:" });
             this.keyBindings.Add(StandardKeyAction.RotateLeft, counterBox);
 
+            TextBox interactBox = new TextBox(this, this.GraphicsDevice) { Bounds = new Rectangle(450, 200, 75, 25), Text = KeyboardController.InteractionKey.ToString(), CanEdit = false };
+            this.AddGUIElement(interactBox);
+            this.AddGUIElement(new Label(this) { Bounds = new Rectangle(275, 200, 50, 25), Text = "Interact Key:" });
+            this.keyBindings.Add(StandardKeyAction.Interact, interactBox);
+
             return base.LoadGUI();
         }
 
@@ -101,7 +106,7 @@
         /// Called every time the screen is to re-draw itself
         /// </summary>
         /// <param name="sb">SpriteBatch for drawing</param>
-        public override void DrawGUI(ISpritebatch sb)
+        public override void DrawGUI(FCCSpritebatch sb)
         {
             base.DrawGUI(sb);
             foreach (var element in this.GUIElements)

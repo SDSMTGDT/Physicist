@@ -10,6 +10,7 @@
     using System.Xml.Linq;
     using System.Xml.Schema;
     using System.Xml.Xsl;
+    using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Media;
@@ -28,7 +29,10 @@
 
         private static XElement rootElement = null;
         private static XmlSchemaSet schemas = new XmlSchemaSet();
-        private static List<XslCompiledTransform> transforms = new List<XslCompiledTransform>();
+        private static List<XslCompiledTransform> templates = new List<XslCompiledTransform>();
+        private static XslCompiledTransform layerTrans;
+
+        private static string currentLayer = "No-processing-done";
 
         static MapLoader()
         {
@@ -62,12 +66,19 @@
                 }
             }
 
-            foreach (string filename in Directory.EnumerateFiles("XML\\Templates"))
+            foreach (string filename in Directory.EnumerateFiles("XML\\Transforms\\Templates"))
             {
+#if DEBUG
+                var transform = new XslCompiledTransform(true);
+#else
                 var transform = new XslCompiledTransform();
+#endif
                 transform.Load(filename);
-                MapLoader.transforms.Add(transform);
+                MapLoader.templates.Add(transform);
             }
+
+            layerTrans = new XslCompiledTransform();
+            layerTrans.Load("XML\\Transforms\\Layer\\LayerTransform.xslt");
         }
 
         public static bool HasFailed
@@ -137,17 +148,29 @@
 
                 if (rootDocument != null)
                 {
+                    XsltArgumentList paramlist = new XsltArgumentList();
+                    paramlist.AddParam("mapheight", string.Empty, rootDocument.Root.Attribute("height").Value);
+
                     XDocument transformDoc = new XDocument();
-                    using (XmlWriter writer = transformDoc.CreateWriter())
+                    XDocument currentReader = rootDocument;
+                    foreach (var transform in MapLoader.templates)
                     {
-                        foreach (var transform in MapLoader.transforms)
+                        transformDoc = new XDocument();
+                        using (XmlWriter writer = transformDoc.CreateWriter())
                         {
-                            transform.Transform(rootDocument.CreateReader(), writer);
+                            transform.Transform(currentReader.CreateReader(), paramlist, writer);
+                            currentReader = transformDoc; // Swap to current doc state
                         }
                     }
 
                     MapLoader.RemoveNamespaces(transformDoc);
 
+#if DEBUG
+                    using (XmlWriter writer = XmlWriter.Create("testout.xml"))
+                    {
+                        transformDoc.WriteTo(writer);
+                    }
+#endif
                     MapLoader.rootElement = transformDoc.Root;
 
                     try
@@ -175,13 +198,68 @@
                 {
                     try
                     {
-                        MapLoader.LoadMedia(rootElement.Element("Media"));
-                        MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
-                        MapLoader.LoadEvents(rootElement.Element("MapEvents"));
+                        var layers = rootElement.Elements("MapLayer");
+                        if (layers.Count() > 0)
+                        {
+                            for(int i = 0; i < layers.Count(); i++)
+                            {
+                                var layerEle = layers.ElementAt(i);
+                                int xoff = int.Parse(layerEle.Attribute("xoffset").Value, CultureInfo.CurrentCulture);
+                                int yoff = int.Parse(layerEle.Attribute("yoffset").Value, CultureInfo.CurrentCulture);
+                                var layer = new MapLayer(
+                                        MapLoader.registration.World,
+                                        layerEle.Attribute("name").Value,
+                                        int.Parse(layerEle.Attribute("width").Value, CultureInfo.CurrentCulture),
+                                        int.Parse(layerEle.Attribute("height").Value, CultureInfo.CurrentCulture),
+                                        int.Parse(layerEle.Attribute("depth").Value, CultureInfo.CurrentCulture),
+                                        new Vector2(xoff, yoff),
+                                        MapLoader.CurrentMap.Height,
+                                        (uint)i + 1);
+
+                                MapLoader.CurrentMap.AddMapLayer(layer);
+
+                                XsltArgumentList paramlist = new XsltArgumentList();
+                                paramlist.AddParam("xoffset", string.Empty, xoff);
+                                paramlist.AddParam("yoffset", string.Empty, yoff);
+
+                                XDocument layerDoc = new XDocument();
+                                using (XmlWriter writer = layerDoc.CreateWriter())
+                                {
+                                    layerTrans.Transform(layerEle.CreateReader(), paramlist, writer);
+                                }
+
+                                XElement rootLayerEle = layerDoc.Root;
+
+                                MapLoader.currentLayer = layer.Name;
+                                MapLoader.LoadMedia(rootLayerEle.Element("Media"));
+                                MapLoader.LoadLevelObjects(rootLayerEle.Element("LevelObjects"));
+                                MapLoader.LoadEvents(rootLayerEle.Element("MapEvents"));                               
+                            }
+                        }
+                        else
+                        {
+                            var layer = new MapLayer(
+                                        MapLoader.registration.World,
+                                        Guid.NewGuid().ToString(),
+                                        MapLoader.CurrentMap.Width,
+                                        MapLoader.CurrentMap.Height,
+                                        0,
+                                        Vector2.Zero,
+                                        MapLoader.CurrentMap.Height,
+                                        0);
+
+                            MapLoader.CurrentMap.AddMapLayer(layer);
+
+                            MapLoader.currentLayer = layer.Name;
+                            MapLoader.LoadMedia(rootElement.Element("Media"));
+                            MapLoader.LoadLevelObjects(rootElement.Element("LevelObjects"));
+                            MapLoader.LoadEvents(rootElement.Element("MapEvents"));
+                        }
                     }
                     catch (AggregateException)
                     {
                         MapLoader.HasFailed = true;
+                        MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error while loading layer: {0}", MapLoader.currentLayer));
                     }
                 }
             }
@@ -206,10 +284,10 @@
                         if (element.Attributes().Where(attribute => attribute.IsNamespaceDeclaration || (attribute.Name.Namespace != XNamespace.None)).Any())
                         {
                             element.ReplaceAttributes(
-                                                    element.Attributes()
-                                                    .Select(attribute =>
-                                                        attribute.IsNamespaceDeclaration ? null :
-                                                            attribute.Name.Namespace != XNamespace.None ? new XAttribute(attribute.Name.LocalName, attribute.Value) : attribute));
+                                element.Attributes()
+                                .Select(attribute =>
+                                        attribute.IsNamespaceDeclaration ? null :
+                                        attribute.Name.Namespace != XNamespace.None ? new XAttribute(attribute.Name.LocalName, attribute.Value) : attribute));
                         }
                     }
                 }
@@ -380,6 +458,7 @@
             {
                 bool canAdd = true;
                 string errorMessage = string.Format(CultureInfo.CurrentCulture, "while loading {0} of class: {1}, ", element.Name, instance.GetType());
+                string description = string.Empty;
 
                 var gameScreenItem = instance as IPhysicistGameScreenItem;
                 if (gameScreenItem != null)
@@ -397,14 +476,17 @@
                     catch (NullReferenceException)
                     {
                         canAdd = false;
+                        description = "Null Reference: try checking element attribute values and media references";
                     }
                     catch (ArgumentNullException)
                     {
                         canAdd = false;
+                        description = "Argument Null: try checking media references";
                     }
                     catch (AggregateException)
                     {
                         canAdd = false;
+                        description = "Aggregate: One or more unknown errors occurred :(";
                     }
                 }
                 else
@@ -414,7 +496,11 @@
 
                 if (canAdd)
                 {
-                    MapLoader.CurrentMap.AddObjectToMap(instance);
+                    MapLoader.CurrentMap.AddObjectToMap(instance, MapLoader.currentLayer);
+                }
+                else
+                {
+                    MapLoader.ErrorOccured(string.Format(CultureInfo.CurrentCulture, "Error {0}{1}", errorMessage, description));
                 }
             }
         }

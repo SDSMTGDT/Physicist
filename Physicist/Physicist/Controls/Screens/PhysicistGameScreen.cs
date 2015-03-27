@@ -93,7 +93,7 @@
                     this.debugView.LoadContent(this.GraphicsDevice, MainGame.ContentManager);
                     this.debugViewMatrix = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(this.map.Width), ConvertUnits.ToSimUnits(this.map.Height), 0f, 0f, .01f);
                 }
-                
+
                 if (this.map.Players.Count() > 0)
                 {
                     this.Camera.Following = this.map.Players.ElementAt(0);
@@ -165,7 +165,7 @@
         /// Called every time the screen is to re-draw itself
         /// </summary>
         /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
-        public override void Draw(ISpritebatch sb)
+        public override void Draw(FCCSpritebatch sb)
         {
             if (this.showDebugView)
             {

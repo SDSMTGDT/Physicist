@@ -204,15 +204,24 @@
 
         protected virtual bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            this.ActivationData = new ActivationData(contact, ActivationType.Collision.ToString());
-            this.ActivateWithStyle();
-            return this.IsEnabled;
+            var success = this.IsEnabled;
+            if (fixtureB != null && !fixtureB.IsSensor)
+            {
+                this.ActivationData = new ActivationData(contact, ActivationType.Collision.ToString());
+                this.ActivateWithStyle();
+                success = false;
+            }
+
+            return success;
         }
 
         protected virtual void OnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            this.ActivationData = null;
-            this.DeactivateWithStyle();
+            if (fixtureB != null && !fixtureB.IsSensor)
+            {
+                this.ActivationData = null;
+                this.DeactivateWithStyle();
+            }
         }
 
         // Slight Hack, if both OnSeparation and OnCollision event are subscribed to

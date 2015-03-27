@@ -24,12 +24,12 @@
             : base(ControllerType.AbstractForceController)
         {
             this.FieldVector = fieldVector;
-            this.FieldBody = fieldBody;
+            this.Body = fieldBody;
         }
 
         public Vector2 FieldVector { get; set; }
 
-        public Body FieldBody 
+        public Body Body 
         { 
             get
             {
@@ -50,7 +50,7 @@
 
         public override void Update(float dt)
         {
-            if (this.FieldBody != null)
+            if (this.Body != null)
             {
                 // Loop through all bodies
                 foreach (Body worldBody in World.BodyList)
@@ -72,7 +72,7 @@
                             continue;
                         }
 
-                        if (this.FieldBody != controllerBody)
+                        if (this.Body != controllerBody)
                         {
                             continue;
                         }

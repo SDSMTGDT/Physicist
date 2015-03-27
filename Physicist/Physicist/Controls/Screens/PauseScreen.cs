@@ -68,7 +68,7 @@
         /// Called every time the screen is to re-draw itself
         /// </summary>
         /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
-        public override void Draw(ISpritebatch sb)
+        public override void Draw(FCCSpritebatch sb)
         {
             if (sb != null)
             {

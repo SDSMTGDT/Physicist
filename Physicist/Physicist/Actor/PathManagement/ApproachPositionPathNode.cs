@@ -12,6 +12,7 @@
     {
         public ApproachPositionPathNode()
         {
+            this.Precision = 2f;
         }
 
         public ApproachPositionPathNode(Actor target, Vector2 position, float speed)
@@ -33,6 +34,8 @@
 
         public bool HideAtEndOfPath { get; set; }
 
+        public float Precision { get; set; }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -43,7 +46,7 @@
                 {
                     Vector2 delta = this.TargetLocation - this.TargetActor.Position;
 
-                    if (delta.Length() > 2f)
+                    if ((int)delta.Length() > this.Precision)
                     {
                         delta.Normalize();
                         delta *= this.Speed;
@@ -51,6 +54,8 @@
                     }
                     else
                     {
+                        this.TargetActor.Position = this.TargetLocation;
+
                         if (this.DisableAfterPathing)
                         {
                             this.TargetActor.IsEnabled = false;
@@ -62,6 +67,7 @@
                         }
 
                         this.IsActive = false;
+                        this.TargetActor.Body.LinearVelocity = Vector2.Zero;
                     }
                 }
             }
@@ -72,6 +78,7 @@
             return new XElement(
                 "ApproachPositionPathNode",
                 new XAttribute("speed", this.Speed),
+                new XAttribute("precision", this.Precision),
                 new XAttribute("disableAfterPathing", this.DisableAfterPathing),
                 new XAttribute("hideAfterPathing", this.HideAtEndOfPath),
                 ExtensionMethods.XmlSerialize(new Vector2(this.TargetLocation.X, this.Map.Height - this.TargetLocation.Y), "Position"),
@@ -89,6 +96,8 @@
                 this.DisableAfterPathing = element.GetAttribute("disableAfterPathing", false);
 
                 this.HideAtEndOfPath = element.GetAttribute("hideAfterPathing", false);
+
+                this.Precision = element.GetAttribute("precision", 2f);
 
                 var designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
                 this.TargetLocation = new Vector2(designPosition.X, this.Map.Height - designPosition.Y);

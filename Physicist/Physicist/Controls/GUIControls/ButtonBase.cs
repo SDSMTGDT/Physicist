@@ -48,7 +48,7 @@
 
                 if (press || held || release || hover)
                 {
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -64,7 +64,7 @@
             {
                 if (this.TrySet(ref this.pressedBackgroundColor, value))
                 {
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -80,7 +80,7 @@
             {
                 if (this.TrySet(ref this.hoverBackgroundColor, value))
                 {
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -96,7 +96,7 @@
             {
                 if (this.TrySet(ref this.heldBackgroundColor, value))
                 {
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -112,7 +112,7 @@
             {
                 if (this.TrySet(ref this.releasedBackgroundColor, value))
                 {
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -150,7 +150,7 @@
                         }
                     }
 
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -167,7 +167,7 @@
                 if (this.TrySetNotify(ref this.bounds, value))
                 {
                     // Reset background color to fill new bounds
-                    this.SetBackgroundTexture();
+                    this.BeginSetBackgroundTexture();
                 }
             }
         }
@@ -191,6 +191,14 @@
             }
 
             base.UnloadContent();
+        }
+
+        protected void BeginSetBackgroundTexture()
+        {
+            if (this.Device != null)
+            {
+                this.SetBackgroundTexture();
+            }
         }
 
         protected abstract void SetBackgroundTexture();

@@ -118,7 +118,21 @@
             {
                 try
                 {
-                    value = (T)Convert.ChangeType(element.Attribute(attributeName).Value, typeof(T), CultureInfo.CurrentCulture);
+                    if (element.Attributes(attributeName).Count() > 0)
+                    {
+                        if (typeof(T).IsEnum)
+                        {
+                            value = (T)Enum.Parse(typeof(T), element.Attribute(attributeName).Value);
+                        }
+                        else
+                        {
+                            value = (T)Convert.ChangeType(element.Attribute(attributeName).Value, typeof(T), CultureInfo.CurrentCulture);
+                        }
+                    }
+                    else
+                    {
+                        value = defaultValue;
+                    }
                 }
                 catch (InvalidCastException)
                 {
@@ -176,7 +190,8 @@
                 new XAttribute("defaultFrameRate", animation.DefaultFrameRate),
                 new XAttribute("playInReverse", animation.PlayInReverse),
                 new XAttribute("flipVertical", animation.FlipVertical),
-                new XAttribute("flipHorizontal", animation.FlipHorizontal));
+                new XAttribute("flipHorizontal", animation.FlipHorizontal),
+                new XAttribute("loopAnimation", animation.LoopAnimation));
         }
 
         public static SpriteAnimation XmlDeserializeSpriteAnimation(XElement element)
@@ -187,12 +202,14 @@
             }
 
             return new SpriteAnimation(
-                    uint.Parse(element.Attribute("rowIndex").Value, CultureInfo.CurrentCulture),
-                    uint.Parse(element.Attribute("frameCount").Value, CultureInfo.CurrentCulture),
-                    float.Parse(element.Attribute("defaultFrameRate").Value, CultureInfo.CurrentCulture),
-                    bool.Parse(element.Attribute("playInReverse").Value),
-                    bool.Parse(element.Attribute("flipVertical").Value),
-                    bool.Parse(element.Attribute("flipHorizontal").Value));
+                    element.GetAttribute("rowIndex", (uint)0),
+                    element.GetAttribute("frameCount", (uint)1),
+                    element.GetAttribute("defaultFrameRate", 0.2f),
+                    element.GetAttribute("playInReverse", false),
+                    element.GetAttribute("flipVertical", false),
+                    element.GetAttribute("flipHorizontal", false),
+                    element.GetAttribute("loopAnimation", true),
+                    element.GetAttribute("name", element.Name.LocalName));
         }
 
         public static Size XmlDeserializeSize(XElement element)

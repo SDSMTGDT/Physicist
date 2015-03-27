@@ -35,7 +35,7 @@
         /// Called every time the screen is to re-draw itself
         /// </summary>
         /// <param name="sb">SpriteBatch for drawing</param>
-        public override void DrawGUI(ISpritebatch sb)
+        public override void DrawGUI(FCCSpritebatch sb)
         {
             base.DrawGUI(sb);
             foreach (var element in this.GUIElements)

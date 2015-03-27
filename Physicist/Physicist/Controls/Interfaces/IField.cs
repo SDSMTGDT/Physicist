@@ -5,11 +5,9 @@
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
 
-    public interface IField : IXmlSerializable
+    public interface IField : IXmlSerializable, IBody
     {
         Vector2 FieldVector { get; }
-
-        Body FieldBody { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "dt", Justification = "Farseer Physics uses dt")]
         void ApplyField(float dt, Body controllerBody, Body worldBody);

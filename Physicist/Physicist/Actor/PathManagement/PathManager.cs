@@ -5,16 +5,26 @@
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Physicist.Controls;
+    using Physicist.Extensions;
 
     public class PathManager : PhysicistGameScreenItem
     {
-        private Dictionary<string, PhysicistPath> paths = new Dictionary<string, PhysicistPath>();
+        private NamedKeyedCollection<PhysicistPath> paths = new NamedKeyedCollection<PhysicistPath>();
         private string currentPath;
         private Actor target;
+        private string startingPath = string.Empty;
 
         public PathManager(Actor target)
         {
             this.target = target;
+        }
+
+        public IEnumerable<PhysicistPath> Paths
+        {
+            get
+            {
+                return this.paths;
+            }
         }
 
         public string CurrentPath
@@ -26,9 +36,9 @@
 
             set
             {
-                if (this.currentPath != value && this.paths.ContainsKey(value))
+                if (this.currentPath != value && this.paths.Contains(value))
                 {
-                    if (this.currentPath != null)
+                    if (!string.IsNullOrEmpty(this.currentPath))
                     {
                         this.paths[this.currentPath].PathCompleted -= this.OnPathCompleted;
                     }
@@ -40,13 +50,18 @@
             }
         }
 
+        public void StopPathing()
+        {
+            this.paths[this.CurrentPath].IsEnabled = false;
+        }
+
         public void AddPath(PhysicistPath path)
         {
             if (path != null)
             {
-                this.paths.Add(path.Name, path);
+                this.paths.Add(path);
 
-                if (this.paths.Count == 1)
+                if (string.IsNullOrEmpty(this.startingPath) && this.paths.Count == 1)
                 {
                     this.CurrentPath = path.Name;
                 }
@@ -55,7 +70,7 @@
 
         public void RemovePath(string pathName)
         {
-            if (this.paths.ContainsKey(pathName))
+            if (this.paths.Contains(pathName))
             {
                 this.OnPathCompleted(this.paths[pathName], null);
                 this.paths.Remove(pathName);
@@ -72,8 +87,11 @@
 
         public override XElement XmlSerialize()
         {
-            XElement element = new XElement("PathManager");
-            foreach (var path in this.paths.Values)
+            XElement element = new XElement(
+                "PathManager",
+                new XAttribute("startingPath", this.startingPath));
+
+            foreach (var path in this.paths)
             {
                 element.Add(path.XmlSerialize());
             }
@@ -85,6 +103,9 @@
         {
             if (element != null)
             {
+                this.startingPath = element.GetAttribute("startingPath", string.Empty);
+                this.currentPath = this.startingPath;
+
                 foreach (var pathEle in element.Elements())
                 {
                     PhysicistPath path = (PhysicistPath)MapLoader.CreateInstance(pathEle, "class");

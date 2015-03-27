@@ -75,7 +75,7 @@
                         SpriteSortMode.FrontToBack, 
                         BlendState.AlphaBlend, 
                         SamplerState.LinearClamp, 
-                        DepthStencilState.Default, 
+                        DepthStencilState.Default,
                         RasterizerState.CullCounterClockwise, 
                         null, 
                         ScreenManager.systemScreens[SystemScreen.MenuScreen].Camera.Transform);
@@ -218,6 +218,7 @@
                 if (screen != null)
                 {
                     ScreenManager.activeScreens.Remove(screen);
+                    screen.UnloadContent();
 
                     if (screen.IsPopup)
                     {
@@ -241,7 +242,12 @@
             switch (screen)
             {
                 case SystemScreen.MenuScreen:
-                    ScreenManager.UnloadContent();
+                    for (int i = ScreenManager.activeScreens.Count - 1; i >= 0; i--)
+                    {
+                        ScreenManager.activeScreens[i].UnloadContent();
+                        ScreenManager.activeScreens.RemoveAt(i);
+                    }
+
                     ScreenManager.CurrentScreen = ScreenManager.systemScreens[SystemScreen.MenuScreen];
                     break;
             }

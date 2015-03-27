@@ -1,6 +1,8 @@
 ﻿namespace Physicist.Controls
 {
-    public interface IMapObject : IXmlSerializable, IDraw
+    using FarseerPhysics.Dynamics;
+
+    public interface IMapObject : IXmlSerializable, IDraw, IBody
     {
         string TextureReference { get; }
     }

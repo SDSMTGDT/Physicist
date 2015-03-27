@@ -22,22 +22,22 @@
         public MapObject(Body body, BodyInfo bodyInfo, string textureRef)
         {
             this.TextureReference = textureRef;
-            this.MapBody = body;
+            this.Body = body;
             this.MapBodyInfo = bodyInfo;
             this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(textureRef), Vector2.Zero));
-            this.MapBody.CollisionCategories = PhysicistCategory.Map1;
+            this.Body.CollisionCategories = PhysicistCategory.Map1;
         }
 
         public string TextureReference { get; private set; }
 
-        public Body MapBody 
+        public Body Body 
         {
             get
             {
                 return this.mapBody;
             }
 
-            private set
+            set
             {
                 this.mapBody = value;
                 if (value != null)
@@ -62,7 +62,7 @@
                                 this.MapBodyInfo.Position + texture.Item2,
                                 null,
                                 Color.White,
-                                this.MapBody.Rotation,
+                                this.Body.Rotation,
                                 this.MapBodyInfo.ShapeOffset,
                                 1f,
                                 SpriteEffects.None,
@@ -87,7 +87,7 @@
             if (element != null)
             {
                 var bodyData = XmlBodyFactory.DeserializeBody(this.World, this.Map.Height, element);
-                this.MapBody = bodyData.Item1;
+                this.Body = bodyData.Item1;
                 this.MapBodyInfo = bodyData.Item2;
                 this.TextureReference = element.GetAttribute("textureRef", string.Empty);
 
@@ -97,7 +97,7 @@
                 {
                     if (this.MapBodyInfo.BodyCategory != Enums.BodyCategory.LoopShape)
                     {
-                        foreach (var fixture in this.MapBody.FixtureList)
+                        foreach (var fixture in this.Body.FixtureList)
                         {
                             Tuple<Texture2D, Vector2> textureInfo = new Tuple<Texture2D, Vector2>(
                                                         AssetCreator.Instance.TextureFromShape(fixture.Shape, this.TextureReference, Color.White, 1f),
@@ -116,9 +116,9 @@
                     this.textures.Add(new Tuple<Texture2D, Vector2>(ContentController.Instance.GetContent<Texture2D>(this.TextureReference), Vector2.Zero));
                 }
 
-                if (this.MapBody != null)
+                if (this.Body != null)
                 {
-                    this.MapBody.CollisionCategories = PhysicistCategory.Map1;
+                    this.Body.CollisionCategories = PhysicistCategory.Map1;
                 }
             }
         }

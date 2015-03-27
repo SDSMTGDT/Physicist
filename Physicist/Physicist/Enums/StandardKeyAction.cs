@@ -8,6 +8,7 @@
         Right,
         Jump,
         RotateRight,
-        RotateLeft
+        RotateLeft,
+        Interact
     }
 }

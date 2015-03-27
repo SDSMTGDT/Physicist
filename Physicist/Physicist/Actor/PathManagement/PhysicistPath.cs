@@ -10,9 +10,11 @@
     using Physicist.Events;
     using Physicist.Extensions;
 
-    public class PhysicistPath : PhysicistGameScreenItem
+    public class PhysicistPath : PhysicistGameScreenItem, IName
     {
         private List<IModifier> modifiers = new List<IModifier>();
+
+        private List<PathNode> nodes = new List<PathNode>();
 
         private Queue<PathNode> nodeQueue = new Queue<PathNode>();
 
@@ -62,6 +64,14 @@
             }
         }
 
+        public IEnumerable<PathNode> Nodes
+        {
+            get
+            {
+                return this.nodes;
+            }
+        }
+
         public void AddPathNode(PathNode node)
         {
             if (node != null)
@@ -73,6 +83,14 @@
                 }
 
                 this.nodeQueue.Enqueue(node);
+            }
+        }
+
+        public void Reset()
+        {
+            if (this.nodes.Count > 0)
+            {
+                this.nodes.ForEach(node => this.AddPathNode(node));
             }
         }
 
@@ -172,6 +190,7 @@
                     {
                         node.TargetActor = this.target;
                         node.Initialize(this.modifiers);
+                        this.nodes.Add(node);
                         this.AddPathNode(node);
                     }
                 }

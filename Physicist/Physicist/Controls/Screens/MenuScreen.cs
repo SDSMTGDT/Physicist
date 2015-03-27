@@ -77,20 +77,23 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            var state = KeyboardController.GetState();
-            if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
+            if (gameTime != null)
             {
-                this.PopScreen();
-            }
+                var state = KeyboardController.GetState();
+                if (state.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape, true))
+                {
+                    this.PopScreen();
+                }
 
-            base.Update(gameTime);
+                base.Update(gameTime);
+            }
         }
 
         /// <summary>
         /// Called every time the screen is to re-draw itself
         /// </summary>
         /// <param name="sb">SpriteBatch for drawing, use sb.draw()</param>
-        public override void Draw(ISpritebatch sb)
+        public override void Draw(FCCSpritebatch sb)
         {
             if (sb != null)
             {
