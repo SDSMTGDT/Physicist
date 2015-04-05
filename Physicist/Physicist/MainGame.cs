@@ -8,9 +8,11 @@
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework.Media;
     using Physicist.Actors;
     using Physicist.Controls;
     using Physicist.Extensions;
@@ -72,7 +74,6 @@
         protected override void Initialize()
         {
             FarseerPhysics.Settings.UseFPECollisionCategories = true;
-            //FarseerPhysics.Settings.DefaultFixtureCollisionCategories = PhysicistCategory.All;
             MainGame.SetWindowBounds(new Rectangle(400, 10, 800, 480));
             ContentController.Instance.Initialize(this.Content, "Content");
             MainGame.GraphicsDev = this.GraphicsDevice;
@@ -92,7 +93,10 @@
         {
             ContentController.Instance.LoadContent<SpriteFont>("MenuFont", "System\\Fonts\\Pericles6");
             ContentController.Instance.LoadContent<Texture2D>("ContentLoadError", "System\\Textures\\ContentLoadError");
-            ContentController.Instance.LoadContent<SpriteFont>("DebugFount", "System\\Fonts\\DebugFont");
+            ContentController.Instance.LoadContent<SpriteFont>("ContentLoadError", "System\\Fonts\\DebugFont");
+            ContentController.Instance.LoadContent<SoundEffect>("ContentLoadError", "System\\Sounds\\Blank");
+            ContentController.Instance.LoadContent<Video>("ContentLoadError", "System\\Videos\\Blank");
+            ContentController.Instance.LoadContent<SpriteFont>("DebugFont", "System\\Fonts\\DebugFont");
         }
 
         /// <summary>
@@ -139,6 +143,7 @@
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             ScreenManager.Draw(this.spriteBatch);
+
             base.Draw(gameTime);
         }
 

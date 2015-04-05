@@ -18,6 +18,7 @@
         private static object lockObject = new object();
         private static ContentController instance = null;
         private Dictionary<MediaFormat, MediaElementKeyedCollection<MediaElement>> media = null;
+        private Dictionary<MediaFormat, Dictionary<string, string>> mediaAlias = null;
 
         private ContentController()
         {
@@ -37,6 +38,10 @@
                             ContentController.instance = new ContentController();
                         }
                     }
+                }
+                else if (!ContentController.instance.IsInitialized)
+                {
+                    Console.WriteLine("Warning: Content Controller is not yet initialized");
                 }
 
                 return ContentController.instance;
@@ -79,10 +84,12 @@
                 this.Content.RootDirectory = rootDirectory;
 
                 this.media = new Dictionary<MediaFormat, MediaElementKeyedCollection<MediaElement>>();
+                this.mediaAlias = new Dictionary<MediaFormat, Dictionary<string, string>>();
 
                 foreach (MediaFormat typename in Enum.GetValues(typeof(MediaFormat)))
                 {
                     this.media.Add(typename, new MediaElementKeyedCollection<MediaElement>());
+                    this.mediaAlias.Add(typename, new Dictionary<string, string>());
                 }
 
                 this.IsInitialized = true;
@@ -99,19 +106,35 @@
                 {
                     try
                     {
-                        this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.Content.Load<T>(assetPath)));
-                    }
-                    catch (ArgumentException)
-                    {
-                        // Don't throw if the assets are the same
-                        if (string.Compare(this.media[assetFormat][assetName].Location, assetPath, StringComparison.CurrentCultureIgnoreCase) != 0)
+                        bool inMedia = this.media[assetFormat].Contains(assetName);
+                        bool inAlias = this.mediaAlias[assetFormat].ContainsKey(assetName);
+                        bool pathExists = this.media[assetFormat].ContainsLocation(assetPath);
+                        if (!inMedia && !inAlias)
                         {
-                            throw;
+                            if (!pathExists)
+                            {
+                                this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.Content.Load<T>(assetPath)));
+                            }
+                            else
+                            {
+                                this.mediaAlias[assetFormat].Add(assetName, this.media[assetFormat].KeyForLocation(assetPath));
+                            }
+                        }
+                        else if (pathExists)
+                        {
+                            var info = this.GetMediaReference<T>(assetName);
+                            if (string.Compare(info.Location, assetPath, StringComparison.CurrentCulture) != 0)
+                            {
+                                throw new ContentLoadException("Load results in overwrite of content located at: " +
+                                                                this.media[assetFormat][assetName].Location +
+                                                                " check that this content was unloaded successfully");
+                            }
                         }
                     }
-                    catch (ContentLoadException)
+                    catch (ContentLoadException e)
                     {
-                        this.media[assetFormat].Add(new MediaElement(assetName, assetPath, this.media[MediaFormat.Texture2D]["ContentLoadError"].Asset));
+                        this.mediaAlias[assetFormat].Add(assetName, this.media[assetFormat]["ContentLoadError"].Name);
+                        Console.WriteLine("Error while loading content: " + assetName + ", " + e.Message);
                     }
                 }
                 else
@@ -123,9 +146,38 @@
 
         public void UnloadContent(string assetName, MediaFormat assetFormat)
         {
-            if (this.media.ContainsKey(assetFormat))
+            if (this.IsInitialized)
             {
-                this.media[assetFormat].Remove(this.media[assetFormat][assetName]);
+                if (this.media.ContainsKey(assetFormat))
+                {
+                    if (this.media[assetFormat].Contains(assetName))
+                    {
+                        string aliasKey = null;
+                        string location = this.media[assetFormat][assetName].Location;
+                        foreach (var alias in this.mediaAlias[assetFormat])
+                        {
+                            if (string.Compare(location, alias.Value, StringComparison.CurrentCulture) == 0)
+                            {
+                                aliasKey = alias.Key;
+                                break;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(aliasKey))
+                        {
+                            this.mediaAlias[assetFormat].Remove(aliasKey);
+                            this.media[assetFormat].ChangeItemKey(this.media[assetFormat][assetName], aliasKey);
+                        }
+                        else
+                        {
+                            this.media[assetFormat].Remove(assetName);
+                        }
+                    }
+                    else if (this.mediaAlias[assetFormat].ContainsKey(assetName))
+                    {
+                        this.mediaAlias[assetFormat].Remove(assetName);
+                    }
+                }
             }
         }
 
@@ -135,26 +187,7 @@
             if (this.IsInitialized)
             {
                 MediaFormat assetFormat = (MediaFormat)Enum.Parse(typeof(MediaFormat), typeof(T).Name);
-                if (this.media.ContainsKey(assetFormat))
-                {
-                    this.media[assetFormat].Remove(this.media[assetFormat][assetName]);
-                }
-            }
-        }
-
-        public void AddContent<T>(string assetName, T asset) where T : class
-        {
-            if (this.IsInitialized)
-            {
-                MediaFormat assetFormat = (MediaFormat)Enum.Parse(typeof(MediaFormat), typeof(T).Name);
-                if (this.media.ContainsKey(assetFormat))
-                {
-                    this.media[assetFormat].Add(new MediaElement(assetName, null, asset));
-                }
-                else
-                {
-                    throw new ContentLoadException("Error, content of type: " + typeof(T).Name + " is not supported!");
-                }
+                this.UnloadContent(assetName, assetFormat);
             }
         }
 
@@ -164,32 +197,63 @@
             if (this.IsInitialized)
             {
                 MediaFormat assetFormat;
-                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) && this.media.ContainsKey(assetFormat) && this.media[assetFormat].Contains(assetName))
+                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) && this.media.ContainsKey(assetFormat))
                 {
-                    asset = this.media[assetFormat][assetName].Asset as T;
+                    string key = assetName;
+                    if (this.mediaAlias[assetFormat].ContainsKey(key))
+                    {
+                        key = this.mediaAlias[assetFormat][key];
+                    }
+
+                    if (this.media[assetFormat].Contains(key))
+                    {
+                        asset = this.media[assetFormat][key].Asset as T;
+                    }
+
+                    if (asset == null)
+                    {
+                        Console.WriteLine("Failed to get Content: " + assetName + ", content not found!");
+                        asset = this.media[assetFormat]["ContentLoadError"].Asset as T;
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Failed to Load Content: " + assetName);
+                    Console.WriteLine("Failed to get Content: " + assetName + ", content of type: " + typeof(T).Name + " is not supported!");
                 }
-            }
-
-            if (asset == null)
-            {
-                throw new KeyNotFoundException();
             }
 
             return asset;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Follows Monogame Content Pattern")]
-        public IMediaInfo GetMediaReference<T>(string key) where T : class
+        public IMediaInfo GetMediaReference<T>(string assetName) where T : class
         {
             IMediaInfo reference = null;
-            MediaFormat assetFormat;
-            if (this.IsInitialized && Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat))
+            if (this.IsInitialized)
             {
-                reference = this.media[assetFormat][key];
+                MediaFormat assetFormat;
+                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat) && this.media.ContainsKey(assetFormat))
+                {
+                    string key = assetName;
+                    if (this.mediaAlias[assetFormat].ContainsKey(key))
+                    {
+                        key = this.mediaAlias[assetFormat][key];
+                    }
+
+                    if (this.media[assetFormat].Contains(key))
+                    {
+                        reference = this.media[assetFormat][key];
+                    }
+
+                    if (reference == null)
+                    {
+                        Console.WriteLine("Failed to get reference for content: " + assetName + ", content not found!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to get reference for content: " + assetName + ", content of type: " + typeof(T).Name + " is not supported!");
+                }
             }
 
             return reference;
@@ -199,9 +263,21 @@
         {
             IMediaInfo reference = null;
             MediaFormat assetFormat;
-            if (this.IsInitialized & asset != null && Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat))
+            if (this.IsInitialized && asset != null)
             {
-                reference = this.media[assetFormat].FirstOrDefault(media => media.Asset.Equals(asset));
+                if (Enum.TryParse<MediaFormat>(typeof(T).Name, out assetFormat))
+                {
+                    reference = this.media[assetFormat].FirstOrDefault(media => media.Asset.Equals(asset));
+
+                    if (reference == null)
+                    {
+                        Console.WriteLine("Failed to get reference for asset, content not found!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to get reference for asset, content of type: " + typeof(T).Name + " is not supported!");
+                }
             }
 
             return reference;
@@ -243,12 +319,6 @@
             }
 
             return materialTexture;
-        }
-
-        public void Reset()
-        {
-            this.media.Clear();
-            this.IsInitialized = false;
         }
     }
 }

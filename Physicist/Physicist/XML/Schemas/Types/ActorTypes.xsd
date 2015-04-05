@@ -183,6 +183,43 @@
     <xs:attribute name="interiorTextureReference" type="xs:string" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="Ticker">
+    <xs:sequence>
+      <xs:element name="Position" type="Vector2"/>
+      <xs:element name="Messages">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element name="Message">
+              <xs:complexType mixed="true">
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="color" type="mstns:Color"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="tickerBackgroundTextureRef" type="xs:string" use="required"/>
+    <xs:attribute name="fontRef" type="xs:string" use="required"/>
+    <xs:attribute name="depth" type="xs:float" use="required"/>
+    <xs:attribute name="width" type="xs:int" use="required"/>
+    <xs:attribute name="height" type="xs:int" use="required"/>
+    <xs:attribute name="transitTime" type="xs:int" default="10">
+      <xs:annotation>
+        <xs:documentation>[Optional] time for message to cross ticker default is '10'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="messageDelay" type="xs:float" default="1">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '1'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
   <xs:complexType name="Player">
     <xs:all>
       <xs:element name="Actor" type="mstns:Actor"/>

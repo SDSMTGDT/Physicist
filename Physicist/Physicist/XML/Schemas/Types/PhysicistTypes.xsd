@@ -16,12 +16,29 @@
   <xs:complexType name="Backdrop">
     <xs:complexContent>
       <xs:extension base="Rectangle">
+        <xs:choice>
+          <xs:element name="Sprites" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element name="GameSprite" type="mstns:GameSprite"/>
+              </xs:sequence>
+            </xs:complexType>
+            <xs:unique name="UniqueGameSpritesPerBackground">
+              <xs:selector xpath="mstns:GameSprite"/>
+              <xs:field xpath="@spriteName"/>
+            </xs:unique>
+          </xs:element>
+        </xs:choice>
         <xs:attribute name="class" type="xs:string" default="Backdrop">
           <xs:annotation>
             <xs:documentation>[Optional] Object class, default is 'Backdrop'</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="textureRef" type="xs:string" use="required"/>
+        <xs:attribute name="textureRef" type="xs:string" default="">
+          <xs:annotation>
+            <xs:documentation>[Optional] Background texture overlay</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="depth" type="xs:float" default="0">
           <xs:annotation>
             <xs:documentation>[Optional] Draw depth, default is '0'</xs:documentation>
@@ -126,7 +143,24 @@
 
   <xs:complexType name="MapLayer">
     <xs:group ref="LayerItems"/>
-    <xs:attributeGroup ref="LayerAttributes"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="width" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="height" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="layerDepth" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="xoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="yoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   
   <xs:complexType name="PhysicistMap">

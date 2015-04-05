@@ -77,8 +77,8 @@
                 MapLoader.templates.Add(transform);
             }
 
-            layerTrans = new XslCompiledTransform();
-            layerTrans.Load("XML\\Transforms\\Layer\\LayerTransform.xslt");
+            MapLoader.layerTrans = new XslCompiledTransform();
+            MapLoader.layerTrans.Load("XML\\Transforms\\Layer\\LayerTransform.xslt");
         }
 
         public static bool HasFailed
@@ -165,12 +165,6 @@
 
                     MapLoader.RemoveNamespaces(transformDoc);
 
-#if DEBUG
-                    using (XmlWriter writer = XmlWriter.Create("testout.xml"))
-                    {
-                        transformDoc.WriteTo(writer);
-                    }
-#endif
                     MapLoader.rootElement = transformDoc.Root;
 
                     try
@@ -201,7 +195,7 @@
                         var layers = rootElement.Elements("MapLayer");
                         if (layers.Count() > 0)
                         {
-                            for(int i = 0; i < layers.Count(); i++)
+                            for (int i = 0; i < layers.Count(); i++)
                             {
                                 var layerEle = layers.ElementAt(i);
                                 int xoff = int.Parse(layerEle.Attribute("xoffset").Value, CultureInfo.CurrentCulture);
@@ -211,10 +205,9 @@
                                         layerEle.Attribute("name").Value,
                                         int.Parse(layerEle.Attribute("width").Value, CultureInfo.CurrentCulture),
                                         int.Parse(layerEle.Attribute("height").Value, CultureInfo.CurrentCulture),
-                                        int.Parse(layerEle.Attribute("depth").Value, CultureInfo.CurrentCulture),
+                                        uint.Parse(layerEle.Attribute("layerDepth").Value, CultureInfo.CurrentCulture),
                                         new Vector2(xoff, yoff),
-                                        MapLoader.CurrentMap.Height,
-                                        (uint)i + 1);
+                                        MapLoader.CurrentMap.Height);
 
                                 MapLoader.CurrentMap.AddMapLayer(layer);
 
@@ -227,6 +220,13 @@
                                 {
                                     layerTrans.Transform(layerEle.CreateReader(), paramlist, writer);
                                 }
+
+#if DEBUG
+                                using (XmlWriter writer = XmlWriter.Create(layerEle.Attribute("name").Value + "_out.xml"))
+                                {
+                                    layerDoc.Save(writer);
+                                }
+#endif
 
                                 XElement rootLayerEle = layerDoc.Root;
 
@@ -245,8 +245,7 @@
                                         MapLoader.CurrentMap.Height,
                                         0,
                                         Vector2.Zero,
-                                        MapLoader.CurrentMap.Height,
-                                        0);
+                                        MapLoader.CurrentMap.Height);
 
                             MapLoader.CurrentMap.AddMapLayer(layer);
 
