@@ -43,7 +43,7 @@
                     null,
                     Color.White,
                     0f,
-                    this.Location,
+                    Vector2.Zero,
                     this.Scale,
                     SpriteEffects.None,
                     this.Depth);

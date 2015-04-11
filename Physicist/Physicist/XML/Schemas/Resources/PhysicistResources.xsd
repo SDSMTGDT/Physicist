@@ -8,7 +8,6 @@
   >
     <xs:include schemaLocation="CommonResources.xsd"/>
 
-    <xs:element name="MediaReference" type="Media" abstract="true"/>
     <xs:element name="MapObject" type="MapObject" abstract="true"/>    
     
     <xs:complexType name="Vertices">
@@ -46,6 +45,11 @@
           <xs:documentation>[Optional] default is 'false'</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="loopAnimation" type="xs:boolean" default="true">
+        <xs:annotation>
+          <xs:documentation>[Optional] loops animation after completion, default is 'true'</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="GameSprite">
@@ -66,9 +70,9 @@
       </xs:all>
       <xs:attribute name="spriteName" type="xs:string" use="required"/>
       <xs:attribute name="textureRef" type="xs:string" use="required"/>
-      <xs:attribute name="frameLength" type="xs:float" default="0.2">
+      <xs:attribute name="frameLength" type="xs:float" default="-1">
         <xs:annotation>
-          <xs:documentation>[Optional] Frame rate (sec/frame), default is 0.2</xs:documentation>
+          <xs:documentation>[Optional] Frame rate (sec/frame), default is -1, uses rate in animations</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="depth" type="UnitInterval" default="1">
@@ -124,11 +128,5 @@
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
-
-    <xs:complexType name="Media">
-      <xs:attribute name="name" type="xs:string" use="required"/>
-      <xs:attribute name="location" type="xs:string" use="required"/>
-    </xs:complexType>
-
   </xs:schema>
 

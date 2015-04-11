@@ -68,6 +68,14 @@
             }
         }
 
+        public static Keys InteractionKey
+        {
+            get
+            {
+                return KeyboardController.MappedKeys[StandardKeyAction.Interact];
+            }
+        }
+
         private static Dictionary<StandardKeyAction, Keys> MappedKeys
         {
             get
@@ -82,6 +90,7 @@
                     KeyboardController.mappedKeys.Add(StandardKeyAction.Jump, Keys.Space);
                     KeyboardController.mappedKeys.Add(StandardKeyAction.RotateRight, Keys.Right);
                     KeyboardController.mappedKeys.Add(StandardKeyAction.RotateLeft, Keys.Left);
+                    KeyboardController.mappedKeys.Add(StandardKeyAction.Interact, Keys.Up);
                 }
 
                 return KeyboardController.mappedKeys;

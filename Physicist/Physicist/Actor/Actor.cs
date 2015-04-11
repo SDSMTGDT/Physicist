@@ -65,7 +65,7 @@
                 }
             }
         }
-
+       
         // 2space variables
         public Vector2 Position
         {
@@ -154,6 +154,14 @@
         }
 
         public Visibility VisibleState { get; set; }
+
+        protected BodyInfo BodyInfo
+        {
+            get
+            {
+                return this.bodyInfo;
+            }
+        }
 
         protected bool RotatesWithWorld { get; set; }
 
@@ -350,7 +358,7 @@
 
         protected void PlaySound(string name, bool localized, bool looping, float volume, float pitch, float pan)
         {
-            if (name != string.Empty)
+            if (!string.IsNullOrEmpty(name))
             {
                 // check for every Guid in the sound controller.
                 for (int i = this.PlayingSounds.Count - 1; i >= 0; i--)

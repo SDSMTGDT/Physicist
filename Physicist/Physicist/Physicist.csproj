@@ -44,10 +44,13 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Actor\Environment\Elevator.cs" />
     <Compile Include="Actor\PathManagement\PathNode.cs" />
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\BodyInfo.cs" />
-    <Compile Include="Actor\Door.cs" />
+    <Compile Include="Actor\Environment\Door.cs" />
+    <Compile Include="Controls\Interfaces\IBody.cs" />
+    <Compile Include="Controls\Interfaces\ILayerTransition.cs" />
     <Compile Include="Controls\Map\Field\FieldContainer.cs" />
     <Compile Include="Controls\Map\Field\AccelerationField.cs" />
     <Compile Include="Controls\Map\Field\Field.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Controls\Interfaces\IXmlSerializable.cs" />
     <Compile Include="Controls\Interfaces\IPhysicistGameScreen.cs" />
     <Compile Include="Controls\DebouncerKeyState.cs" />
+    <Compile Include="Controls\Map\MapLayer.cs" />
     <Compile Include="Controls\Map\MapObject.cs" />
     <Compile Include="Controls\Map\BackgroundMusic.cs" />
     <Compile Include="Controls\Map\Backdrop.cs" />
@@ -105,6 +109,10 @@
     <Compile Include="Controls\Screens\ExtrasScreen.cs" />
     <Compile Include="Controls\Screens\ExtrasScreen.Design.cs">
       <DependentUpon>ExtrasScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\LevelEndScreen.cs" />
+    <Compile Include="Controls\Screens\LevelEndScreen.Design.cs">
+      <DependentUpon>LevelEndScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Screens\MenuScreen.cs" />
     <Compile Include="Controls\Screens\MenuScreen.Design.cs">
@@ -127,24 +135,30 @@
     <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
     <Compile Include="Controls\Screens\ScreenManager.cs" />
     <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Enums\ActivationType.cs" />
+    <Compile Include="Enums\StandardBehavior.cs" />
     <Compile Include="Controls\SoundController.cs" />
     <Compile Include="Enums\KeyState.cs" />
     <Compile Include="Enums\PrimativeTypes.cs" />
     <Compile Include="Enums\TriggerSetOperation.cs" />
     <Compile Include="Events\Modifiers\PrimitivePropertyModifier.cs" />
+    <Compile Include="Events\Triggers\ActivationData.cs" />
     <Compile Include="Events\Triggers\KeyPressTrigger.cs" />
     <Compile Include="Events\Triggers\TriggerSet.cs" />
+    <Compile Include="Extensions\AnimationCompleteEventArgs.cs" />
+    <Compile Include="Extensions\LayerTransitionEventArgs.cs" />
+    <Compile Include="Extensions\NamedKeyedCollection.cs" />
     <Compile Include="Extensions\PhysicistCategory.cs" />
     <Compile Include="Tools\DebugView\DebugViewXNA.cs" />
     <Compile Include="Tools\DebugView\PrimitiveBatch.cs" />
     <Compile Include="Enums\MediaFormat.cs" />
     <Compile Include="Enums\StandardAnimations.cs" />
-    <Compile Include="Enums\StandardKeyActions.cs" />
+    <Compile Include="Enums\StandardKeyAction.cs" />
     <Compile Include="Enums\Visibility.cs" />
     <Compile Include="Enums\TriggerMode.cs" />
     <Compile Include="Enums\TriggerStyle.cs" />
     <Compile Include="Enums\BodyCategory.cs" />
-    <Compile Include="Enums\SystemScreens.cs" />
+    <Compile Include="Enums\SystemScreen.cs" />
     <Compile Include="Events\Modifiers\AnimateModifier.cs" />
     <Compile Include="Controls\Interfaces\IModifier.cs" />
     <Compile Include="Events\PhysicistEvent.cs" />
@@ -166,7 +180,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Levels\SoundTest.xml">
+    <Content Include="Content\Levels\Tests\LayerTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\EnemyInteractionTests.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\EnemyTests.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\SoundTest.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -179,35 +205,35 @@
     <Content Include="Content\Textures\BlueField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Levels\Blank.xml">
+    <Content Include="Content\Levels\Tests\Blank.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Levels\FieldTest.xml">
+    <Content Include="Content\Levels\Tests\FieldTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\Levels\TriggerSetTest.xml">
+    <Content Include="Content\Levels\Tests\TriggerSetTest.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Levels\PathTest.xml">
+    <Content Include="Content\Levels\Tests\PathTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Levels\TriggerTest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Content\Levels\SchemaTest.xml">
+    <Content Include="Content\Levels\Tests\TriggerTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\Levels\MaterialTest.xml">
+    <Content Include="Content\Levels\Tests\SchemaTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\MaterialTest.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\Levels\TestLevel.xml">
+    <Content Include="Content\Levels\Tests\TestLevel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
@@ -215,6 +241,24 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\System\Textures\ContentLoadError.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Box.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Door.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Interior.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft_Overlay.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft_SuspensionLines.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\FillShape.png">
@@ -226,18 +270,29 @@
     <Content Include="Content\Textures\OrangeField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Slug.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\YellowField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Tools\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XML\Templates\ActorTemplates.xslt">
+    <Content Include="XML\Transforms\Templates\ActorTemplates.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Reference Include="FarseerPhysics MonoGame">
-      <HintPath>$(ProjectDir)Tools\FarseerPhysics\FarseerPhysics MonoGame.dll</HintPath>
+    <Content Include="XML\Transforms\Layer\LayerTransform.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XML\Transforms\Templates\LayerTemplates.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Reference Include="FarseerPhysics MonoGame, Version=3.5.0.26691, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Tools\FarseerPhysics\Augmented\FarseerPhysics MonoGame.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>$(ProjectDir)Tools\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
@@ -281,6 +336,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="XML\Schemas\Extensions\LayerPrefabs.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XML\Schemas\Nodes\PhysicistEnemies.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="XML\Schemas\Nodes\PhysicistEvents.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -304,6 +365,9 @@
     <None Include="XML\Schemas\Nodes\PhysicistMedia.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Schemas\Proxies\LayerCommon.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="XML\Schemas\Types\ActorTypes.xsd">
       <SubType>Designer</SubType>
@@ -370,6 +434,9 @@
     <None Include="Content\Textures\SolidArc.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="XML\Schemas\Types\EnemyTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="XML\Schemas\Types\EventTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -386,6 +453,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="XML\Schemas\Types\LayerPrefabTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="XML\Schemas\Types\PhysicistTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -401,6 +471,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Fonts\" />
+    <Folder Include="Content\Levels\Published\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProjectDir)Tools\StyleCop\v4.7\StyleCop.targets" />

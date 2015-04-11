@@ -120,6 +120,14 @@
             }
         }
 
+        public static Category Dynamic
+        {
+            get
+            {
+                return PhysicistCategory.Dynamic1 | PhysicistCategory.Dynamic2 | PhysicistCategory.Dynamic3;
+            }
+        }
+
         public static Category Dynamic1
         {
             get
@@ -221,14 +229,6 @@
             get
             {
                 return Enemy1 | Enemy2 | Enemy3;
-            }
-        }
-
-        public static Category Dynamic
-        {
-            get
-            {
-                return Dynamic1 | Dynamic2 | Dynamic3;
             }
         }
 

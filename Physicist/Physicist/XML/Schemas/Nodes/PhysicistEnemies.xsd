@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PhysicistEnemies"
+    targetNamespace="PhysicistEnemies"
+    elementFormDefault="qualified"
+    xmlns="PhysicistEnemies"
+    xmlns:types="PhysicistTypes"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:import namespace="PhysicistTypes" schemaLocation="../Types/EnemyTypes.xsd"/>
+  <xs:element name="Slug" type="types:Slug"/>
+  
+</xs:schema>

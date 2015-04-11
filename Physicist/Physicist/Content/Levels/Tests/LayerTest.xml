@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Map xmlns="PhysicistTypes"
+     xmlns:system="SystemPrefabs"
+     xmlns:actor="PhysicistActors"
+     xmlns:layer="LayerPrefabs"
+     width="400"
+     height="1300">
+  <MapLayer height="200" width="300" depth="1" name="Mainroom" yoffset="1073">
+    <Media>
+      <Texture2D name="ElevatorDoor" location="Textures/Elevator_Door"/>
+      <Texture2D name="ElevatorInterior" location="Textures/Elevator_Interior"/>
+      <Texture2D name="mario" location="Textures/NOTSTOLEN"/>
+      <Texture2D name="MegamanSprite" location="Textures/MegamanSprite"/>
+    </Media>
+    <LevelObjects>
+      <Actors>    
+        <actor:Door targetDoor="Elevator{0}" name="Door" doorTextureReference="ElevatorDoor" 
+            interiorTextureReference="ElevatorInterior"> 
+          <Position x="50" y="56"/>
+        </actor:Door>
+
+        <actor:Actor class="Actor" name="MegaMan" health="10" rotation="0" isEnabled="true" visibleState="Visible">
+          <MovementSpeed x="100" y="100"/>
+          <Sprites>
+            <GameSprite spriteName="MegaMan" textureRef="MegamanSprite" frameLength="0.2" depth="1">
+              <Offset x="0" y="0"/>
+              <FrameSize width="64" height="64"/>
+              <Animations>
+                <Animation name="Idle" struct="SpriteAnimation" rowIndex="0" frameCount="1" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Animation name="Left" struct="SpriteAnimation" rowIndex="1" frameCount="3" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                <Animation name="Right" struct="SpriteAnimation" rowIndex="1" frameCount="3" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+              </Animations>
+            </GameSprite>
+          </Sprites>
+          <BodyInfo>
+            <Rectangle width="64" height="64"  density="1" bodyType="Dynamic" fixedRotation="true" friction="1">
+              <Position x="150" y="125"/>
+            </Rectangle>
+          </BodyInfo>
+        </actor:Actor>
+
+        <system:Mario textureRef="mario">
+          <system:Position x="100" y="100"/>
+        </system:Mario>
+
+      </Actors>
+    </LevelObjects>
+  </MapLayer>
+
+  <layer:Elevator name="Elevator" boxTextureLocation="Textures/Elevator_Box" interiorTextureLocation="Textures/Elevator_Interior"
+                  overlayTextureLocation="Textures/Elevator_Shaft_Overlay" shaftTextureLocation="Textures/Elevator_Shaft"
+                  suspensionTextureLocation="Textures/Elevator_Shaft_SuspensionLines" depth="0" speed="60" xoffset="12" yoffset="0"                  
+                  floorCount="4" startingFloor="0">
+    <layer:Floor level="0" targetDoor="Door"/>
+    <layer:Floor level="1"/>
+    <layer:Floor level="3"/>
+  </layer:Elevator> 
+</Map>

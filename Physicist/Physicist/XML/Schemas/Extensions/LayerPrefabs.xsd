@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LayerPrefabs"
+    targetNamespace="LayerPrefabs"
+    elementFormDefault="qualified"
+    xmlns="LayerPrefabs"
+    xmlns:mstns="LayerPrefabs"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:include schemaLocation="../Types/LayerPrefabTypes.xsd"/>
+
+  <xs:element name="Elevator" type="ElevatorLayerType"/>
+
+</xs:schema>

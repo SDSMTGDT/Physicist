@@ -5,7 +5,7 @@
  
     public interface IBackgroundObject : IXmlSerializable
     {
-        Vector2 Location { get; }
+        Vector2 Location { get; set; }
 
         Size Dimensions { get; }
     }

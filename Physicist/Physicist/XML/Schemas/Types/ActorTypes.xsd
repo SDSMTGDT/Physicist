@@ -22,6 +22,11 @@
         <xs:sequence>
           <xs:element name="Position" type="Vector2"/>
         </xs:sequence>
+        <xs:attribute name="precision" type="xs:float" default="2">
+          <xs:annotation>
+            <xs:documentation>[Optional] specifies how close to position target must get, default is 2</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="speed" type="xs:float" default="10">
           <xs:annotation>
             <xs:documentation>[Optional] default is '10'</xs:documentation>
@@ -91,7 +96,7 @@
         <xs:documentation>[Optional] default is false</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="class" type="xs:string" default="PhysicstPath">
+    <xs:attribute name="class" type="xs:string" default="PhysicistPath">
       <xs:annotation>
         <xs:documentation>[Optional] default is 'PhysicistPath'</xs:documentation>
       </xs:annotation>
@@ -118,6 +123,11 @@
           <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="PhysicistPath" type="PhysicistPath"/>
           </xs:choice>
+          <xs:attribute name="startingPath" default="">
+            <xs:annotation>
+              <xs:documentation>[Optional] supplying no starting path selects the first path in list</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:complexType>        
       </xs:element>
     </xs:all>
@@ -157,11 +167,20 @@
         <xs:documentation>[Optional] default is 'true'</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="attackDamage" type="xs:int" default="0">
+  </xs:complexType>
+
+  <xs:complexType name="Door">
+    <xs:sequence>
+      <xs:element name="Position" type="Vector2"/>
+    </xs:sequence>
+    <xs:attribute name="targetDoor" type="xs:string" default="LEVEL_END">
       <xs:annotation>
-        <xs:documentation>[Optional] default is '0'</xs:documentation>
-      </xs:annotation>
+        <xs:documentation>[Optional] specifies target door of connecting layer, default is 'LEVEL_END' </xs:documentation>
+      </xs:annotation>     
     </xs:attribute>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="doorTextureReference" type="xs:string" use="required"/>
+    <xs:attribute name="interiorTextureReference" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="Player">
@@ -176,13 +195,4 @@
     </xs:attribute>
   </xs:complexType>
             
-  <xs:complexType name="ActorList">
-    <xs:sequence minOccurs="0">
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:any namespace="PhysicistActors" processContents="lax"/>
-        <xs:any namespace="ActorExtensions" processContents="lax"/>
-        <xs:any namespace="SystemPrefabs" processContents="lax"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:complexType>
 </xs:schema>

@@ -18,6 +18,21 @@
 
     public static class ExtensionMethods
     {
+        public static float Angle(this Vector2 vector, Vector2 value)
+        {
+            return vector.Length() == 0 || value.Length() == 0 ? 0 : (float)Math.Acos(vector.Dot(value) / (vector.Length() * value.Length()));
+        }
+
+        public static float Cross(this Vector2 vector, Vector2 value)
+        {
+            return (vector.X * value.Y) - (vector.Y * value.X); 
+        }
+
+        public static float Dot(this Vector2 vector, Vector2 value)
+        {
+            return (vector.X * value.X) + (vector.Y * value.Y);
+        }
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "No new instances are created")]
         public static bool TrySet<T>(this NotifyProperty notify, ref T value, T newValue)
         {
@@ -103,7 +118,21 @@
             {
                 try
                 {
-                    value = (T)Convert.ChangeType(element.Attribute(attributeName).Value, typeof(T), CultureInfo.CurrentCulture);
+                    if (element.Attributes(attributeName).Count() > 0)
+                    {
+                        if (typeof(T).IsEnum)
+                        {
+                            value = (T)Enum.Parse(typeof(T), element.Attribute(attributeName).Value);
+                        }
+                        else
+                        {
+                            value = (T)Convert.ChangeType(element.Attribute(attributeName).Value, typeof(T), CultureInfo.CurrentCulture);
+                        }
+                    }
+                    else
+                    {
+                        value = defaultValue;
+                    }
                 }
                 catch (InvalidCastException)
                 {
@@ -161,7 +190,8 @@
                 new XAttribute("defaultFrameRate", animation.DefaultFrameRate),
                 new XAttribute("playInReverse", animation.PlayInReverse),
                 new XAttribute("flipVertical", animation.FlipVertical),
-                new XAttribute("flipHorizontal", animation.FlipHorizontal));
+                new XAttribute("flipHorizontal", animation.FlipHorizontal),
+                new XAttribute("loopAnimation", animation.LoopAnimation));
         }
 
         public static SpriteAnimation XmlDeserializeSpriteAnimation(XElement element)
@@ -172,12 +202,14 @@
             }
 
             return new SpriteAnimation(
-                    uint.Parse(element.Attribute("rowIndex").Value, CultureInfo.CurrentCulture),
-                    uint.Parse(element.Attribute("frameCount").Value, CultureInfo.CurrentCulture),
-                    float.Parse(element.Attribute("defaultFrameRate").Value, CultureInfo.CurrentCulture),
-                    bool.Parse(element.Attribute("playInReverse").Value),
-                    bool.Parse(element.Attribute("flipVertical").Value),
-                    bool.Parse(element.Attribute("flipHorizontal").Value));
+                    element.GetAttribute("rowIndex", (uint)0),
+                    element.GetAttribute("frameCount", (uint)1),
+                    element.GetAttribute("defaultFrameRate", 0.2f),
+                    element.GetAttribute("playInReverse", false),
+                    element.GetAttribute("flipVertical", false),
+                    element.GetAttribute("flipHorizontal", false),
+                    element.GetAttribute("loopAnimation", true),
+                    element.GetAttribute("name", element.Name.LocalName));
         }
 
         public static Size XmlDeserializeSize(XElement element)

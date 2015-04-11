@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LayerPrefabTypes"
+    targetNamespace="LayerPrefabs"
+    xmlns="LayerPrefabs"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mstns="LayerPrefabs"
+    elementFormDefault="qualified"
+>
+  <xs:include schemaLocation="../Proxies/LayerCommon.xsd"/>
+
+  <xs:complexType name="ElevatorLayerType">
+    <xs:sequence>      
+      <xs:element name="Floor" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="level" type="xs:int" use="required"/>
+          <xs:attribute name="targetDoor" type="xs:string" default="LEVEL_END">
+            <xs:annotation>
+              <xs:documentation>[Optional] Specifies which door elevator door at level connects to, default is 'LEVEL_END'</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="OtherMedia" type="MediaList" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OtherActors" type="ActorList" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+
+    <xs:attribute name="depth" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="floorCount" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>[Required] Total floors in elevator, not every floor needs be connected</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>    
+    <xs:attribute name="startingFloor" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] Starting floor of the elevator</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="xoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="yoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="boxTextureLocation" type="xs:string" default="Textures/Elevator_Box">
+      <xs:annotation>
+        <xs:documentation>[Optional] Location of elevator box texture, default is 'Textures/Elevator_Box'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="shaftTextureLocation" type="xs:string" default="Textures/Elevator_Shaft">
+      <xs:annotation>
+        <xs:documentation>[Optional] Location of elevator shaft texture, default is 'Textures/Elevator_Shaft'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="overlayTextureLocation" type="xs:string" default="Textures/Elevator_Shaft_Overlay">
+      <xs:annotation>
+        <xs:documentation>[Optional] Location of elevator box texture, default is 'Textures/Elevator_Box'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="interiorTextureLocation" type="xs:string" default="Textures/Elevator_Interior">
+      <xs:annotation>
+        <xs:documentation>[Optional] Location of elevator box texture, default is 'Textures/Elevator_Box'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="suspensionTextureLocation" type="xs:string" default="Textures/Elevator_Shaft_SuspensionLines">
+      <xs:annotation>
+        <xs:documentation>[Optional] Location of elevator box texture, default is 'Textures/Elevator_Box'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="speed" type="xs:unsignedInt" default="20">
+      <xs:annotation>
+        <xs:documentation>[Optional] Speed of elevator, default is '20'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+</xs:schema>

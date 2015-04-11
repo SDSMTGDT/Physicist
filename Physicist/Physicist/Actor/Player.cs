@@ -75,12 +75,15 @@
         {
             set
             {
-                this.spriteState = value;
-
-                // update the animations
-                foreach (var sprite in this.Sprites.Values)
+                if (string.Compare(this.spriteState, value, StringComparison.CurrentCulture) != 0)
                 {
-                    sprite.CurrentAnimationString = this.spriteState;
+                    this.spriteState = value;
+
+                    // update the animations
+                    foreach (var sprite in this.Sprites.Values)
+                    {
+                        sprite.CurrentAnimationString = this.spriteState;
+                    }
                 }
             }
         }

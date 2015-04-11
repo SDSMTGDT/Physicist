@@ -33,6 +33,8 @@
             this.SpriteName = spriteName;
         }
 
+        public event EventHandler<AnimationCompleteEventArgs> AnimationComplete;
+
         // sprite properties
         public Texture2D SpriteSheet { get; private set; }
 
@@ -92,6 +94,7 @@
                 if (this.animations.ContainsKey(value))
                 {
                     this.currentAnimationString = value;
+                    this.Reset();
                 }
             }
         }
@@ -161,16 +164,55 @@
             }
         }
 
+        public bool AnimationFinished
+        {
+            get;
+            private set;
+        }
+
+        public void Reset()
+        {
+            this.CurrentFrame = this.CurrentAnimation.PlayInReverse ? this.MaxFrames - 1 : 0;
+            this.AnimationFinished = false;
+        }
+
         public void Update(GameTime time)
         {
             if (time != null)
             {
                 this.markedTime += time.ElapsedGameTime.Milliseconds / 1000.0f;
 
+                bool reachedEnd = this.CurrentAnimation.PlayInReverse ? this.CurrentFrame == 0 : this.CurrentFrame == this.MaxFrames - 1;
+
                 // if the elapsed time since the last frame change indicates that it is time to animate the sprite, do so.
-                if (this.markedTime > this.FrameLength)
+                if (this.markedTime > (this.FrameLength > 0 ? this.FrameLength : this.CurrentAnimation.DefaultFrameRate))
                 {
-                    this.CurrentFrame = (this.CurrentFrame + 1) % this.MaxFrames;
+                    if (this.CurrentAnimation.LoopAnimation || !reachedEnd)
+                    {
+                        if (this.CurrentAnimation.PlayInReverse)
+                        {
+                            int result = (int)((int)this.CurrentFrame - 1);
+                            if (result < 0)
+                            {
+                                result += (int)this.MaxFrames;
+                            }
+
+                            this.CurrentFrame = (uint)result;
+                        }
+                        else
+                        {
+                            this.CurrentFrame = (this.CurrentFrame + 1) % this.MaxFrames;
+                        }
+                    }
+                    else
+                    {
+                        if (this.AnimationComplete != null)
+                        {
+                            this.AnimationFinished = true;
+                            this.AnimationComplete(this, new AnimationCompleteEventArgs(this.CurrentAnimation));
+                        }
+                    }
+
                     this.markedTime = 0;
                 }
             }
@@ -224,7 +266,7 @@
                 // Create animation dictionay
                 this.animations = new Dictionary<string, SpriteAnimation>((int)(this.SpriteSheet.Height / this.FrameSize.Height));
 
-                this.frameLength = element.GetAttribute("frameLength", 0.2f);
+                this.frameLength = element.GetAttribute("frameLength", -1f);
                 this.depth = element.GetAttribute("depth", 0.9f);
 
                 // Get the name

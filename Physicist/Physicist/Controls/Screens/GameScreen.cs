@@ -140,7 +140,7 @@
         {
         }
 
-        public void DrawScreen(ISpritebatch sb)
+        public void DrawScreen(FCCSpritebatch sb)
         {
             if (sb != null && this.screenBack != null)
             {
@@ -151,11 +151,11 @@
             this.DrawGUI(sb);
         }
 
-        public virtual void Draw(ISpritebatch sb) 
+        public virtual void Draw(FCCSpritebatch sb) 
         {
         }
 
-        public virtual void DrawGUI(ISpritebatch sb)
+        public virtual void DrawGUI(FCCSpritebatch sb)
         {
         }
 

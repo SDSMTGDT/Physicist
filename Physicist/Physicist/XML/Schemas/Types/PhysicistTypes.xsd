@@ -13,15 +13,6 @@
   <xs:include id="Fields" schemaLocation="FieldTypes.xsd"/>
   <xs:import namespace="PhysicistActors" schemaLocation="../Nodes/PhysicistActors.xsd"/>
 
-  <xs:complexType name="MediaList">
-    <xs:sequence minOccurs="0">
-      <xs:choice maxOccurs="unbounded">
-        <xs:element ref="MediaReference"/>
-        <xs:any namespace="MediaExtensions" processContents="lax"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="Backdrop">
     <xs:complexContent>
       <xs:extension base="Rectangle">
@@ -125,12 +116,27 @@
     </xs:choice>
   </xs:complexType>
 
-  <xs:complexType name="PhysicistMap">
-    <xs:all>
+  <xs:group name="LayerItems">
+    <xs:sequence>
       <xs:element name="Media" type="MediaList"/>
       <xs:element name="LevelObjects" type="LevelObjects"/>
       <xs:element name="MapEvents" type="MapEvents" minOccurs="0"/>
-    </xs:all>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="MapLayer">
+    <xs:group ref="LayerItems"/>
+    <xs:attributeGroup ref="LayerAttributes"/>
+  </xs:complexType>
+  
+  <xs:complexType name="PhysicistMap">
+    <xs:choice>
+      <xs:group ref="LayerItems"/>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="MapLayer" type="MapLayer"/>
+        <xs:any namespace="LayerPrefabs" processContents="lax"/>
+      </xs:choice>
+    </xs:choice>
     <xs:attribute name="width" type="xs:int" use="required"/>
     <xs:attribute name="height" type="xs:int" use="required"/>
   </xs:complexType>

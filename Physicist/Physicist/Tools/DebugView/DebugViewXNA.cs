@@ -22,7 +22,6 @@ using Microsoft.Xna.Framework.Graphics;
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Farseer Code")]
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "*", Justification = "Farseer Code")]
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "*", Justification = "Farseer Code")]
-
 namespace FarseerPhysics.DebugView
 {
     /// <summary>
@@ -49,6 +48,9 @@ namespace FarseerPhysics.DebugView
         public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
         public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
         public Color TextColor = Color.White;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "Farseer Code Pattern")]
+        public Color SensorColor = new Color(0.9f, 0.2f, 0.1f);
 
         //Contacts
         private int _pointCount;
@@ -142,10 +144,13 @@ namespace FarseerPhysics.DebugView
                 {
                     Transform xf;
                     b.GetTransform(out xf);
+                    DrawCircle(b.Position, 1f, Color.Black);
                     foreach (Fixture f in b.FixtureList)
                     {
                         if (b.Enabled == false)
                             DrawShape(f, xf, InactiveShapeColor);
+                        else if (f.IsSensor)
+                            DrawShape(f, xf, SensorColor);
                         else if (b.BodyType == BodyType.Static)
                             DrawShape(f, xf, StaticShapeColor);
                         else if (b.BodyType == BodyType.Kinematic)

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Map xmlns="PhysicistTypes"
+     xmlns:path="PhysicistPaths"
+     xmlns:actor="PhysicistActors"
+     xmlns:system="SystemPrefabs"
+     xmlns:enemy="PhysicistEnemies"
+     xmlns:field="PhysicistFields"
+     width="800" height="480">
+  <Media>
+    <Texture2D name="Slug" location="Textures/Slug"/>
+    <Texture2D name="Hemp" location="Materials/Hemp"/>
+    <Texture2D name="BlueField" location="Textures/BlueField"/>
+    <Texture2D name="Mario" location="Textures/NOTSTOLEN"/>
+  </Media>
+  <LevelObjects>
+    <Foregrounds>
+      <Rectangle width="10" height="60" fill="true" textureRef="Hemp">
+        <Position x="100" y="30"/>
+      </Rectangle>
+    </Foregrounds>
+    <Actors>
+      <enemy:Slug startDirection="Left">
+        <Enemy maxSpeed="30">
+          <NPC>
+            <Actor name="Slug1">
+              <BodyInfo>
+                <Rectangle bodyType="Dynamic" width="28" height="19">
+                  <Position x="200" y="50"/>
+                </Rectangle>
+              </BodyInfo>
+              <Sprites>
+                <GameSprite spriteName="slug" textureRef="Slug">
+                  <FrameSize height="20" width="29"/>
+                  <Offset x="0" y="0"/>
+                  <Animations>
+                    <Animation name="Right" rowIndex="0" frameCount="4" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="false"/>
+                    <Animation name="Left" rowIndex="0" frameCount="4" defaultFrameRate="1" playInReverse="false" flipVertical="false" flipHorizontal="true"/>
+                  </Animations>
+                </GameSprite>
+              </Sprites>
+              <MovementSpeed x="10" y="10"/>
+            </Actor>
+          </NPC>
+        </Enemy>
+      </enemy:Slug>
+      <system:Mario textureRef="Mario">
+        <system:Position x="200" y="200"/>
+      </system:Mario>
+    </Actors>
+  </LevelObjects>  
+</Map>
