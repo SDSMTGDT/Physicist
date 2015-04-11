@@ -276,6 +276,11 @@
             return ConvertUnits.ToDisplayUnits(value);
         }
 
+        public static float ToDisplayUnits(this float value)
+        {
+            return ConvertUnits.ToDisplayUnits(value);
+        }
+
         public static Texture2D TileTexture(this Texture2D value, Size bounds)
         {
             Texture2D tiledTexture = null;

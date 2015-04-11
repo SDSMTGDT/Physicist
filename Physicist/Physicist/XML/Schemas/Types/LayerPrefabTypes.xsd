@@ -24,16 +24,20 @@
       <xs:element name="OtherActors" type="ActorList" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
 
-    <xs:attribute name="depth" type="xs:unsignedInt" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="floorCount" type="xs:int" use="required">
       <xs:annotation>
         <xs:documentation>[Required] Total floors in elevator, not every floor needs be connected</xs:documentation>
       </xs:annotation>
-    </xs:attribute>    
+    </xs:attribute>
+    <xs:attribute name="layerDepth" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="startingFloor" type="xs:int" default="0">
       <xs:annotation>
-        <xs:documentation>[Optional] Starting floor of the elevator</xs:documentation>
+        <xs:documentation>[Optional] Starting floor of the elevator, default is '0'</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="xoffset" type="xs:unsignedInt" default="0">

@@ -63,7 +63,7 @@
       <xsl:number value="300 * @floorCount"/>
     </xsl:variable>
 
-    <MapLayer xmlns="PhysicistTypes" name="{@name}" depth="{@depth}" width="78" height="{$height}" xoffset="{@xoffset}" yoffset="{@yoffset}">
+    <MapLayer xmlns="PhysicistTypes" name="{@name}" layerDepth="{@layerDepth}" width="78" height="{$height}" xoffset="{@xoffset}" yoffset="{@yoffset}">
       <Media>
         <Texture2D name="{$BoxID}" location="{@boxTextureLocation}"/>
         <Texture2D name="{$ShaftID}" location="{@shaftTextureLocation}"/>
@@ -77,15 +77,15 @@
         <Backgrounds>
           <Backdrop name="{$ShaftID}" depth="0" textureRef="{$ShaftID}" tile="true">
             <Dimension height="{$height}" width="78"/>
-            <Location x="0" y="{$mapheight - $height}"/>
+            <Location x="0" y="{$height}"/>
           </Backdrop>
           <Backdrop name="{$SuspensionID}" depth="0.1" textureRef="{$SuspensionID}" tile="true">
             <Dimension height="{$height}" width="78"/>
-            <Location x="0" y="{$mapheight - $height}"/>
+            <Location x="0" y="{$height}"/>
           </Backdrop>
           <Backdrop name="{$OverlayID}" depth="1" textureRef="{$OverlayID}" tile="true">
             <Dimension height="{$height}" width="78"/>
-            <Location x="0" y="{$mapheight - $height}"/>
+            <Location x="0" y="{$height}"/>
           </Backdrop>
         </Backgrounds>
 

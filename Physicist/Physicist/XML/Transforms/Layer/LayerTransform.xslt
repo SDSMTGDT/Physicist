@@ -14,7 +14,7 @@
   <xsl:param name="xoffset"></xsl:param>
   <xsl:param name="yoffset"></xsl:param>
 
-  <xsl:template match="Position | Location ">
+  <xsl:template match="Position | Location">
     <xsl:copy>
       <xsl:attribute name="x">
         <xsl:value-of select="@x + $xoffset"/>

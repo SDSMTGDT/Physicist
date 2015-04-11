@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Map
+  xmlns="PhysicistTypes"
+  xmlns:actor="PhysicistActors"
+  xmlns:system="SystemPrefabs"
+  xmlns:layer="LayerPrefabs"
+  width="3748" height="1400">
+
+  <MapLayer name="ExperimentLevel" height="400" width="1600" layerDepth="4" xoffset="2115" yoffset="223">
+    <Media>
+      <Texture2D name="PlasterWall" location="Textures/Prologue/PlasterWall"/>
+      <Texture2D name="ElevatorDoor" location="Textures/Elevator_Door"/>
+      <Texture2D name="ElevatorInteriorBlack" location="Textures/Elevator_Interior_Black"/>
+      <Texture2D name="YellowField" location="Materials/YellowField"/>
+      <Texture2D name="BlueField" location="Materials/BlueField"/>
+      <Texture2D name="Machine" location="Textures/Prologue/Physics_Machine"/>
+      <Texture2D name="WoodenDoor" location="Textures/WoodenDoor"/>
+      <Texture2D name="DividingWall" location="Textures/Prologue/DividingWall"/>
+    </Media>
+    <LevelObjects>
+      <Backgrounds>        
+        <Backdrop textureRef="PlasterWall" depth=".1" tile="true">          
+          <Location x="0" y="400"/>
+          <Dimension width="1600" height="400"/>        
+        </Backdrop>
+      
+        <Backdrop textureRef="DividingWall" depth="1">
+          <Location x="809" y="322"/>
+          <Dimension width="128" height="322"/>
+        </Backdrop>
+
+        <Backdrop textureRef="WoodenDoor" depth=".2">
+          <Location x="809" y="112"/>
+          <Dimension width="51" height="112"/>
+        </Backdrop>
+        <Backdrop>
+          <Location x="600" y="250"/>
+          <Dimension width="400" height="300"/>
+          <Sprites>
+            <GameSprite depth=".2" frameLength=".2" spriteName="machine" textureRef="Machine">
+              <Animations>
+                <Animation name="Idle" defaultFrameRate=".2" frameCount="5" rowIndex="0"/>
+              </Animations>
+              <FrameSize width="400" height="300"/>
+              <Offset x="0" y="0"/>
+            </GameSprite>
+          </Sprites>
+        </Backdrop>
+      </Backgrounds>
+      <Foregrounds>
+        <Polygon textureRef="YellowField" fill="true">
+          <Position x="0" y="150"/>
+          <Vertices>
+            <Vector2 x="0" y="0"/>
+            <Vector2 x="0" y="150"/>
+            <Vector2 x="300" y="150"/>
+            <Vector2 x="150" y="0"/>
+            <Vector2 x="0" y="0"/>
+          </Vertices>
+        </Polygon>
+      </Foregrounds>
+      <Actors>
+        <actor:Door doorTextureReference="ElevatorDoor" interiorTextureReference="ElevatorInteriorBlack"
+            name="ExperimentLevelDoorEntry" targetDoor="OfficeLevelDoorExit">
+          <Position x="70" y="206"/>
+        </actor:Door>
+      </Actors>
+    </LevelObjects>
+  </MapLayer>
+  <MapLayer name="OfficeLevel" height="200" width="900" layerDepth="3" xoffset="1348" yoffset="374">
+    <Media>
+      <Texture2D name="PlasterWall" location="Textures/Prologue/PlasterWall"/>
+      <Texture2D name="ElevatorDoor" location="Textures/Elevator_Door"/>
+      <Texture2D name="ElevatorInterior" location="Textures/Elevator_Interior"/>
+      <Texture2D name="ElevatorInteriorBlack" location="Textures/Elevator_Interior_Black"/>
+      <Texture2D name="FluorescentLight" location="Textures/Fluorescent_Long_Composite"/>
+      <Texture2D name="Cubicle" location="Textures/Cubicle"/>
+      <Texture2D name="OfficeDesk" location="Textures/OfficeDesk"/>
+      <Texture2D name="OfficeChair" location="Textures/OfficeChair"/>
+      <Texture2D name="TallPottedPlant" location="Textures/Prologue/TallPottedPlant"/>
+      <Texture2D name="WaterCoolerBase" location="Textures/Prologue/Water_Cooler_Base"/>
+    </Media>
+    <LevelObjects>
+      <Backgrounds>
+        <Backdrop textureRef="PlasterWall" depth=".1" tile="true">                    
+          <Location x="0" y="200"/>
+          <Dimension width="900" height="200"/>          
+        </Backdrop>
+        <Backdrop textureRef="FluorescentLight" depth="1">
+          <Location x="60" y="200"/>
+          <Dimension width="112" height="24"/>
+        </Backdrop>
+        <Backdrop textureRef="FluorescentLight" depth="1">
+          <Location x="280" y="200"/>
+          <Dimension width="112" height="24"/>
+        </Backdrop>
+        <Backdrop textureRef="FluorescentLight" depth="1">
+          <Location x="500" y="200"/>
+          <Dimension width="112" height="24"/>
+        </Backdrop>
+        <Backdrop textureRef="FluorescentLight" depth="1">
+          <Location x="720" y="200"/>
+          <Dimension width="112" height="24"/>
+        </Backdrop>
+        
+        <Backdrop textureRef="Cubicle" depth=".12">
+          <Location x="150" y="112"/>
+          <Dimension width="112" height="112"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeDesk" depth=".2">
+          <Location x="203" y="48"/>
+          <Dimension width="32" height="48"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeChair" depth=".15">
+          <Location x="172" y="58"/>
+          <Dimension width="31" height="58"/>
+        </Backdrop>
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="265" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+        
+        <Backdrop textureRef="Cubicle" depth=".12">
+          <Location x="300" y="112"/>
+          <Dimension width="112" height="112"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeDesk" depth=".2">
+          <Location x="353" y="48"/>
+          <Dimension width="32" height="48"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeChair" depth=".15">
+          <Location x="322" y="58"/>
+          <Dimension width="31" height="58"/>
+        </Backdrop>
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="415" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+        
+        <Backdrop textureRef="Cubicle" depth=".12">
+          <Location x="450" y="112"/>
+          <Dimension width="112" height="112"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeDesk" depth=".2">
+          <Location x="503" y="48"/>
+          <Dimension width="32" height="48"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeChair" depth=".15">
+          <Location x="472" y="58"/>
+          <Dimension width="31" height="58"/>
+        </Backdrop>
+        <Backdrop textureRef="WaterCoolerBase" depth=".2">
+          <Location x="575" y="32"/>
+          <Dimension width="28" height="32"/>
+        </Backdrop>
+        
+        <Backdrop textureRef="Cubicle" depth=".12">
+          <Location x="650" y="112"/>
+          <Dimension width="112" height="112"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeDesk" depth=".2">
+          <Location x="703" y="48"/>
+          <Dimension width="32" height="48"/>
+        </Backdrop>
+        <Backdrop textureRef="OfficeChair" depth=".15">
+          <Location x="672" y="58"/>
+          <Dimension width="31" height="58"/>
+        </Backdrop>
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="765" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+      </Backgrounds>
+      <Actors>
+        <actor:Door doorTextureReference="ElevatorDoor" interiorTextureReference="ElevatorInterior"
+                    name="OfficeLevelElevatorDoorEntry" targetDoor="Elevator{2}">
+          <Position x="70" y="56"/>
+        </actor:Door>
+        <actor:Door doorTextureReference="ElevatorDoor" interiorTextureReference="ElevatorInteriorBlack"
+                    name="OfficeLevelDoorExit" targetDoor="ExperimentLevelDoorEntry">
+          <Position x="840" y="56"/>
+        </actor:Door>
+      </Actors>
+    </LevelObjects>    
+  </MapLayer>
+  <MapLayer name="EntryWay" height="322" width="1500" yoffset="973">
+    <Media>
+      <Texture2D name="NOTSTOLEN" location="Textures/NOTSTOLEN"/>
+      <Texture2D name="PlasterWall" location="Textures/Prologue/PlasterWall"/>
+      <Texture2D name="CityScape" location="Textures/Prologue/CityScape"/>
+      <Texture2D name="FrontDesk" location="Textures/Prologue/FrontDesk"/>
+      <Texture2D name="LargeLogoSign" location="Textures/Prologue/LargeLogoSign"/>
+      <Texture2D name="LargeWindow" location="Textures/Prologue/LargeWindow"/>
+      <Texture2D name="TallPottedPlant" location="Textures/Prologue/TallPottedPlant"/>
+      <Texture2D name="RevolvingDoor" location="Textures/Prologue/RevolvingDoor"/>
+      <Texture2D name="Player" location="Textures/Player"/>
+      <Texture2D name="WoodenDoor" location="Textures/WoodenDoor"/>
+      <Texture2D name="DividingWall" location="Textures/Prologue/DividingWall"/>
+      <SoundEffect name="sabredance" location="Sounds/sabredance"/>
+      <Texture2D name="ElevatorDoor" location="Textures/Elevator_Door"/>
+      <Texture2D name="ElevatorInterior" location="Textures/Elevator_Interior"/>
+      <SpriteFont name="Pericles" location="System/Fonts/Pericles6"/>
+      <Texture2D name="Ticker" location="Textures/Prologue/Ticker_Tape"/>
+    </Media>
+
+    <LevelObjects>
+
+      <Backgrounds>
+        <Backdrop textureRef="PlasterWall" depth=".1" tile="true">
+          <Location x="0" y="322"/>
+          <Dimension width="1500" height="322"/>
+        </Backdrop>
+
+        <Backdrop textureRef="FrontDesk" depth=".2">
+          <Location x="240" y="64"/>
+          <Dimension width="128" height="64"/>
+        </Backdrop>
+
+        <Backdrop textureRef="RevolvingDoor" depth="1.1">
+          <Location x="0" y="112"/>
+          <Dimension width="48" height="112"/>
+        </Backdrop>
+
+        <Backdrop textureRef="LargeLogoSign" depth=".2">
+          <Location x="206" y="130"/>
+          <Dimension width="196" height="64"/>
+        </Backdrop>
+
+        <Backdrop textureRef="LargeWindow" depth=".2">
+          <Location x="52" y="292"/>
+          <Dimension width="192" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="LargeWindow" depth=".2">
+          <Location x="280" y="292"/>
+          <Dimension width="192" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="860" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="TallPottedPlant" depth="1">
+          <Location x="970" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="1080" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="TallPottedPlant" depth="1">
+          <Location x="1190" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="TallPottedPlant" depth=".2">
+          <Location x="1300" y="96"/>
+          <Dimension width="32" height="96"/>
+        </Backdrop>
+
+        <Backdrop textureRef="DividingWall" depth="1">
+          <Location x="609" y="322"/>
+          <Dimension width="128" height="322"/>
+        </Backdrop>
+
+        <Backdrop textureRef="WoodenDoor" depth=".2">
+          <Location x="609" y="112"/>
+          <Dimension width="51" height="112"/>
+        </Backdrop>
+
+      </Backgrounds>
+      <Actors>        
+        <actor:Ticker name="Ticker" tickerBackgroundTextureRef="Ticker" depth=".2" 
+                width="596" height="48" transitTime="5" messageDelay=".7" fontRef="Pericles">
+          <Position x="1092" y="238"/>
+          <Messages>
+            <Message color="Yellow">Welcome to the Circus of Value!</Message>
+            <Message color="Red">I'm sorry Dave, I can't do that</Message>
+          </Messages>
+        </actor:Ticker>
+          
+                  <system:Mario textureRef="Player">
+          <system:Position x="1030" y="50"/>
+        </system:Mario>
+
+        
+        <actor:Door doorTextureReference="ElevatorDoor" interiorTextureReference="ElevatorInterior" 
+                    name="EntryWayElevatorDoor" targetDoor="Elevator{0}">
+          <Position x="1417" y="56"/>
+        </actor:Door>
+      </Actors>
+    </LevelObjects>
+  </MapLayer>
+  <layer:Elevator boxTextureLocation="Textures/Elevator_Box" interiorTextureLocation="Textures/Elevator_Interior" 
+                  overlayTextureLocation="Textures/Elevator_Shaft_Overlay" shaftTextureLocation="Textures/Elevator_Shaft" 
+                  suspensionTextureLocation="Textures/Elevator_Shaft_SuspensionLines" floorCount="3" speed="60" 
+                  startingFloor="2" name="Elevator" xoffset="1380" yoffset="200" layerDepth="1">
+    <layer:Floor level="0" targetDoor="EntryWayElevatorDoor"/>
+    <layer:Floor level="2" targetDoor="OfficeLevelElevatorDoorEntry"/>
+  </layer:Elevator>
+</Map>

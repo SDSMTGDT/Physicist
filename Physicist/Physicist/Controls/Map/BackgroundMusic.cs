@@ -7,7 +7,7 @@
     using Physicist.Actors;
     using Physicist.Extensions;
 
-    public class BackgroundMusic : IBackgroundObject, IUpdate
+    public class BackgroundMusic : PhysicistGameScreenItem, IBackgroundObject, IUpdate
     {
         public BackgroundMusic()
         {
@@ -39,7 +39,7 @@
             throw new NotImplementedException("Updates on play/pause?");
         }
 
-        public XElement XmlSerialize()
+        public override XElement XmlSerialize()
         {
             XElement element = new XElement(
                 "backdrop",
@@ -51,11 +51,12 @@
             return element;
         }
 
-        public void XmlDeserialize(XElement element)
+        public override void XmlDeserialize(XElement element)
         {
             if (element != null)
             {
                 this.Location = ExtensionMethods.XmlDeserializeVector2(element.Element("Location"));
+                this.Location = new Vector2(this.Location.X, this.Map.Height - this.Location.Y);
                 this.Dimensions = ExtensionMethods.XmlDeserializeSize(element.Element("Dimensions"));
 
                 this.SoundEffect = ContentController.Instance.GetContent<SoundEffect>(element.Attribute("soundref").Value);

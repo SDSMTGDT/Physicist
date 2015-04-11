@@ -3,7 +3,7 @@
     using Microsoft.Xna.Framework;
     using Physicist.Extensions;
  
-    public interface IBackgroundObject : IXmlSerializable
+    public interface IBackgroundObject
     {
         Vector2 Location { get; set; }
 

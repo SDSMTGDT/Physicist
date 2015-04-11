@@ -13,10 +13,12 @@
       <Word>Pathing</Word>
       <Word>Triggerable</Word>
       <Word>gui</Word>
+      <Word>Xna</Word>
     </Recognized>
   </Words>
   <Acronyms>
     <CasingExceptions>
+      <Acronym>Xna</Acronym>
       <Acronym>GUI</Acronym>
       <Acronym>dt</Acronym>
       <Acronym>NPC</Acronym>

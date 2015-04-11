@@ -40,6 +40,49 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+            
+    <xsl:template match="actor:Ticker">
+    <Ticker width="{@width}" height="{@height}" transitTime="{@transitTime}" messageDelay="{@messageDelay}" fontRef="{@fontRef}">
+      <xsl:copy-of select="physicist:Messages"/>
+      <xsl:call-template name="Actor_Template">
+        <xsl:with-param name="Name" select="@name"/>
+        <xsl:with-param name="BodyInfo">
+          <BodyInfo>
+            <Rectangle height="{@height}" width="{@width}" density="1" bodyType="Static" fixedRotation="false" friction="0">
+              <xsl:copy-of select="physicist:Position"/>
+            </Rectangle>
+          </BodyInfo>
+        </xsl:with-param>
+
+        <xsl:with-param name="GameSprites">
+          <GameSprite spriteName="Ticker" textureRef="{@tickerBackgroundTextureRef}" depth="0.5">
+            <FrameSize height="{@height}" width="{@width}"/>
+            <Offset x="0" y="0"/>
+            <Animations>
+              <Animation name="Idle" defaultFrameRate="1" frameCount="1" rowIndex="0"/>
+            </Animations>
+          </GameSprite>
+        </xsl:with-param>
+
+        <xsl:with-param name="Health">
+          <xsl:call-template name="DefaultParameter">
+            <xsl:with-param name="Input" select="@health"/>
+            <xsl:with-param name="DefaultValue" select="10"/>
+            <xsl:with-param name="Type" select='"Attribute"'/>
+          </xsl:call-template>
+        </xsl:with-param>
+
+        <xsl:with-param name="MovementSpeed">
+          <MovementSpeed x="0" y="0"/>
+        </xsl:with-param>
+
+        <xsl:with-param name="Damage">
+          <xsl:text disable-output-escaping="yes">false</xsl:text>
+        </xsl:with-param>
+        
+      </xsl:call-template>
+    </Ticker>
+  </xsl:template>
 
   <xsl:template match="actor:Door">
     <Door targetDoor="{@targetDoor}">
@@ -83,6 +126,11 @@
         <xsl:with-param name="MovementSpeed">
           <MovementSpeed x="0" y="0"/>
         </xsl:with-param>
+
+        <xsl:with-param name="Damage">
+          <xsl:text disable-output-escaping="yes">false</xsl:text>
+        </xsl:with-param>
+        
       </xsl:call-template>
     </Door>
   </xsl:template>
@@ -129,7 +177,10 @@
           </xsl:call-template>
         </xsl:with-param>
         
-        
+        <xsl:with-param name="Damage">
+          <xsl:text disable-output-escaping="yes">true</xsl:text>
+        </xsl:with-param>
+
       </xsl:call-template>
     </Player>
   </xsl:template>

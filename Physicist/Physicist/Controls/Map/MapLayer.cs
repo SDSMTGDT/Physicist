@@ -24,9 +24,8 @@
         private uint collisionLayer = 0;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Loop Body is tracked and disposed by world")]
-        public MapLayer(World world, string name, int width, int height, int depth, Vector2 offset, int mapHeight, uint collisionLayer)
+        public MapLayer(World world, string name, int width, int height, uint layerDepth, Vector2 offset, int mapHeight)
         {
-            this.Depth = depth;
             this.Width = width;
             this.Height = height;
             this.Name = name;
@@ -48,7 +47,7 @@
             this.layerBody.CollisionLayer = 0;
             this.layerBody.UserData = this;
 
-            this.CollisionLayer = collisionLayer;
+            this.CollisionLayer = layerDepth;
 
             this.fill = new Texture2D(MainGame.GraphicsDev, 1, 1);
             this.fill.SetData(new Color[1] { Color.Black });
@@ -59,8 +58,6 @@
         public int Width { get; private set; }
 
         public int Height { get; private set; }
-
-        public int Depth { get; private set; }
 
         public Vector2 Offset { get; private set; }
 
@@ -92,6 +89,7 @@
                 {
                     this.layerBody.CollisionLayer = value;
                 }
+
                 this.bodies.ForEach(body => body.Body.CollisionLayer = value);
                 this.players.ForEach(player => player.Body.CollisionLayer = value);
             }
