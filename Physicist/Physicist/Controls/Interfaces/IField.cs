@@ -1,9 +1,8 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using System.Collections.Generic;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
+    using Physicist.Types.Interfaces;
 
     public interface IField : IXmlSerializable, IBody
     {

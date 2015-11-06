@@ -3,9 +3,8 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Util;
 
     public class AnimateModifier : Modifier<Actor>
     {

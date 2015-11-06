@@ -1,21 +1,30 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Controls;
-    using Physicist.Enums;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// MenuScreen is the 'main' screen for this section of
     /// your game. It is used to host content and update components.
     /// </summary>
-    public partial class MenuScreen : GameScreen
+    public partial class MenuScreen : GameScreen, ISystemScreen
     {
+        private const SystemScreen SystemScreenType = SystemScreen.MenuScreen;
+
         public MenuScreen() :
-            base(SystemScreen.MenuScreen.ToString())
+            base(SystemScreenType.ToString())
         {
             this.BackgroundColor = new Color(0, 0, 0, 0.8f);
+        }
+
+        public SystemScreen ScreenType
+        {
+            get { return MenuScreen.SystemScreenType; }
         }
 
         /// <summary>

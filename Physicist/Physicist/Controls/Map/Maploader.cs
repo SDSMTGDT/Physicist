@@ -1,4 +1,4 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,9 @@
     using System.Xml.Schema;
     using System.Xml.Xsl;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Audio;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Media;
-    using Physicist.Actors;
-    using Physicist.Enums;
-    using Physicist.Events;
-    using Physicist.Extensions;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
 
     public static class MapLoader
     {
@@ -34,6 +30,7 @@
 
         private static string currentLayer = "No-processing-done";
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Simplistic init code")]
         static MapLoader()
         {
             var assemblyNames = new List<string>();
@@ -201,7 +198,7 @@
                         var layers = rootElement.Elements("MapLayer");
                         if (layers.Count() > 0)
                         {
-                            for(int i = 0; i < layers.Count(); i++)
+                            for (int i = 0; i < layers.Count(); i++)
                             {
                                 var layerEle = layers.ElementAt(i);
                                 int xoff = int.Parse(layerEle.Attribute("xoffset").Value, CultureInfo.CurrentCulture);

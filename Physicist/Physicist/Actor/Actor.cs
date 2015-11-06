@@ -1,4 +1,4 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,13 @@
     using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Common;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
 
     public class Actor : PhysicistGameScreenItem, IActor
     {
@@ -245,7 +249,7 @@
                 new XAttribute("isEnabled", this.IsEnabled),
                 new XAttribute("visibleState", this.VisibleState.ToString()),
                 new XAttribute("canBeDamaged", this.CanBeDamaged),
-                ExtensionMethods.XmlSerialize(this.MovementSpeed, "MovementSpeed"),
+                this.MovementSpeed.XmlSerialize("MovementSpeed"),
                 new XElement("Sprites", this.sprites.Values.Select(sprite => sprite.XmlSerialize()).ToArray()),
                 new XElement("BodyInfo", this.bodyInfo.XmlSerialize()));
 
@@ -289,7 +293,7 @@
                 // --------------------------------------------------------
                 // Assign the new values to the Actor after body is created
                 this.Name = element.GetAttribute("name", string.Empty);
-                this.MovementSpeed = ExtensionMethods.XmlDeserializeVector2(element.Element("MovementSpeed"));
+                this.MovementSpeed = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("MovementSpeed"));
                 this.Health = element.GetAttribute("health", 1);
                 this.Rotation = element.GetAttribute("rotation", 0f);
                 this.IsEnabled = element.GetAttribute("isEnabled", true);

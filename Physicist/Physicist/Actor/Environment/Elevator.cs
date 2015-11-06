@@ -1,20 +1,20 @@
-﻿namespace Physicist.Actors.Environment
+﻿namespace Physicist.MainGame.Actors.Environment
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
-    using FarseerPhysics.Collision;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using Physicist.Actors;
-    using Physicist.Controls;
     using Physicist.Events;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.MainGame.Controls;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
 
     public class Elevator : Actor, ILayerTransition
     {
@@ -60,7 +60,7 @@
             private set;
         }
 
-        public void SetPlayer(Player player)
+        public void SetPlayer(IPosition player)
         {
             if (player != null)
             {

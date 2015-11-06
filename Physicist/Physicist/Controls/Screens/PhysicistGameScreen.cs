@@ -1,16 +1,18 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using FarseerPhysics;
-    using FarseerPhysics.DebugView;
+    using Physicist.MainGame.Util.Farseer;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Actors;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// PhysicistGameScreen is the 'main' screen for this section of
@@ -97,7 +99,6 @@
                 if (this.map.Players.Count() > 0)
                 {
                     this.Camera.Following = this.map.Players.ElementAt(0);
-                    SoundController.Map = this.map;
                     SoundController.Listener = this.map.Players.ElementAt(0).Listener;
                 }
             }
@@ -148,7 +149,7 @@
 
                 if (state.IsKeyDown(Keys.P))
                 {
-                    ScreenManager.AddScreen(Enums.SystemScreen.PauseScreen);
+                    ScreenManager.AddScreen(SystemScreen.PauseScreen);
                 }
 
                 this.World.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);

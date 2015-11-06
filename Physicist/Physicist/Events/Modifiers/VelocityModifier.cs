@@ -1,13 +1,11 @@
 ﻿namespace Physicist.Events
 {
-    using System;
     using System.Collections.Generic;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Util;
 
     public class VelocityModifier : Modifier<Body>
     {
@@ -43,7 +41,7 @@
             {                
                 base.XmlDeserialize(element.Element("Modifier"));
 
-                this.stepChange = ExtensionMethods.XmlDeserializeVector2(element.Element("StepChange"));
+                this.stepChange = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("StepChange"));
             }
         }
 

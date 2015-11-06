@@ -1,10 +1,10 @@
-﻿namespace Physicist.Controls.Fields
+﻿namespace Physicist.MainGame.Controls.Fields
 {
     using System;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Extensions;
+    using Physicist.Types.Util;
 
     public class AccelerationField : Field
     {

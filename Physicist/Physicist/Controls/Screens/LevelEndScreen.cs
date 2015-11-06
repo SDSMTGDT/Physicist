@@ -1,9 +1,11 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Controls;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// LevelEndScreen is the 'main' screen for this section of
@@ -79,7 +81,7 @@
 
         private void Return(object sender, EventArgs e)
         {
-            ScreenManager.PopBackTo(Enums.SystemScreen.MenuScreen);
+            ScreenManager.PopBackTo(SystemScreen.MenuScreen);
         }
     }
 }

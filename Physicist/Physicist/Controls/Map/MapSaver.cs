@@ -1,16 +1,11 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Extensions;
-    using Physicist.Extensions.Primitives;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Interfaces;
 
     public static class MapSaver
     {

@@ -6,8 +6,10 @@
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
+    using Enums = Physicist.Types.Enums;
 
     public class KeyPressTrigger : Trigger
     {
@@ -52,7 +54,7 @@
         {
             if (element != null)
             {
-                this.TriggerKey = Physicist.Controls.KeyboardController.KeyForAction(element.GetAttribute("triggerKey", StandardKeyAction.Jump));
+                this.TriggerKey = KeyboardController.KeyForAction(element.GetAttribute("triggerKey", StandardKeyAction.Jump));
                 this.KeyState = element.GetAttribute("keyState", Enums.KeyState.Down);
                 base.XmlDeserialize(element.Element("Trigger"));
             }

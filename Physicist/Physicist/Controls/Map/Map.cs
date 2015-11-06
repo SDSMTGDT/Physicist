@@ -1,19 +1,17 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using FarseerPhysics.Collision.Shapes;
-    using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
-    using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Actors;
-    using Physicist.Events;
-    using Physicist.Extensions;
-    using Physicist.Extensions.Primitives;
+    using Physicist.Controls.Screens;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Util;
+    using Physicist.Types.Xna;
 
     public class Map
     {

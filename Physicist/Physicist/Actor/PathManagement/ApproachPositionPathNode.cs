@@ -1,12 +1,12 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors
 {
     using System;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
 
     public class ApproachPositionPathNode : PathNode
     {
@@ -81,7 +81,7 @@
                 new XAttribute("precision", this.Precision),
                 new XAttribute("disableAfterPathing", this.DisableAfterPathing),
                 new XAttribute("hideAfterPathing", this.HideAtEndOfPath),
-                ExtensionMethods.XmlSerialize(new Vector2(this.TargetLocation.X, this.Map.Height - this.TargetLocation.Y), "Position"),
+                new Vector2(this.TargetLocation.X, this.Map.Height - this.TargetLocation.Y).XmlSerialize("Position"),
                 base.XmlSerialize());
         }
 
@@ -99,7 +99,7 @@
 
                 this.Precision = element.GetAttribute("precision", 2f);
 
-                var designPosition = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                var designPosition = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("Position"));
                 this.TargetLocation = new Vector2(designPosition.X, this.Map.Height - designPosition.Y);
             }
         }

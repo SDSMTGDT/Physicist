@@ -1,6 +1,6 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using FarseerPhysics.Dynamics;
+    using Physicist.Types.Interfaces;
 
     public interface IMapObject : IXmlSerializable, IDraw, IBody
     {

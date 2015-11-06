@@ -1,4 +1,4 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -9,9 +9,9 @@
     using FarseerPhysics.Common.Decomposition;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Controllers;
 
     // Taken From Farseer Examples modified to fit purposes 
     public sealed class AssetCreator : IDisposable

@@ -1,11 +1,11 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors
 {
     using System;
     using System.Collections.Generic;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
-    using Physicist.Enums;
+    using Physicist.MainGame.Controls;
+    using Physicist.Types.Enums;
     using Physicist.Events;
 
     public class PathNode : PhysicistGameScreenItem

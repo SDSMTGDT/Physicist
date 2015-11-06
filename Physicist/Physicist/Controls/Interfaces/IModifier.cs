@@ -1,7 +1,6 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using System;
-    using Microsoft.Xna.Framework;
+    using Physicist.Types.Interfaces;
 
     public interface IModifier : IPhysicistGameScreenItem, IName, IUpdate, IXmlSerializable
     {

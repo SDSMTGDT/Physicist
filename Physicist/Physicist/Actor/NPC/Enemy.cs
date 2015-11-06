@@ -1,8 +1,9 @@
-﻿namespace Physicist.Actors.NPCs
+﻿namespace Physicist.MainGame.Actors.NPCs
 {
     using System.Xml.Linq;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
+    using Physicist.MainGame.Extensions;
 
     public abstract class Enemy : NPC, IDamage
     {

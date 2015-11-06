@@ -1,23 +1,31 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using System;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls;
-    using Physicist.Enums;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// PauseScreen is the 'main' screen for this section of
     /// your game. It is used to host content and update components.
     /// </summary>
-    public partial class PauseScreen : GameScreen
+    public partial class PauseScreen : GameScreen, ISystemScreen
     {
+        private const SystemScreen SystemScreenType = SystemScreen.PauseScreen;
+
         public PauseScreen() :
-            base(SystemScreen.PauseScreen.ToString())
+            base(PauseScreen.SystemScreenType.ToString())
         {
             this.IsPopup = true;
             this.BackgroundColor = new Color(0, 0, 0, 0.8f);
+        }
+
+        public SystemScreen ScreenType
+        {
+            get { return PauseScreen.SystemScreenType; }
         }
 
         /// <summary>

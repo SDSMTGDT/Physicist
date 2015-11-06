@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Controls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Events;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
 
     public abstract class Trigger : PhysicistGameScreenItem, ITrigger
     {

@@ -1,7 +1,5 @@
 ﻿namespace Physicist.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
@@ -9,10 +7,12 @@
     using FarseerPhysics.Dynamics.Contacts;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Controls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Events;
+    using Physicist.Types.Util;
     
     public class ProximityTrigger : Trigger, IXmlSerializable
     {
@@ -142,7 +142,7 @@
                 var bodyInfoEle = element.Element("FixtureTemplate");
                 if (bodyInfoEle == null)
                 {
-                    Vector2 position = ExtensionMethods.XmlDeserializeVector2(element.Element("Position"));
+                    Vector2 position = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("Position"));
                     var tempBody = BodyFactory.CreateCircle(
                                             this.World,
                                             float.Parse(element.Attribute("radius").Value, CultureInfo.CurrentCulture),

@@ -1,17 +1,17 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors.Environment
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
     using FarseerPhysics.Collision;
-    using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
-    using Physicist.Events; 
-    using Physicist.Extensions;
+    using Physicist.Events;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Common;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
 
     public class Door : Actor, ILayerTransition
     {
@@ -49,7 +49,7 @@
             private set;
         }
 
-        public void SetPlayer(Player player)
+        public void SetPlayer(IPosition player)
         {
             if (player != null)
             {

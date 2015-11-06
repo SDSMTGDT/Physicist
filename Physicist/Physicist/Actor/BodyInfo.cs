@@ -1,4 +1,4 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors
 {
     using System;
     using System.Collections.Generic;
@@ -9,9 +9,9 @@
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
 
     public class BodyInfo
     {
@@ -232,7 +232,7 @@
         {
             XElement bodyInfoXml = new XElement(
                 this.bodyCategory.Value.ToString(),
-                ExtensionMethods.XmlSerialize(new Vector2(this.Position.X, this.mapHeight - this.Position.Y), "Position"),
+                new Vector2(this.Position.X, this.mapHeight - this.Position.Y).XmlSerialize("Position"),
                 new XAttribute("rotation", this.rotation),
                 new XAttribute("collidesWith", this.collidesWith.ToString()),
                 new XAttribute("fixedRotation", this.fixedRotation),
@@ -245,7 +245,7 @@
                     "VertexList",
                     this.vertexList.Select(vertex => new XElement(
                                     "Vertices", 
-                                    vertex.Select(vector => ExtensionMethods.XmlSerialize(vector, "Vector2")))));
+                                    vertex.Select(vector => vector.XmlSerialize("Vector2")))));
 
                 bodyInfoXml.Add(this.vertexList.Count > 1 ? vertices : vertices.Element("Verticies"));
             }
@@ -293,7 +293,7 @@
                 Vector2 designPosition = Vector2.Zero;
                 if (posEle != null)
                 {
-                    designPosition = ExtensionMethods.XmlDeserializeVector2(posEle);
+                    designPosition = XmlDeserializeHelper.XmlDeserialize<Vector2>(posEle);
                 }
 
                 this.position = new Vector2(designPosition.X, this.mapHeight - designPosition.Y);
@@ -321,7 +321,7 @@
 
             foreach (var vert in element.Element("VertexList").Elements())
             {
-                Vector2 nextVect = ExtensionMethods.XmlDeserializeVector2(vert);
+                Vector2 nextVect = XmlDeserializeHelper.XmlDeserialize<Vector2>(vert);
                 verts.Add(nextVect);
                 xmax = MathHelper.Max(nextVect.X, xmax);
                 ymax = MathHelper.Max(nextVect.Y, ymax);
@@ -351,7 +351,7 @@
 
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                verts.Add(XmlDeserializeHelper.XmlDeserialize<Vector2>(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -377,7 +377,7 @@
                 Vertices nextVerts = new Vertices();
                 foreach (var vert in verticeslist.Elements())
                 {
-                    nextVerts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                    nextVerts.Add(XmlDeserializeHelper.XmlDeserialize<Vector2>(vert));
                 }
 
                 this.vertexList.Add(nextVerts);
@@ -388,9 +388,9 @@
 
         private void MakeEdge(XElement element)
         {
-            this.start = ExtensionMethods.XmlDeserializeVector2(element.Element("Start"));
+            this.start = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("Start"));
 
-            this.end = ExtensionMethods.XmlDeserializeVector2(element.Element("End"));
+            this.end = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("End"));
 
             this.shapeOffset = Vector2.Zero;
         }
@@ -432,7 +432,7 @@
 
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                verts.Add(XmlDeserializeHelper.XmlDeserialize<Vector2>(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };
@@ -447,7 +447,7 @@
 
             foreach (var vert in element.Element("Vertices").Elements())
             {
-                verts.Add(ExtensionMethods.XmlDeserializeVector2(vert));
+                verts.Add(XmlDeserializeHelper.XmlDeserialize<Vector2>(vert));
             }
 
             this.vertexList = new List<Vertices>() { verts };
