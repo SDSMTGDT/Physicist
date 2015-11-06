@@ -1,4 +1,4 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,12 @@
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Actors;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
+    using Physicist.MainGame.Extensions;
 
     public class MapObject : PhysicistGameScreenItem, IMapObject
     {
@@ -95,7 +99,7 @@
 
                 if (this.fill)
                 {
-                    if (this.MapBodyInfo.BodyCategory != Enums.BodyCategory.LoopShape)
+                    if (this.MapBodyInfo.BodyCategory != BodyCategory.LoopShape)
                     {
                         foreach (var fixture in this.Body.FixtureList)
                         {
@@ -108,7 +112,7 @@
                     }
                     else
                     {
-                        System.Console.WriteLine("Error! Loop Shape is not supported for fill");
+                        Console.WriteLine("Error! Loop Shape is not supported for fill");
                     }
                 }
                 else

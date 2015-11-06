@@ -1,20 +1,16 @@
-﻿namespace Physicist.Actors
+﻿namespace Physicist.MainGame.Actors
 {
     using System;
-    using System.Collections.Generic;
     using System.Xml.Linq;
-    using FarseerPhysics;
     using FarseerPhysics.Collision;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Audio;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls;
-    using Physicist.Enums;
     using Physicist.Events;
-    using Physicist.Extensions;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Util;
+    using Physicist.MainGame.Extensions;
 
     public class Player : Actor
     {

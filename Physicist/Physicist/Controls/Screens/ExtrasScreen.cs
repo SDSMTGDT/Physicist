@@ -1,22 +1,30 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
-    using System;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls;
-    using Physicist.Enums;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// ExtrasScreen is the 'main' screen for this section of
     /// your game. It is used to host content and update components.
     /// </summary>
-    public partial class ExtrasScreen : GameScreen
+    public partial class ExtrasScreen : GameScreen, ISystemScreen
     {
+        private const SystemScreen SystemScreenType = SystemScreen.ExtrasScreen;
+
         public ExtrasScreen() :
-            base(SystemScreen.ExtrasScreen.ToString())
+            base(ExtrasScreen.SystemScreenType.ToString())
         {
             this.BackgroundColor = new Color(0, 0, 0, 0.8f);
+        }
+
+        public SystemScreen ScreenType
+        {
+            get { return ExtrasScreen.SystemScreenType; }
         }
 
         /// <summary>

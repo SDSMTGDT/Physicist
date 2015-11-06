@@ -1,4 +1,4 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.Types.Interfaces
 {
     using System;
     using Microsoft.Xna.Framework;

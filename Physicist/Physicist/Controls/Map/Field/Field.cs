@@ -1,15 +1,13 @@
-﻿namespace Physicist.Controls.Fields
+﻿namespace Physicist.MainGame.Controls.Fields
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
-    using FarseerPhysics;
     using FarseerPhysics.Controllers;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Util;
 
     public abstract class Field : Controller, IField
     {
@@ -97,7 +95,7 @@
         {
             if (element != null)
             {
-                this.FieldVector = ExtensionMethods.XmlDeserializeVector2(element.Element("FieldVector"));
+                this.FieldVector = XmlDeserializeHelper.XmlDeserialize<Vector2>(element.Element("FieldVector"));
                 this.Singularity = element.GetAttribute("singularity", false);
             }
         }

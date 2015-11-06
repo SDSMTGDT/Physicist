@@ -1,10 +1,10 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System.Collections.Generic;
-    using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Actors;
-    using Physicist.Enums;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Common;
     
     public interface IActor : IPosition, IName, IUpdate, IDraw, IBody
     {

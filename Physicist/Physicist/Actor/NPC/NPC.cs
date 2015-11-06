@@ -1,12 +1,12 @@
-﻿namespace Physicist.Actors.NPCs
+﻿namespace Physicist.MainGame.Actors.NPCs
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Xml.Linq;
     using Microsoft.Xna.Framework;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
 
     public abstract class NPC : Actor
     {

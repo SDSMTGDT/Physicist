@@ -1,9 +1,10 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
     using Physicist.Controls.GUIControls;
-    using Physicist.Extensions;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Xna;
+    using Physicist.Types.Util;
 
     public partial class ExtrasScreen : GameScreen
     {

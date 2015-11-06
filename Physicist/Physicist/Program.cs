@@ -1,4 +1,4 @@
-﻿namespace Physicist
+﻿namespace Physicist.MainGame
 {
     #region Using Statements
     using System;

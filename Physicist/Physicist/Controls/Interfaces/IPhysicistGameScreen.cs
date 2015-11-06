@@ -1,4 +1,4 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using FarseerPhysics.Dynamics;
 

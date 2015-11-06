@@ -1,16 +1,14 @@
-﻿namespace Physicist.Actors.NPCs
+﻿namespace Physicist.MainGame.Actors.NPCs
 {
     using System;
-    using System.Linq;
     using System.Xml.Linq;
     using FarseerPhysics.Collision;
     using FarseerPhysics.Dynamics;
-    using FarseerPhysics.Dynamics.Contacts;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
+    using Physicist.MainGame.Extensions;
     using Physicist.Events;
-    using Physicist.Extensions;
+    using Physicist.Types.Util;
     
     public class Slug : Enemy
     {

@@ -1,4 +1,4 @@
-﻿namespace Physicist.Extensions
+﻿namespace Physicist.MainGame.Extensions
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,8 @@
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
-    using Physicist.Actors;
-    using Physicist.Enums;
+    using Physicist.MainGame.Actors;
+    using Physicist.Types.Enums;
 
     public static class XmlBodyFactory
     {

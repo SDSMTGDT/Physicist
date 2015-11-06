@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
 
     public class PrimitivePropertyModifier : Modifier<object>
     {

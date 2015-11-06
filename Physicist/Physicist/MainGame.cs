@@ -1,19 +1,14 @@
-﻿namespace Physicist
+﻿namespace Physicist.MainGame
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using FarseerPhysics;
-    using FarseerPhysics.Common;
-    using FarseerPhysics.Dynamics;
-    using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using Physicist.Actors;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.Controls.Screens;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Xna;
 
     /// <summary>
     /// This is the main type for your game
@@ -72,7 +67,8 @@
         protected override void Initialize()
         {
             FarseerPhysics.Settings.UseFPECollisionCategories = true;
-            //FarseerPhysics.Settings.DefaultFixtureCollisionCategories = PhysicistCategory.All;
+
+            // FarseerPhysics.Settings.DefaultFixtureCollisionCategories = PhysicistCategory.All;
             MainGame.SetWindowBounds(new Rectangle(400, 10, 800, 480));
             ContentController.Instance.Initialize(this.Content, "Content");
             MainGame.GraphicsDev = this.GraphicsDevice;
@@ -101,7 +97,10 @@
         /// </summary>
         protected override void BeginRun()
         {
-            ScreenManager.Initialize(this.GraphicsDevice);
+            ScreenManager.Initialize(
+                this.GraphicsDevice, 
+                new ISystemScreen[] { new MenuScreen(), new OptionsScreen(), new PauseScreen()});
+
             ScreenManager.Quit += this.RequestQuit;
 
             base.BeginRun();

@@ -1,10 +1,10 @@
-﻿namespace Physicist.Controls.Fields
+﻿namespace Physicist.MainGame.Controls.Fields
 {
-    using System;
     using System.Linq;
     using System.Xml.Linq;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Util;
 
     public class FieldContainer : MapObject, IName
     {

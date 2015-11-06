@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4C3E822E-AE4B-451D-8E3E-C5730048F117}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Physicist</RootNamespace>
+    <AssemblyName>Physicist</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\Physicist_Menu_ShelfSet\Physicist\Physicist\Tools\CodeAnalysis\PhysicistRuleSet.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Dependencies\CodeAnalysis\PhysicistRuleSet.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>
+    </NoWarn>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\WindowsGL\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Actor\Environment\Elevator.cs" />
+    <Compile Include="Actor\PathManagement\PathNode.cs" />
+    <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\BodyInfo.cs" />
+    <Compile Include="Actor\Environment\Door.cs" />
+    <Compile Include="Controls\Interfaces\IBody.cs" />
+    <Compile Include="Controls\Interfaces\IModifier.cs" />
+    <Compile Include="Controls\Interfaces\ITrigger.cs" />
+    <Compile Include="Controls\Map\Field\FieldContainer.cs" />
+    <Compile Include="Controls\Map\Field\AccelerationField.cs" />
+    <Compile Include="Controls\Map\Field\Field.cs" />
+    <Compile Include="Controls\Map\Field\HealthField.cs" />
+    <Compile Include="Controls\Interfaces\IField.cs" />
+    <Compile Include="Controls\Map\Field\VelocityField.cs" />
+    <Compile Include="Actor\PathManagement\ApproachPositionPathNode.cs" />
+    <Compile Include="Actor\PathManagement\PhysicistPath.cs" />
+    <Compile Include="Actor\PathManagement\PathManager.cs" />
+    <Compile Include="Controls\Interfaces\IActor.cs" />
+    <Compile Include="Actor\NPC\Enemy.cs" />
+    <Compile Include="Actor\NPC\NPC.cs" />
+    <Compile Include="Actor\NPC\Slug.cs" />
+    <Compile Include="Actor\Player.cs" />
+    <Compile Include="Controls\Interfaces\IGameScreenItem.cs" />
+    <Compile Include="Controls\Interfaces\IMapObject.cs" />
+    <Compile Include="Controls\AssetCreator.cs" />
+    <Compile Include="Controls\Interfaces\IPhysicistGameScreen.cs" />
+    <Compile Include="Controls\Map\MapLayer.cs" />
+    <Compile Include="Controls\Map\MapObject.cs" />
+    <Compile Include="Controls\Map\MapSaver.cs" />
+    <Compile Include="Controls\Map\Map.cs" />
+    <Compile Include="Controls\Map\MapLoader.cs" />
+    <Compile Include="Controls\Screens\ExtrasScreen.cs" />
+    <Compile Include="Controls\Screens\ExtrasScreen.Design.cs">
+      <DependentUpon>ExtrasScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\LevelEndScreen.cs" />
+    <Compile Include="Controls\Screens\LevelEndScreen.Design.cs">
+      <DependentUpon>LevelEndScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\MenuScreen.cs" />
+    <Compile Include="Controls\Screens\MenuScreen.Design.cs">
+      <DependentUpon>MenuScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\OptionsScreen.cs" />
+    <Compile Include="Controls\Screens\OptionsScreen.Design.cs">
+      <DependentUpon>OptionsScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\PauseScreen.cs" />
+    <Compile Include="Controls\Screens\PauseScreen.Design.cs">
+      <DependentUpon>PauseScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\PhysicistGameScreen.cs" />
+    <Compile Include="Controls\Screens\PhysicistGameScreen.Design.cs">
+      <DependentUpon>PhysicistGameScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Screens\PhysicistGameScreenItem.cs" />
+    <Compile Include="Controls\ParticleEngine.cs" />
+    <Compile Include="Events\Modifiers\PrimitivePropertyModifier.cs" />
+    <Compile Include="Events\Triggers\KeyPressTrigger.cs" />
+    <Compile Include="Events\Triggers\TriggerSet.cs" />
+    <Compile Include="Extensions\FarseerExtensions.cs" />
+    <Compile Include="Extensions\PhysicistCategory.cs" />
+    <Compile Include="Util\Farseer\DebugViewXNA.cs" />
+    <Compile Include="Util\Farseer\PrimitiveBatch.cs" />
+    <Compile Include="Events\Modifiers\AnimateModifier.cs" />
+    <Compile Include="Events\PhysicistEvent.cs" />
+    <Compile Include="Events\Modifiers\Modifier.cs" />
+    <Compile Include="Events\Triggers\ProximityTrigger.cs" />
+    <Compile Include="Events\Triggers\Trigger.cs" />
+    <Compile Include="Events\Modifiers\VelocityModifier.cs" />
+    <Compile Include="Extensions\XmlBodyFactory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Levels\Tests\LayerTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\EnemyInteractionTests.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\EnemyTests.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\SoundTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\sabredance.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\thud.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\BlueField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\Blank.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\FieldTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\TriggerSetTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\PathTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\Tests\TriggerTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\SchemaTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\MaterialTest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Levels\Tests\TestLevel.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Materials\hemp.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\System\Textures\ContentLoadError.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Box.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Door.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Interior.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft_Overlay.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Elevator_Shaft_SuspensionLines.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\FillShape.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\MegamanSprite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\OrangeField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Slug.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\YellowField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Reference Include="FarseerPhysics MonoGame">
+      <HintPath>..\Dependencies\FarseerPhysics\Augmented\FarseerPhysics MonoGame.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <!--</ItemGroup>
+  <ItemGroup>-->
+    <CodeAnalysisDictionary Include="CustomDictionary.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </CodeAnalysisDictionary>
+    <Content Include="Icon.ico" />
+    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Content\System\Fonts\Pericles6.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\System\Fonts\DebugFont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Background.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Capsule.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Chain.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Circle.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\CompoundPolygon.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Edge.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Ellipse.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Gear.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\LineArc.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\LoopShape.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\NOTSTOLEN.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Platform.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\Polygon.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\RoundedRectangle.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\SolidArc.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Fonts\" />
+    <Folder Include="Content\Levels\Published\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Physicist.Controls\Physicist.Controls.csproj">
+      <Project>{064aa566-40d5-482f-a6f2-7aa2f75acb52}</Project>
+      <Name>Physicist.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physicist.Types\Physicist.Types.csproj">
+      <Project>{05f7ef8f-7325-45ed-8935-e6338b8f7dfb}</Project>
+      <Name>Physicist.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physicist.XML\Physicist.XML.csproj">
+      <Project>{7c224097-6308-47ab-8555-404d13f838ab}</Project>
+      <Name>Physicist.XML</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(ProjectDir)..\Dependencies\StyleCop\v4.7\StyleCop.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,11 +1,11 @@
-﻿namespace Physicist.Controls.Fields
+﻿namespace Physicist.MainGame.Controls.Fields
 {
     using System;
     using System.Xml.Linq;
     using FarseerPhysics.Dynamics;
     using Microsoft.Xna.Framework;
-    using Physicist.Controls;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Controls;
+    using Physicist.Types.Util;
 
     public class HealthField : Field
     {

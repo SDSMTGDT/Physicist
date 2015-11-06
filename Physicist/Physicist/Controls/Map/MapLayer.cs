@@ -1,16 +1,16 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using FarseerPhysics.Common;
     using FarseerPhysics.Dynamics;
     using FarseerPhysics.Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Physicist.Actors;
-    using Physicist.Extensions;
+    using Physicist.MainGame.Actors;
+    using Physicist.MainGame.Extensions;
+    using Physicist.Types.Interfaces;
+    using Physicist.Types.Xna;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Follows Monogame pattern")]
     public class MapLayer : IName
@@ -92,6 +92,7 @@
                 {
                     this.layerBody.CollisionLayer = value;
                 }
+
                 this.bodies.ForEach(body => body.Body.CollisionLayer = value);
                 this.players.ForEach(player => player.Body.CollisionLayer = value);
             }

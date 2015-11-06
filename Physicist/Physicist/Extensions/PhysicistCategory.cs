@@ -1,9 +1,5 @@
-﻿namespace Physicist.Extensions
+﻿namespace Physicist.MainGame.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using FarseerPhysics.Dynamics;
 
     public static class PhysicistCategory

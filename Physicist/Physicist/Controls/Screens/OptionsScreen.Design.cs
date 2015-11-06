@@ -1,14 +1,16 @@
-﻿namespace Physicist.Controls
+﻿namespace Physicist.MainGame.Controls
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
-    using Physicist.Controls;
+    using Physicist.Controls.Screens;
     using Physicist.Controls.GUIControls;
-    using Physicist.Enums;
-    using Physicist.Extensions;
+    using Physicist.Types.Enums;
+    using Physicist.Types.Util;
+    using Physicist.Types.Controllers;
+    using Physicist.Types.Xna;
 
     public partial class OptionsScreen : GameScreen
     {
