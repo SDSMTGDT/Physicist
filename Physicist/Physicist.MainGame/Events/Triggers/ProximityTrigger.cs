@@ -121,6 +121,7 @@
             base.Update(gameTime);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public override void XmlDeserialize(XElement element)
         {
             Fixture sensorTemplate = null;

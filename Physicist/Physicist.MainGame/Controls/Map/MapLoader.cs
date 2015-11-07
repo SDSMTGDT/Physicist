@@ -8,13 +8,12 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using System.Xml.Schema;
     using System.Xml.Xsl;
     using Microsoft.Xna.Framework;
     using Physicist.Types.Controllers;
     using Physicist.Types.Enums;
     using Physicist.Types.Interfaces;
-    using XML;
+    using Physicist.XML;
 
     public static class MapLoader
     {
@@ -198,7 +197,7 @@
                                 XDocument layerDoc = new XDocument();
                                 using (XmlWriter writer = layerDoc.CreateWriter())
                                 {
-                                    foreach(var layerTrans in XmlResourceLoader.Layers)
+                                    foreach (var layerTrans in XmlResourceLoader.Layers)
                                     {
                                         layerTrans.Transform(layerEle.CreateReader(), paramlist, writer);
                                     }
