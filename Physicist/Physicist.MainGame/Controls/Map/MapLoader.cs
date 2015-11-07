@@ -14,6 +14,7 @@
     using Physicist.Types.Controllers;
     using Physicist.Types.Enums;
     using Physicist.Types.Interfaces;
+    using XML;
 
     public static class MapLoader
     {
@@ -123,7 +124,7 @@
                 using (FileStream rstream = File.OpenRead(filePath))
                 {
                     XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.Schemas = MapLoader.schemas;
+                    settings.Schemas = XmlResourceLoader.Schemas;
                     settings.ValidationType = ValidationType.Schema;
                     settings.ValidationEventHandler += (sender, args) =>
                     {

@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="ActorExtensions"
-    targetNamespace="ActorExtensions"
-    elementFormDefault="qualified"
-    xmlns="ActorExtensions"
-    xmlns:mstns="ActorExtensions"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
->
-</xs:schema>

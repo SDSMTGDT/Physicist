@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physicist.MainGame", "Physicist\Physicist.MainGame.csproj", "{4C3E822E-AE4B-451D-8E3E-C5730048F117}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physicist.MainGame", "Physicist.MainGame\Physicist.MainGame.csproj", "{4C3E822E-AE4B-451D-8E3E-C5730048F117}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physicist.LevelEditor", "Physicist.LevelEditor\Physicist.LevelEditor.csproj", "{19352C4E-AF8D-43D4-A0B6-2AC6C6CFC5BD}"
 EndProject
