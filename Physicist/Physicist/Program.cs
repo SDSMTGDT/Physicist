@@ -18,7 +18,7 @@
         [STAThread]
         public static void Main()
         {
-            using (var game = new MainGame())
+            using (var game = new PhysicistGame())
             {
                 game.Run();
             }

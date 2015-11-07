@@ -84,7 +84,7 @@
                 this.map = MapLoader.Initialize(this.maps[0], this);
                 if (this.map == null || !MapLoader.LoadCurrentMap())
                 {
-                    System.Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
+                    Console.WriteLine(string.Format(CultureInfo.CurrentCulture, "Loading of Map: {0} has failed!", this.maps[0]));
                     success = false;
                 }
                 else
@@ -92,7 +92,7 @@
                     this.debugView = new DebugViewXNA(this.world);
                     this.debugView.DefaultShapeColor = Color.White;
                     this.debugView.SleepingShapeColor = Color.LightGray;
-                    this.debugView.LoadContent(this.GraphicsDevice, MainGame.ContentManager);
+                    this.debugView.LoadContent(this.GraphicsDevice, PhysicistGame.ContentManager);
                     this.debugViewMatrix = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(this.map.Width), ConvertUnits.ToSimUnits(this.map.Height), 0f, 0f, .01f);
                 }
 

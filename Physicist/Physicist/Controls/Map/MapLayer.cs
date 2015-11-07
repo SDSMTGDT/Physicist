@@ -50,7 +50,7 @@
 
             this.CollisionLayer = collisionLayer;
 
-            this.fill = new Texture2D(MainGame.GraphicsDev, 1, 1);
+            this.fill = new Texture2D(PhysicistGame.GraphicsDev, 1, 1);
             this.fill.SetData(new Color[1] { Color.Black });
         }
 

@@ -53,12 +53,12 @@
             }
         }
 
-        public static void Initialize(GraphicsDevice graphicsDev, IEnumerable<ISystemScreen> screens)
+        public static void Initialize(GraphicsDevice graphicsDev, Lazy<IEnumerable<ISystemScreen>> screens)
         {
             ScreenManager.GraphicsDevice = graphicsDev;
             ScreenManager.IsInitialized = true;
 
-            screens.ForEach(s =>
+            screens.Value.ForEach(s =>
             {
                 s.InitializeScreen(ScreenManager.GraphicsDevice);
                 s.LoadScreenContent();

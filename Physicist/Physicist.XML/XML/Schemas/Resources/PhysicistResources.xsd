@@ -6,7 +6,7 @@
       xmlns:mstns="PhysicistTypes"
       elementFormDefault="qualified"
   >
-    <xs:include schemaLocation="CommonResources.xsd"/>
+    <xs:include id="Common" schemaLocation="CommonResources.xsd"/>
 
     <xs:element name="MapObject" type="MapObject" abstract="true"/>    
     

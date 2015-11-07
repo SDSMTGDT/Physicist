@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="PhysicistCommon"
+<xs:schema id="PhysicistMedia"
     targetNamespace="PhysicistTypes"
-    elementFormDefault="unqualified"
+    elementFormDefault="qualified"
     xmlns="PhysicistTypes"
     xmlns:mstns="PhysicistTypes"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-  <xs:include schemaLocation="../Resources/PhysicistResources.xsd"/>
+  <xs:include schemaLocation="../Proxies/PhysicistCommon.xsd"/>
+
 </xs:schema>

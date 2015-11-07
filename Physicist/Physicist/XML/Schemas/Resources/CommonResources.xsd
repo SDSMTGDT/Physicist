@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CommonResources"
+    elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:simpleType name="XDirections">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Left"/>       
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="StandardKeyActions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Up"/>
+      <xs:enumeration value="Down"/>
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Jump"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="KeyState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Up"/>
+      <xs:enumeration value="Down"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="TriggerSetOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AND"/>
+      <xs:enumeration value="OR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrimitiveTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="int"/>
+      <xs:enumeration value="bool"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="char"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="UnitInterval">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Hidden"/>
+      <xs:enumeration value="Visible"/>
+      <xs:enumeration value="Collapsed"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BodyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Dynamic"/>
+      <xs:enumeration value="Static"/>
+      <xs:enumeration value="Kinematic"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Percentage">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Extensions">
+    <xs:choice maxOccurs="unbounded">
+      <xs:any processContents="skip" minOccurs="0"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Size">
+    <xs:attribute name="width" type="xs:int" use="required"/>
+    <xs:attribute name="height" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Vector2">
+    <xs:attribute name="x" type="xs:float" use="required"/>
+    <xs:attribute name="y" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Rectangle">
+    <xs:all>
+      <xs:element name="Location" type="Vector2"/>
+      <xs:element name="Dimension" type="Size"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:attributeGroup name="LayerAttributes">
+    <xs:attribute name="depth" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="width" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="height" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="xoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="yoffset" type="xs:unsignedInt" default="0">
+      <xs:annotation>
+        <xs:documentation>[Optional] default is '0'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name="ActorList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:any namespace="PhysicistActors" processContents="lax"/>
+        <xs:any namespace="ActorExtensions" processContents="lax"/>
+        <xs:any namespace="SystemPrefabs" processContents="lax"/>
+        <xs:any namespace="PhysicistEnemies" processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Media">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="location" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="MediaList">
+    <xs:sequence minOccurs="0">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="Texture2D" type="Media"/>
+        <xs:element name="SoundEffect" type="Media"/>
+        <xs:element name="Video" type="Media"/>
+        <xs:any namespace="MediaExtensions" processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

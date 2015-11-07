@@ -41,113 +41,120 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OtherResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlResourceLoader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schemas\Extensions\ActorExtensions.xsd">
+    <EmbeddedResource Include="XML\Schemas\Extensions\ActorExtensions.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Extensions\LayerPrefabs.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\Extensions\MediaExtensions.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Extensions\LayerPrefabs.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Extensions\SystemPrefabs.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Extensions\MediaExtensions.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistActors.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Extensions\SystemPrefabs.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistEnemies.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistEvents.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistActors.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistFields.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistEnemies.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistMedia.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistEvents.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistPaths.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistFields.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Nodes\PhysicistShapes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistMedia.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Proxies\LayerCommon.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\Proxies\PhysicistCommon.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistPaths.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Proxies\PrefabCommon.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Nodes\PhysicistShapes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Resources\CommonResources.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Proxies\LayerCommon.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Resources\PhysicistResources.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Proxies\PhysicistCommon.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\ActorTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Proxies\PrefabCommon.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\EnemyTypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\Types\EventTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Resources\CommonResources.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\FarseerTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Resources\PhysicistResources.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\FieldTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\ActorTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\LayerPrefabTypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\Types\PhysicistTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\EnemyTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\Types\SystemPrefabTypes.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\EventTypes.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\FarseerTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\FieldTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\LayerPrefabTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\PhysicistTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Schemas\Types\SystemPrefabTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Transforms\Layer\LayerTransform.xslt">
+    <EmbeddedResource Include="XML\Transforms\Layer\LayerTransform.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Transforms\Templates\ActorTemplates.xslt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Transforms\Templates\ActorTemplates.xslt">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Transforms\Templates\LayerTemplates.xslt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="XML\Transforms\Templates\LayerTemplates.xslt">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

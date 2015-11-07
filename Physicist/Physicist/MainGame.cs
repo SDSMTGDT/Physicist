@@ -1,6 +1,7 @@
 ﻿namespace Physicist.MainGame
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
@@ -13,17 +14,17 @@
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class MainGame : Game
+    public class PhysicistGame : Game
     {
         private static GraphicsDeviceManager graphics;
         private static GameWindow window;
         private FCCSpritebatch spriteBatch;
 
-        public MainGame()
+        public PhysicistGame()
             : base()
         {
-            MainGame.graphics = new GraphicsDeviceManager(this);
-            MainGame.window = this.Window;
+            PhysicistGame.graphics = new GraphicsDeviceManager(this);
+            PhysicistGame.window = this.Window;
         }
 
         public static GraphicsDevice GraphicsDev 
@@ -45,16 +46,16 @@
             System.Reflection.FieldInfo field = type.GetField("window", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (field != null)
             {
-                win = field.GetValue(MainGame.window) as OpenTK.GameWindow;
+                win = field.GetValue(PhysicistGame.window) as OpenTK.GameWindow;
             }
 
             if (win != null)
             {
                 win.Y = bounds.Y;
                 win.X = bounds.X;
-                MainGame.graphics.PreferredBackBufferHeight = bounds.Height;
-                MainGame.graphics.PreferredBackBufferWidth = bounds.Width;
-                MainGame.graphics.ApplyChanges();
+                PhysicistGame.graphics.PreferredBackBufferHeight = bounds.Height;
+                PhysicistGame.graphics.PreferredBackBufferWidth = bounds.Width;
+                PhysicistGame.graphics.ApplyChanges();
             }
         }
 
@@ -69,10 +70,10 @@
             FarseerPhysics.Settings.UseFPECollisionCategories = true;
 
             // FarseerPhysics.Settings.DefaultFixtureCollisionCategories = PhysicistCategory.All;
-            MainGame.SetWindowBounds(new Rectangle(400, 10, 800, 480));
+            PhysicistGame.SetWindowBounds(new Rectangle(400, 10, 800, 480));
             ContentController.Instance.Initialize(this.Content, "Content");
-            MainGame.GraphicsDev = this.GraphicsDevice;
-            MainGame.ContentManager = this.Content;
+            PhysicistGame.GraphicsDev = this.GraphicsDevice;
+            PhysicistGame.ContentManager = this.Content;
             this.spriteBatch = new FCCSpritebatch(this.GraphicsDevice);
             AssetCreator.Instance.Initialize(this.GraphicsDevice);
             this.IsMouseVisible = true;
@@ -99,7 +100,7 @@
         {
             ScreenManager.Initialize(
                 this.GraphicsDevice, 
-                new ISystemScreen[] { new MenuScreen(), new OptionsScreen(), new PauseScreen()});
+                new Lazy<IEnumerable<ISystemScreen>>(() => new List<ISystemScreen>() { new MenuScreen(), new OptionsScreen(), new PauseScreen() }));
 
             ScreenManager.Quit += this.RequestQuit;
 

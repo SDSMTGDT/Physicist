@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Events"
+    targetNamespace="PhysicistEvents"
+    elementFormDefault="qualified"
+    xmlns="PhysicistEvents"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:types="PhysicistTypes"
+>
+  <xs:import namespace="PhysicistTypes"
+             schemaLocation="../Types/EventTypes.xsd"/>
+
+  <xs:element name="ProximityTrigger" type="types:ProximityTrigger" substitutionGroup="types:Trigger"/>
+  <xs:element name="KeyPressTrigger" type="types:KeyPressTrigger" substitutionGroup="types:Trigger"/>
+  <xs:element name="VelocityModifier" type="types:VelocityModifier" substitutionGroup="types:Modifier"/>
+  <xs:element name="AnimateModifier" type="types:AnimateModifier" substitutionGroup="types:Modifier"/>
+  <xs:element name="PrimitivePropertyModifier" type="types:PrimitivePropertyModifier" substitutionGroup="types:Modifier"/>
+  <xs:element name="TriggerSet" type="types:TriggerSetType" substitutionGroup="types:TriggerSet"/>
+
+</xs:schema>
