@@ -25,9 +25,6 @@
         private static IPhysicistGameScreen registration = null;
 
         private static XElement rootElement = null;
-        private static XmlSchemaSet schemas = new XmlSchemaSet();
-        private static List<XslCompiledTransform> templates = new List<XslCompiledTransform>();
-        private static XslCompiledTransform layerTrans;
 
         private static string currentLayer = "No-processing-done";
 
@@ -55,28 +52,6 @@
                     }
                 }
             }
-
-            foreach (string dirName in Directory.EnumerateDirectories("XML\\Schemas"))
-            {
-                foreach (string filename in Directory.EnumerateFiles(dirName))
-                {
-                    MapLoader.schemas.Add(null, filename);
-                }
-            }
-
-            foreach (string filename in Directory.EnumerateFiles("XML\\Transforms\\Templates"))
-            {
-#if DEBUG
-                var transform = new XslCompiledTransform(true);
-#else
-                var transform = new XslCompiledTransform();
-#endif
-                transform.Load(filename);
-                MapLoader.templates.Add(transform);
-            }
-
-            layerTrans = new XslCompiledTransform();
-            layerTrans.Load("XML\\Transforms\\Layer\\LayerTransform.xslt");
         }
 
         public static bool HasFailed
@@ -151,7 +126,7 @@
 
                     XDocument transformDoc = new XDocument();
                     XDocument currentReader = rootDocument;
-                    foreach (var transform in MapLoader.templates)
+                    foreach (var transform in XmlResourceLoader.Templates)
                     {
                         transformDoc = new XDocument();
                         using (XmlWriter writer = transformDoc.CreateWriter())
@@ -223,7 +198,10 @@
                                 XDocument layerDoc = new XDocument();
                                 using (XmlWriter writer = layerDoc.CreateWriter())
                                 {
-                                    layerTrans.Transform(layerEle.CreateReader(), paramlist, writer);
+                                    foreach(var layerTrans in XmlResourceLoader.Layers)
+                                    {
+                                        layerTrans.Transform(layerEle.CreateReader(), paramlist, writer);
+                                    }
                                 }
 
                                 XElement rootLayerEle = layerDoc.Root;

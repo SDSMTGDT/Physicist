@@ -24,14 +24,22 @@
 
             foreach (var file in Directory.EnumerateFiles("XML\\Transforms\\Templates"))
             {
+#if DEBUG
+                var template = new XslCompiledTransform(true);
+#else
                 var template = new XslCompiledTransform();
+#endif
                 template.Load(file);
                 templates.Add(template);
             }
 
             foreach (var file in Directory.EnumerateFiles("XML\\Transforms\\Layer"))
             {
+#if DEBUG
+                var template = new XslCompiledTransform(true);
+#else
                 var template = new XslCompiledTransform();
+#endif
                 template.Load(file);
                 layers.Add(template);
             }
